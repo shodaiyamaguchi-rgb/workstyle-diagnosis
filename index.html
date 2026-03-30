@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>64タイプ ワークスタイル診断</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23667eea'/><stop offset='100%25' stop-color='%23764ba2'/></linearGradient></defs><circle cx='50' cy='50' r='45' fill='url(%23g)'/><text x='50' y='62' text-anchor='middle' font-size='36' font-weight='bold' fill='white'>64</text></svg>">
+<meta property="og:title" content="64タイプ ワークスタイル診断">
+<meta property="og:description" content="MBTIの4軸に独自の2軸を加えた6軸・64タイプの職場パーソナリティ診断">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="64タイプ ワークスタイル診断">
+<meta name="twitter:description" content="MBTIの4軸に独自の2軸を加えた6軸・64タイプの職場パーソナリティ診断">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e17;--card:rgba(255,255,255,0.03);--card-border:rgba(255,255,255,0.06);--text:#e8e6e3;--text-muted:rgba(255,255,255,0.5);--accent:#E67E22}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.container{max-width:640px;margin:0 auto;padding:0 20px}
+
+/* Start Screen */
+#startScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:40px 20px}
+.start-label{font-size:11px;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:24px}
+.start-title{font-family:'Noto Serif JP',serif;font-size:32px;font-weight:700;margin-bottom:12px;line-height:1.4}
+.start-sub{font-size:14px;color:var(--text-muted);margin-bottom:48px;line-height:1.8}
+.start-btn{display:block;width:100%;max-width:360px;padding:16px 24px;border:none;border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:500;cursor:pointer;transition:all .3s;margin-bottom:16px}
+.start-btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.start-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(102,126,234,0.3)}
+.start-btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--card-border)}
+.start-btn.secondary:hover{background:rgba(255,255,255,0.06)}
+.start-note{font-size:12px;color:var(--text-muted);margin-top:8px}
+.mbti-grid{display:none;flex-wrap:wrap;gap:8px;justify-content:center;max-width:360px;margin:16px auto}
+.mbti-grid.show{display:flex}
+.mbti-chip{padding:8px 14px;border-radius:8px;background:var(--card);border:1px solid var(--card-border);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+.mbti-chip:hover,.mbti-chip.selected{background:rgba(102,126,234,0.2);border-color:rgba(102,126,234,0.5)}
+
+/* Question Screen */
+#questionScreen{display:none;min-height:100vh;padding:20px}
+.q-header{position:sticky;top:0;background:var(--bg);padding:16px 0 12px;z-index:10}
+.q-progress-wrap{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.q-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+.q-progress-fill{height:100%;border-radius:2px;transition:width .4s ease;background:linear-gradient(90deg,#667eea,#764ba2)}
+.q-count{font-size:12px;color:var(--text-muted);white-space:nowrap}
+.q-axis-label{font-size:11px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase}
+.q-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:32px 24px;margin:24px auto;max-width:560px}
+.q-text{font-family:'Noto Serif JP',serif;font-size:18px;line-height:1.8;margin-bottom:32px;text-align:center}
+.q-scale{display:flex;justify-content:space-between;align-items:center;gap:4px;margin-bottom:12px}
+.q-scale-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--card-border);background:transparent;color:var(--text-muted);font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.q-scale-btn:hover{border-color:rgba(102,126,234,0.5);background:rgba(102,126,234,0.1)}
+.q-scale-btn.selected{background:linear-gradient(135deg,#667eea,#764ba2);border-color:transparent;color:#fff;transform:scale(1.15)}
+.q-scale-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted)}
+.q-nav{display:flex;gap:12px;justify-content:center;margin-top:24px;max-width:560px;margin-left:auto;margin-right:auto}
+.q-nav-btn{padding:12px 32px;border-radius:10px;border:none;font-family:'Noto Sans JP',sans-serif;font-size:14px;cursor:pointer;transition:all .2s}
+.q-nav-btn.prev{background:var(--card);color:var(--text);border:1px solid var(--card-border)}
+.q-nav-btn.next{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.q-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+/* Result Screen */
+#resultScreen{display:none;padding:40px 0 80px}
+.r-header{text-align:center;padding:40px 20px 32px;position:relative}
+.r-label{font-size:11px;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:16px}
+.r-name{font-family:'Noto Serif JP',serif;font-size:36px;font-weight:700;margin-bottom:8px}
+.r-code{font-size:14px;letter-spacing:2px;margin-bottom:20px;opacity:0.6}
+.r-summary{font-size:15px;line-height:1.9;color:var(--text-muted);max-width:540px;margin:0 auto;padding:0 20px}
+
+/* Score bars */
+.score-section{padding:24px 20px}
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.score-label{font-size:12px;width:28px;text-align:right;font-weight:700}
+.score-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;position:relative;overflow:visible}
+.score-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.score-pct{font-size:11px;color:var(--text-muted);width:36px}
+.score-label-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:-4px;margin-bottom:8px;padding-left:40px;padding-right:36px}
+
+/* Cards */
+.r-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;margin:16px 20px;overflow:hidden}
+.r-card-title{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;padding:20px 24px;display:flex;align-items:center;gap:10px}
+
+/* Character & Great */
+.r-persona{display:flex;gap:16px;padding:0 24px 20px}
+.r-persona-item{flex:1;padding:16px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border)}
+.r-persona-label{font-size:11px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.r-persona-name{font-size:14px;font-weight:500}
+
+/* Accordion */
+.accordion-item{border-top:1px solid var(--card-border)}
+.accordion-header{padding:16px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:500;transition:background .2s;user-select:none}
+.accordion-header:hover{background:rgba(255,255,255,0.02)}
+.accordion-arrow{transition:transform .3s;font-size:12px;color:var(--text-muted)}
+.accordion-header.open .accordion-arrow{transform:rotate(180deg)}
+.accordion-body{display:none;padding:0 24px 20px;font-size:14px;line-height:2;color:var(--text-muted);white-space:pre-line}
+.accordion-body.open{display:block}
+
+/* Tabs */
+.tab-bar{display:flex;gap:4px;padding:0 24px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--card-border);background:transparent;color:var(--text-muted);font-size:13px;cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;transition:all .2s}
+.tab-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(255,255,255,0.03)}
+.tab-content{padding:0 24px 20px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.compat-item{padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.compat-item:last-child{border-bottom:none}
+.compat-name{font-weight:700;font-size:14px;margin-bottom:4px}
+.compat-code{font-size:12px;color:var(--text-muted)}
+.compat-desc{font-size:13px;color:var(--text-muted);margin-top:4px;line-height:1.7}
+
+/* Career */
+.career-group{margin-bottom:16px}
+.career-group-title{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.career-tags{display:flex;flex-wrap:wrap;gap:6px}
+
+/* Tags */
+.tag{display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;border:1px solid var(--card-border);background:rgba(255,255,255,0.02)}
+.tag.green{border-color:rgba(46,204,113,0.3);color:#2ecc71;background:rgba(46,204,113,0.06)}
+.tag.red{border-color:rgba(231,76,60,0.3);color:#e74c3c;background:rgba(231,76,60,0.06)}
+.tag.blue{border-color:rgba(52,152,219,0.3);color:#3498db;background:rgba(52,152,219,0.06)}
+.tag.purple{border-color:rgba(155,89,182,0.3);color:#9b59b6;background:rgba(155,89,182,0.06)}
+.tag.gold{border-color:rgba(241,196,15,0.3);color:#f1c40f;background:rgba(241,196,15,0.06)}
+.tag.warn{border-color:rgba(231,76,60,0.2);color:rgba(231,76,60,0.8);background:rgba(231,76,60,0.04)}
+
+/* Tips */
+.tip-section{padding:0 24px 20px}
+.tip-item{display:flex;gap:10px;padding:10px 0;font-size:14px;line-height:1.7;color:var(--text-muted)}
+.tip-icon{flex-shrink:0;font-size:16px}
+
+/* Share */
+.share-wrap{padding:20px 24px;display:flex;flex-direction:column;gap:12px}
+.share-label{font-size:13px;font-weight:700;margin-bottom:4px}
+.share-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.share-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;border:1px solid var(--card-border);background:var(--card);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;text-decoration:none}
+.share-btn:hover{background:rgba(255,255,255,0.06);transform:translateY(-1px)}
+.share-btn.x{border-color:rgba(255,255,255,0.15);background:rgba(0,0,0,0.3)}
+.share-btn.line{border-color:rgba(6,199,85,0.3);color:#06c755}
+.share-btn.copy{border-color:rgba(102,126,234,0.3);color:#667eea}
+.share-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(102,126,234,0.95);color:#fff;padding:12px 28px;border-radius:12px;font-size:14px;opacity:0;transition:all .3s;pointer-events:none;z-index:100;backdrop-filter:blur(8px)}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Restart */
+.restart-wrap{text-align:center;padding:40px 20px}
+.restart-btn{padding:14px 40px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:15px;cursor:pointer;transition:all .2s}
+.restart-btn:hover{background:rgba(255,255,255,0.06)}
+
+/* fadeInUp animation for result cards */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.r-card{animation:fadeInUp .5s ease both}
+.r-card:nth-child(2){animation-delay:.1s}
+.r-card:nth-child(3){animation-delay:.2s}
+.r-card:nth-child(4){animation-delay:.3s}
+.r-card:nth-child(5){animation-delay:.4s}
+.r-card:nth-child(6){animation-delay:.5s}
+.r-card:nth-child(7){animation-delay:.6s}
+.r-card:nth-child(8){animation-delay:.7s}
+.r-card:nth-child(9){animation-delay:.8s}
+.r-header{animation:fadeInUp .5s ease both}
+
+/* Question fade transition */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-card.fade-in{animation:fadeIn .3s ease both}
+
+/* Type badge chips */
+.type-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:16px auto 20px;max-width:480px}
+.type-badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.5px;border:1.5px solid var(--accent);color:var(--accent);background:rgba(255,255,255,0.03)}
+
+/* Prominent restart button for shared links */
+.restart-btn.prominent{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;font-size:16px;padding:16px 48px}
+.restart-btn.prominent:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(102,126,234,0.3)}
+
+@media(max-width:400px){
+  .q-scale-btn{width:38px;height:38px;font-size:13px}
+  .r-name{font-size:28px}
+  .r-persona{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen">
+  <div class="start-label">Work Style Personality Map</div>
+  <div class="start-title">64タイプ<br>ワークスタイル診断</div>
+  <div class="start-sub">MBTIの4軸に独自の2軸を加えた<br>6軸・64タイプの職場パーソナリティ診断</div>
+  <button class="start-btn primary" onclick="startFull()">90問で診断する<br><span style="font-size:12px;opacity:0.7">所要時間：約10分</span></button>
+  <button class="start-btn secondary" onclick="toggleMbtiSelect()">MBTIを知っている人はこちら<br><span style="font-size:12px;opacity:0.7">30問ショートカット（約4分）</span></button>
+  <div class="mbti-grid" id="mbtiGrid"></div>
+  <div class="start-note" id="mbtiNote" style="display:none">MBTIタイプを選んでください</div>
+</div>
+
+<!-- QUESTION SCREEN -->
+<div id="questionScreen">
+  <div class="container">
+    <div class="q-header">
+      <div class="q-progress-wrap">
+        <div class="q-progress-bar"><div class="q-progress-fill" id="progressFill"></div></div>
+        <div class="q-count" id="qCount"></div>
+      </div>
+      <div class="q-axis-label" id="qAxisLabel"></div>
+    </div>
+    <div class="q-card">
+      <div class="q-text" id="qText"></div>
+      <div class="q-scale" id="qScale"></div>
+      <div class="q-scale-labels"><span>全く当てはまらない</span><span>非常に当てはまる</span></div>
+    </div>
+    <div class="q-nav">
+      <button class="q-nav-btn prev" id="prevBtn" onclick="prevQ()">← 戻る</button>
+      <button class="q-nav-btn next" id="nextBtn" onclick="nextQ()">次へ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="resultScreen">
+  <div class="container" id="resultContent"></div>
+</div>
+
+<script>
+const PROFILES = {
+"ENFP-O-Br":{name:"着火マン",character:"ルフィ（ONE PIECE）",great:"マルコ・ポーロ",color:"#E67E22",summary:"「あ、それ面白そう」が人生のエンジン。0→1が圧倒的に得意で、興味の幅が広く異分野の知識を組み合わせてアイデアを出す。人の気持ちに敏感でチームの空気を真っ先に察知する。",compatibility:{complement:[{code:"ISTJ-G-Dp",name:"金庫番",desc:"発散を形にする完璧な分業。"},{code:"ISTJ-G-Br",name:"組織の記憶庫",desc:"広い視野を持ちつつ真逆のアプローチで補い合う。"}],chemistry:[{code:"ENTJ-O-Dp",name:"将軍",desc:"アイデアを戦略に落とし込む爆発力。"},{code:"ENTP-O-Br",name:"アイデアマン",desc:"アイデアの応酬が止まらないコンビ。"}],comfort:[{code:"ENFP-O-Dp",name:"伝道師",desc:"同じ情熱を共有し自然体でいられる。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"一緒にいると楽しさ2倍。"}],catalyst:[{code:"ESTJ-G-Dp",name:"頑固職人",desc:"真逆の価値観が視野を広げる。"},{code:"ISTP-G-Dp",name:"専属オペレーター",desc:"職人的な深さが新しい視点を。"}]},careers:{top:["新規事業開発","プロデューサー","コミュニティマネージャー"],good:["ブランドマーケティング","UXリサーチャー","組織開発"],surprise:["ソリューション営業","ファシリテーター"],avoid:["定型的な経理","品質検査・データ入力"]},strengths:["アイデア出し","企画の初期ドラフト","プレゼン","社外パートナーとの関係構築"],weaknesses:["定型フォーマット入力","数字の細かいチェック","長期間の単独作業","手順書の作成"],tips:{do:"「面白い企画があるんだけど一緒に考えてくれない？」→巻き込まれるのが好き。裁量をもらえると本気を出す。",dont:"「このフォーマット通りにやって」「細かく進捗報告して」→自由度がないと窮屈。"},fullSections:[{title:"👤 この人はこんな人",content:"「あ、それ面白そう」が人生のエンジン。可能性が見えると黙っていられない。0→1のフェーズが圧倒的に得意。\n\n人といるとエネルギーが湧いてくる。ランチに誰かを誘うのはだいたいこの人。興味の幅が広く、全然違う分野の知識を組み合わせてアイデアを出す。\n\n弱点は物事を最後まできっちり詰めるのがしんどいこと。8割できたあたりで「だいたいOK」と思いがち。同じ作業の繰り返しをやっていると魂が抜けていく。"},{title:"💼 仕事の進め方",content:"【着手フェーズ】\n「面白い」と思った瞬間に動き出す。まず人に話しに行く。着手は早いが計画を立てるよりまず手を動かす派。\n\n【進行フェーズ】\n複数のタスクを並行して進めるのが自然体。途中で「もっといいやり方があるかも」と方向転換することが多い。\n\n【完了フェーズ】\n8割できたあたりで「だいたいOK」と思いがち。詰めの作業は苦手。締切直前に集中力が爆発する。\n\n【1日の働き方】\n朝はゆっくり、午前中に人と話してエンジンをかけ、午後にクリエイティブな仕事。固定ルーティンより日によってリズムが違う方がパフォーマンスが出る。"},{title:"🗣️ 会議での振る舞い",content:"会議の盛り上げ役。沈黙が続くと自分から口火を切る。ブレストでは誰よりもアイデアを出し、他の人の意見に「それいいね！」と乗っかってさらに広げる。\n\n一方で議論が細部の詰めに入ると集中力が落ちる。議事録を取るのは苦手。\n\n【ベストな会議の使い方】\n・ブレスト・アイデア出しの場にはマスト\n・キックオフミーティングのファシリテーターとして最適\n・詳細レビュー会議には必須でなければ参加不要"},{title:"💬 チャットでの傾向",content:"メッセージ量が多い。思いついたらすぐ送る。絵文字・リアクションを多用し、他の人の投稿にもよくリアクション。\n\n【周囲が知っておくと楽なこと】\n・重要な依頼はSlackだけでなく口頭でも確認する方が安全\n・「面白い！」のリアクションは「やります」の意味ではない\n・深夜にアイデアメモが飛んでくることがあるが返信は翌日でOK"},{title:"👔 上司として／部下として",content:"【上司として】\n自由にやらせてくれるリーダー。メンバーの強みを見つけるのが上手く活かすポジションに配置する。ビジョンを熱く語りチームのモチベーションを上げる。一方でマイクロマネジメントは一切しない（できない）。\n\n【部下として】\n自由を与えてもらうと120%の力を発揮する。「好きにやっていいよ」が最高の褒め言葉。管理型の上司とは相性が悪い。理由なきルールが最も苦手。"},{title:"🔥 モチベーション",content:"【🚀 上がる瞬間】\n・新しいプロジェクトのキックオフ\n・「前例がないけどやってみよう」と言われたとき\n・自分のアイデアが採用されたとき\n・チームメンバーが自分の言葉で動いてくれたとき\n\n【📉 下がる瞬間】\n・同じ作業の繰り返しが続くとき\n・アイデアを出しても全部却下されるとき\n・自由度のない環境に閉じ込められたとき\n・一つのことだけを延々とやらされるとき"},{title:"📝 フィードバック",content:"【受けるとき】\n感情で受け取る。ポジティブなFBにはすごく素直に喜ぶ。ネガティブなFBは最初感情的に落ち込むが、少し時間を置くと建設的に受け止められる。\n\n【伝えるとき】\n基本ポジティブなことを言うのが得意で褒め上手。厳しいFBを伝えるのは苦手で遠回しになりがち。"},{title:"✅ 得意・苦手タスク",content:"【🎯 得意】\n・アイデア出し・ブレスト\n・企画書の初期ドラフト\n・プレゼン・ピッチ\n・社外パートナーとの関係構築\n・ワークショップのファシリ\n・新規プロジェクト立ち上げ\n\n【😰 苦手】\n・定型フォーマットへの入力\n・数字の細かいチェック\n・長期間の単独作業\n・手順書の作成\n・予算管理"},{title:"📖 頼み方マニュアル",content:"【✅ こう頼むとうまくいく】\n・「面白い企画があるんだけど」→巻き込まれるのが好き\n・「自由にやってOK、方向性だけ合わせよう」→裁量をもらえると本気を出す\n・締切は明確に伝える→本人は楽観的に見積もるので\n\n【❌ パフォーマンスが落ちる】\n・「このフォーマット通りにやって」→自由度がないと窮屈\n・「細かく進捗報告して」→監視されている感覚に\n・理由を説明せずに「とにかくやって」→納得しないと動けない\n\n【💡 コツ】\n1. 最初に「Why」を共有する\n2. 自由と裁量を渡し、締切とチェックポイントは明確に\n3. 一人にしない。壁打ち相手をつける"},{title:"🎯 適職マップ",content:"【🏆 天職レベル】\n・新規事業開発 — 0→1を作りながら人を巻き込む\n・プロデューサー — 多方面のステークホルダーをまとめビジョンを形にする\n・コミュニティマネージャー — 外向×共感×攻めの三拍子\n\n【⭐ かなり合う】\n・ブランドマーケティング/PR\n・UXリサーチャー\n・組織開発/人事企画\n\n【💡 意外とハマる】\n・ソリューション営業\n・ファシリテーター\n\n【⚠️ 避けた方がいい】\n・定型的な経理・監査\n・品質検査・データ入力"},{title:"🤝 相性マップ",content:"【💎 最強の補完パートナー】\nISTJ-G-Dp「金庫番」 — 正反対だからこそ最強の補完。着火マンが広げたアイデアを金庫番が着実に形にする。\n\n【🔥 化学反応が起きるコンビ】\nENTJ-O-Dp「将軍」 — アイデアを戦略に落とし込む爆発力。\nENTP-O-Br「アイデアマン」 — アイデアの応酬が止まらない。\n\n【☀️ 居心地がいい仲間】\nENFP-O-Dp「伝道師」 — 同じ情熱を共有し自然体でいられる。\n\n【⚡ 未知の触発者】\nESTJ-G-Dp「頑固職人」 — 真逆の価値観が視野を広げる。"},{title:"🌈 プライベートの顔",content:"休日の予定を聞くと毎回違うことを言っている人。先週は「陶芸体験に行ってきた」、今週は「友達とフットサルした」。Googleカレンダーに空白の日が続くとソワソワする。\n\n友達は広く浅く…に見せかけて、実は一人ひとりとの関係をちゃんと大事にしている。お金の使い方は「体験」重視。「あの時行っておけばよかった」と後悔するのが一番嫌だから迷ったら行く。"}]},
+"ENFP-O-Dp":{name:"伝道師",character:"ナルト（NARUTO）",great:"キング牧師",color:"#D35400",summary:"「これだけは絶対に伝えたい」という一つのテーマに人生を賭ける情熱家。着火マンの広さを深さに変えたタイプ。一つの信念で人を動かす。",compatibility:{complement:[{code:"ISTJ-G-Br",name:"組織の記憶庫",desc:"情熱を記録と仕組みで持続させる。"},{code:"ISTJ-O-Dp",name:"任務遂行者",desc:"伝道師のビジョンを確実に遂行。"}],chemistry:[{code:"ENFJ-O-Dp",name:"恩師",desc:"使命感が共鳴し合う深い同盟。"},{code:"ENFP-O-Br",name:"着火マン",desc:"情熱を共有し自然体でいられる。"}],comfort:[{code:"ENFP-G-Dp",name:"共感屋",desc:"深い共感が共通。"},{code:"INFP-O-Dp",name:"理想主義者",desc:"理想への情熱。"}],catalyst:[{code:"ESTP-O-Br",name:"トラブルシューター",desc:"「動こう」が行動に火を。"},{code:"INTP-O-Br",name:"発明家",desc:"知的な刺激が情熱を進化させる。"}]},careers:{top:["社会起業家","布教型マーケター","教育改革者"],good:["NPOリーダー","トレーナー・講師","クリエイティブディレクター"],surprise:["政治家","ドキュメンタリー制作"],avoid:["定型事務","価値観に合わない営業"]},strengths:["一つのテーマへの没入","人を巻き込む情熱","深い共感力","使命感"],weaknesses:["マルチタスク","事務処理","客観性","興味外の仕事"],tips:{do:"「これを世界に広めてほしい」→使命感に火がつく。",dont:"「幅広くいろいろやって」→一つに集中してこそ。"},fullSections:[{title:"👤 この人はこんな人",content:"「これだけは絶対に伝えたい」というテーマに人生を賭ける情熱家。\n\n着火マンの広さを深さに変えたタイプ。一つの信念で人を動かす。話を聞いていると「自分もやりたくなる」と思わせる力がある。\n\n弱点は興味外の仕事へのモチベーションが極端に低いこと。"},{title:"💼 仕事の進め方",content:"【着手】使命に共感できれば即動く。【進行】一つのテーマに深く没入。人を巻き込みながら進める。【完了】「伝わったか」が基準。【1日】テーマに関わる時間が多いほど調子がいい。"},{title:"🗣️ 会議での振る舞い",content:"テーマに関する議論では圧倒的な熱量。人の心を動かすプレゼンが得意。\n【ベスト】ビジョン共有/キックオフ/外部への発信"},{title:"💬 チャットでの傾向",content:"テーマに関する発信は熱い長文。それ以外は少なめ。\n【知っておくと楽】情熱モードの長文は本気の証。事務連絡は別途リマインドを。"},{title:"👔 上司として／部下として",content:"【上司】使命感でチームを引きつける。一人ひとりの「なぜ」を大切にする。管理は弱い。\n【部下】使命を共有できる上司の下で最強。共有できないと沈黙。"},{title:"🔥 モチベーション",content:"【🚀】使命が前進した/人が動いてくれた/共感された/深い対話\n【📉】使命と無関係な仕事/事務処理/価値観の合わない環境"},{title:"📝 フィードバック",content:"【受ける】使命への共感がベースにあると受け入れやすい。【伝える】情熱を込めて。相手の可能性を引き出す。"},{title:"✅ 得意・苦手タスク",content:"【🎯】布教・発信/深い対話/ビジョン共有/人を巻き込む\n【😰】マルチタスク/事務処理/客観的分析/興味外の作業"},{title:"📖 頼み方マニュアル",content:"【✅】「これを世界に広めてほしい」→使命感に火がつく。\n【❌】「いろいろやって」→一つに集中してこそ。\n【💡】1.使命との接続を示す 2.深く没入する時間を 3.事務はサポート体制を"},{title:"🎯 適職マップ",content:"【🏆】社会起業家/布教型マーケター/教育改革者\n【⭐】NPOリーダー/トレーナー/クリエイティブディレクター\n【💡】政治家/ドキュメンタリー\n【⚠️】定型事務/価値観に合わない営業"},{title:"🤝 相性マップ",content:"【💎】ISTJ-G-Br「組織の記憶庫」。ISTJ-O-Dp「任務遂行者」。\n【🔥】ENFJ-O-Dp「恩師」。ENFP-O-Br「着火マン」。\n【☀️】ENFP-G-Dp「共感屋」。INFP-O-Dp「理想主義者」。\n【⚡】ESTP-O-Br「トラブルシューター」。"},{title:"🌈 プライベートの顔",content:"テーマに関連する本、映画、イベントに時間を使う。友達との会話も自然とテーマの話になりがち。「また始まった」と言われるが本人は楽しい。"}]},
+"ENFP-G-Br":{name:"ムードメーカー",character:"善逸（鬼滅の刃）",great:"ダイアナ妃",color:"#F0B27A",summary:"「みんなが楽しく過ごせるように」が行動原理。守り×広型で場の空気を温かくする天才。自分が目立つより周囲が笑顔になることが嬉しい。",compatibility:{complement:[{code:"ISTJ-O-Dp",name:"任務遂行者",desc:"温かさに鉄の意志が構造を。"},{code:"INTJ-O-Dp",name:"ラスボス",desc:"温かさと知性のバランス。"}],chemistry:[{code:"ESFJ-G-Br",name:"調和の達人",desc:"場の雰囲気が極上に。"},{code:"INFP-G-Br",name:"やさしさ担当",desc:"温かさ×想像力。"}],comfort:[{code:"ENFP-O-Br",name:"着火マン",desc:"楽しさ共通。"},{code:"ENFP-G-Dp",name:"共感屋",desc:"優しさ共通。"}],catalyst:[{code:"ENTJ-O-Br",name:"総司令",desc:"強い指揮力が方向を与える。"},{code:"ESTJ-O-Dp",name:"鬼教官",desc:"厳しさが優しさを鍛える。"}]},careers:{top:["チームビルディング担当","カスタマーサクセス","社内コミュニケーション担当"],good:["イベント企画","カウンセラー","広報"],surprise:["保育関連","ホスピタリティ"],avoid:["厳格な監査","一人の長時間データ作業"]},strengths:["場の空気を温める","誰にでも優しい","チームの心理的安全性","気配り"],weaknesses:["厳しい判断","自己主張","対立の処理","一人作業"],tips:{do:"「チームの雰囲気をよくしてほしい」→天性の力。",dont:"「もっと厳しく言って」→対立がストレス。"},fullSections:[{title:"👤 この人はこんな人",content:"「みんなが楽しく過ごせるように」が行動原理。場の空気を温かくする天才。\n\n新しいメンバーに真っ先に声をかけ、孤立しがちな人にも自然に話しかける。自分が目立つより周囲が笑顔になることが嬉しい。\n\n弱点は自分の意見を飲み込むこと。対立が苦手で問題を先送りすることがある。"},{title:"💼 仕事の進め方",content:"【着手】周囲の状況を確認してから。【進行】チームと協調しながら場の空気を見て進行。【完了】「みんなが満足しているか」。【1日】穏やかなリズム。人との交流で充電。"},{title:"🗣️ 会議での振る舞い",content:"場を和ませる存在。声の小さい人の意見を拾い上げる。\n【ベスト】チームビルディング/ブレストの場の温め/新メンバー歓迎"},{title:"💬 チャットでの傾向",content:"リアクション多め。ねぎらいと感謝の言葉。雑談チャンネルの盛り上げ役。\n【知っておくと楽】「何でもいいよ」は本心でないことがある。1on1で本音を。"},{title:"👔 上司として／部下として",content:"【上司】みんなに好かれるリーダー。心理的安全性が高い。厳しい判断が苦手。\n【部下】チームの空気を守る縁の下の力持ち。"},{title:"🔥 モチベーション",content:"【🚀】チームの雰囲気が良い/「いてくれて助かる」/新メンバーが馴染んだ\n【📉】チーム内の対立/孤立/攻撃的な環境"},{title:"📝 フィードバック",content:"【受ける】「いつもありがとう。ここをこうするともっと」が理想。【伝える】とても優しい。核心が伝わらないことも。"},{title:"✅ 得意・苦手タスク",content:"【🎯】場を温める/気配り/心理的安全性/包容力\n【😰】自己主張/厳しい判断/対立解決/一人作業"},{title:"📖 頼み方マニュアル",content:"【✅】「チームの雰囲気をよくして」「新メンバーの面倒を」。\n【❌】「強く言って」「一人で」。\n【💡】1.人関わりの多い仕事 2.貢献を見える化 3.厳しい場面は分担"},{title:"🎯 適職マップ",content:"【🏆】チームビルディング/カスタマーサクセス/社内コミュニケーション\n【⭐】イベント企画/カウンセラー/広報\n【💡】保育関連/ホスピタリティ\n【⚠️】厳格な監査/一人のデータ作業"},{title:"🤝 相性マップ",content:"【💎】ISTJ-O-Dp「任務遂行者」。INTJ-O-Dp「ラスボス」。\n【🔥】ESFJ-G-Br「調和の達人」。INFP-G-Br「やさしさ担当」。\n【☀️】ENFP-O-Br「着火マン」。ENFP-G-Dp「共感屋」。\n【⚡】ENTJ-O-Br「総司令」。"},{title:"🌈 プライベートの顔",content:"友達とカフェ、ショッピング、ホームパーティー。誕生日カードは手書き。友達が始めたことに付き合って始めることが多い。"}]},
+"ENFP-G-Dp":{name:"共感屋",character:"炭治郎（鬼滅の刃）",great:"アウンサンスーチー",color:"#EB984E",summary:"「あなたの気持ち、わかるよ」が自然に出る人。守り×深型で一人の人に深く寄り添う。静かだが温かい共感力で、この人と話すと不思議と楽になる。",compatibility:{complement:[{code:"ISTJ-O-Br",name:"ルール番人",desc:"共感に公正さが構造を。"},{code:"INTJ-G-Br",name:"黒幕参謀",desc:"温かさに知的な構造。"}],chemistry:[{code:"INFJ-G-Dp",name:"カウンセラー",desc:"深い共感同士。言葉が少なくても通じる。"},{code:"INFP-G-Dp",name:"詩人",desc:"深い共感。光の方へ導く。"}],comfort:[{code:"ENFP-G-Br",name:"ムードメーカー",desc:"優しさ共通。"},{code:"ENFP-O-Dp",name:"伝道師",desc:"深い共感。"}],catalyst:[{code:"ENTJ-O-Dp",name:"将軍",desc:"強い意志が共感だけの世界に方向を。"},{code:"ESTP-O-Dp",name:"エース",desc:"行動力が内向的な共感を外に。"}]},careers:{top:["臨床心理士","EAP（従業員支援）カウンセラー","コーチ"],good:["ソーシャルワーカー","パストラルケア","メンタリング担当"],surprise:["占い師","セラピスト"],avoid:["攻撃的な営業","ハイスピードのトレーディング"]},strengths:["深い共感","一人に寄り添う力","信頼構築","静かな温かさ"],weaknesses:["大人数対応","自己主張","ドライな判断","スピード"],tips:{do:"「この人に寄り添ってほしい」→一人に深く。静かな環境で。",dont:"「もっと多くの人を」→深い共感が生命線。"},fullSections:[{title:"👤 この人はこんな人",content:"「あなたの気持ち、わかるよ」が自然に出る人。一人に深く寄り添う。\n\nこの人と話すと不思議と楽になる。言葉にならない感情を汲み取る力がある。\n\n弱点は感情的に巻き込まれすぎること。自分と他人の境界が曖昧になることがある。"},{title:"💼 仕事の進め方",content:"【着手】人のニーズを感じ取ってから。【進行】一人に丁寧に向き合う。【完了】「相手が楽になったか」。【1日】穏やかなリズム。静かな環境でベスト。"},{title:"🗣️ 会議での振る舞い",content:"発言少なめ。でも「この人は何を感じているか」を一番わかっている。\n【ベスト】1on1/少人数の深い対話/メンバーケアの共有"},{title:"💬 チャットでの傾向",content:"個別DMでのケアが多い。温かく丁寧。全体への発信は少ない。\n【知っておくと楽】燃え尽きに注意。この人自身のケアも必要。"},{title:"👔 上司として／部下として",content:"【上司】メンバーの心理状態に最も敏感。安心できる環境を作る。大きな意思決定は苦手。\n【部下】信頼関係が築けた上司の下で最大の力を発揮。"},{title:"🔥 モチベーション",content:"【🚀】深い共感ができた/「楽になった」と言われた/信頼関係/静かな達成感\n【📉】大人数対応/ドライな判断を求められる/感情を無視する環境"},{title:"📝 フィードバック",content:"【受ける】信頼関係がベースにあると受け入れやすい。【伝える】相手の感情に寄り添いながら。"},{title:"✅ 得意・苦手タスク",content:"【🎯】深い共感/信頼構築/一人へのケア/心理的安全性\n【😰】大人数/自己主張/ドライな判断/スピード"},{title:"📖 頼み方マニュアル",content:"【✅】「この人に寄り添ってほしい」→一人に深く。\n【❌】「もっと多くの人を」→深い共感が命。\n【💡】1.一人に集中させる 2.燃え尽き防止 3.静かな環境"},{title:"🎯 適職マップ",content:"【🏆】臨床心理士/EAPカウンセラー/コーチ\n【⭐】ソーシャルワーカー/パストラルケア/メンタリング\n【💡】占い師/セラピスト\n【⚠️】攻撃的営業/ハイスピードトレーディング"},{title:"🤝 相性マップ",content:"【💎】ISTJ-O-Br「ルール番人」。INTJ-G-Br「黒幕参謀」。\n【🔥】INFJ-G-Dp「カウンセラー」。INFP-G-Dp「詩人」。\n【☀️】ENFP-G-Br「ムードメーカー」。ENFP-O-Dp「伝道師」。\n【⚡】ENTJ-O-Dp「将軍」。"},{title:"🌈 プライベートの顔",content:"親しい友人と深い対話をする時間が至福。大人数のパーティーより二人でカフェ。動物や自然に癒される。日記を書いている人が多い。"}]},
+"ENTP-O-Br":{name:"アイデアマン",character:"五条悟（呪術廻戦）",great:"エジソン",color:"#5DADE2",summary:"「それ、もっと面白くできない？」が口癖。既存の仕組みを分解して再構築するのが大好き。知的好奇心の塊で議論が大好物。",compatibility:{complement:[{code:"ISFJ-G-Dp",name:"守り神",desc:"アイデアを温かい仕組みに。"},{code:"ISFJ-G-Br",name:"屋台骨",desc:"発散を安定した運営に。"}],chemistry:[{code:"ENFP-O-Br",name:"着火マン",desc:"アイデアの応酬が止まらない。"},{code:"INTJ-O-Br",name:"軍師",desc:"知的好奇心が共通。最強の分析コンビ。"}],comfort:[{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"知的レベルが合う。"},{code:"ENTP-G-Br",name:"歩く百科事典",desc:"広い知識が共通。"}],catalyst:[{code:"ISFP-G-Dp",name:"癒し職人",desc:"感覚の深さが知性に新しい入力を。"},{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"温かさがドライさを補う。"}]},careers:{top:["戦略コンサルタント","起業家","R&Dディレクター"],good:["プロダクトマネージャー","弁護士","テクニカルアーキテクト"],surprise:["お笑い脚本家","ディベートコーチ"],avoid:["定型的なルーティン事務","感情ケア中心の仕事"]},strengths:["議論・ディベート","仕組みの分析と再構築","知的好奇心","多角的な問題解決"],weaknesses:["感情面のケア","完遂","ルーティン","空気を読む"],tips:{do:"「この仕組みを根本から見直してほしい」→知的好奇心に火がつく。",dont:"「今まで通りにやって」→退屈で死ぬ。"},fullSections:[{title:"👤 この人はこんな人",content:"「それ、もっと面白くできない？」が口癖。既存の仕組みを分解して再構築するのが大好き。\n\n知的好奇心の塊で議論が大好物。反論されると喜ぶ珍しいタイプ。「でもさ」「ちょっと待って、こう考えたら？」が止まらない。\n\n弱点は感情面のケアが苦手なこと。正論で人を傷つけることがある。"},{title:"💼 仕事の進め方",content:"【着手】既存の仕組みの「なぜ？」から入る。【進行】複数の可能性を同時に検討。議論しながら進める。【完了】「最適解か」が基準。完璧より面白さ。【1日】知的な刺激がある日が最高。"},{title:"🗣️ 会議での振る舞い",content:"議論の活性化剤。「そもそもこの前提は正しい？」と根本から問い直す。\n【ベスト】戦略議論/ブレスト/問題の構造化"},{title:"💬 チャットでの傾向",content:"長文の議論を突然始める。リンクや参考資料を大量に共有。「これ面白い」が口癖。\n【知っておくと楽】議論を吹っかけるのは敵意ではなく好奇心。事務連絡は別途。"},{title:"👔 上司として／部下として",content:"【上司】知的刺激に溢れる。メンバーの思考力を鍛える。管理は弱い。\n【部下】知的自由があれば最高のアイデアメーカー。退屈だと壊滅。"},{title:"🔥 モチベーション",content:"【🚀】仕組みを根本から変えた/知的な議論/新しい発見/「そういう視点はなかった」\n【📉】ルーティン/「前例通りにやれ」/感情論/知的退屈"},{title:"📝 フィードバック",content:"【受ける】論理的なFBは大歓迎。「ここの論理が甘い」が最高。【伝える】ストレートで論理的。冷たく感じることも。"},{title:"✅ 得意・苦手タスク",content:"【🎯】議論/仕組み分析/知的好奇心/多角的解決/ブレスト\n【😰】感情ケア/完遂/ルーティン/空気を読む"},{title:"📖 頼み方マニュアル",content:"【✅】「この仕組みを根本から見直して」→知的好奇心に火。\n【❌】「今まで通りにやって」→退屈で死ぬ。\n【💡】1.知的自由 2.議論の相手を 3.完遂はサポート"},{title:"🎯 適職マップ",content:"【🏆】戦略コンサル/起業家/R&Dディレクター\n【⭐】プロダクトマネージャー/弁護士/テクニカルアーキテクト\n【💡】お笑い脚本家/ディベートコーチ\n【⚠️】定型ルーティン/感情ケア中心"},{title:"🤝 相性マップ",content:"【💎】ISFJ-G-Dp「守り神」。ISFJ-G-Br「屋台骨」。\n【🔥】ENFP-O-Br「着火マン」。INTJ-O-Br「軍師」。\n【☀️】ENTP-O-Dp「常識クラッシャー」。ENTP-G-Br「歩く百科事典」。\n【⚡】ISFP-G-Dp「癒し職人」。"},{title:"🌈 プライベートの顔",content:"Wikipedia巡回が趣味。気づいたら3時間。友達との会話は知的な議論になりがち。新しいガジェットにすぐ飛びつく。"}]},
+"ENTP-O-Dp":{name:"常識クラッシャー",character:"夜神月（DEATH NOTE）",great:"スティーブ・ジョブズ",color:"#2E86C1",summary:"「常識？それ、誰が決めたの？」既存のルールを根本から壊して新しい秩序を作る人。一つのテーマに深くのめり込み、誰も思いつかない解を導く。",compatibility:{complement:[{code:"ISFJ-O-Dp",name:"守護者",desc:"破壊に献身が人間味を。"},{code:"ISFJ-O-Br",name:"献身サポーター",desc:"日常を支えてくれる。"}],chemistry:[{code:"INTJ-O-Dp",name:"ラスボス",desc:"知的レベルが同じ。議論が哲学の域。"},{code:"ENTP-O-Br",name:"アイデアマン",desc:"知的同盟。"}],comfort:[{code:"ENTP-G-Dp",name:"設計屋",desc:"深い設計思想。"},{code:"INTP-O-Dp",name:"研究者",desc:"深い探究。"}],catalyst:[{code:"ESFJ-O-Br",name:"総支配人",desc:"人間関係の力が孤高を補う。"},{code:"ENFJ-O-Br",name:"カリスマ委員長",desc:"人を動かす力が理論を社会に届ける。"}]},careers:{top:["破壊的イノベーター","ベンチャーCTO","知財戦略家"],good:["暗号技術者","ハッカー（ホワイトハット）","哲学者"],surprise:["風刺作家","異端の研究者"],avoid:["合意形成重視の組織","ルーティン事務"]},strengths:["既存の破壊と再構築","深い論理","常識を疑う力","一つへの没入"],weaknesses:["協調性","感情面","日常管理","完遂"],tips:{do:"「この常識を壊してほしい」→最高に燃える。",dont:"「みんなに合わせて」→協調は苦痛。"},fullSections:[{title:"👤 この人はこんな人",content:"既存のルールを根本から壊して新しい秩序を作る人。「なぜそうなっている？」を延々と問う。\n\n一つのテーマに深くのめり込み、誰も思いつかない解を導く。\n\n弱点は協調性。「正しいことを言っているのに何で理解されない？」と感じがち。"},{title:"💼 仕事の進め方",content:"【着手】既存の「おかしいところ」を見つけてから。【進行】一人で深く没入。必要に応じて巻き込む。【完了】「根本的に変わったか」。【1日】深夜型が多い。静かな時間に集中。"},{title:"🗣️ 会議での振る舞い",content:"「そもそもこの前提が間違ってる」と場を凍らせることがある。ただし的を射ている。\n【ベスト】戦略の根本見直し/イノベーション会議"},{title:"💬 チャットでの傾向",content:"突然長文の問題提起を投稿する。反応がないとさらに長文で追撃。\n【知っておくと楽】挑発的に見えても敵意はない。知的好奇心。"},{title:"👔 上司として／部下として",content:"【上司】知的に最高。ついていける人には刺激的。管理は壊滅。\n【部下】自由と知的環境があれば最強。管理されると反発。"},{title:"🔥 モチベーション",content:"【🚀】常識を壊した/根本的な解を見つけた/知的な議論/「そういう視点は」\n【📉】ルーティン/「前例通り」/知的退屈/協調を求められすぎ"},{title:"📝 フィードバック",content:"【受ける】論理的指摘は歓迎。「感情的にちょっと」は受け入れにくい。【伝える】容赦なく正確。"},{title:"✅ 得意・苦手タスク",content:"【🎯】破壊と再構築/深い論理/常識を疑う/一つへの没入\n【😰】協調/感情面/日常管理/完遂"},{title:"📖 頼み方マニュアル",content:"【✅】「この常識を壊して」→最高に燃える。\n【❌】「みんなに合わせて」→苦痛。\n【💡】1.知的自由 2.孤高を認める 3.完遂はサポート"},{title:"🎯 適職マップ",content:"【🏆】破壊的イノベーター/ベンチャーCTO/知財戦略家\n【⭐】暗号技術者/ホワイトハットハッカー/哲学者\n【💡】風刺作家/異端の研究者\n【⚠️】合意形成重視/ルーティン事務"},{title:"🤝 相性マップ",content:"【💎】ISFJ-O-Dp「守護者」。ISFJ-O-Br「献身サポーター」。\n【🔥】INTJ-O-Dp「ラスボス」。ENTP-O-Br「アイデアマン」。\n【☀️】ENTP-G-Dp「設計屋」。INTP-O-Dp「研究者」。\n【⚡】ESFJ-O-Br「総支配人」。"},{title:"🌈 プライベートの顔",content:"マイナーな分野の本を読む。友達に「そんなの誰が読むの」と言われるのが褒め言葉。夜中にひらめいてメモする。"}]},
+"ENTP-G-Br":{name:"歩く百科事典",character:"殺せんせー（暗殺教室）",great:"リチャード・ファインマン",color:"#85C1E9",summary:"「あ、それ知ってる。実はこういう背景があってね」が止まらない人。守り×広型で幅広い知識を持ち、人に教えるのが好き。知識の橋渡し役。",compatibility:{complement:[{code:"ISFP-O-Dp",name:"美の求道者",desc:"知識に感性の彩り。"},{code:"ISFP-O-Br",name:"美の探偵",desc:"知識に五感の視点。"}],chemistry:[{code:"INTP-G-Br",name:"教育者",desc:"知識の広さ共通。最高の知的対話。"},{code:"ENTP-O-Br",name:"アイデアマン",desc:"広い知識の応酬。"}],comfort:[{code:"ENTP-G-Dp",name:"設計屋",desc:"同じENTP-G。"},{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"知的好奇心。"}],catalyst:[{code:"ESFP-O-Dp",name:"パフォーマー",desc:"感覚の爆発が知識に新しい入力。"},{code:"ENFJ-O-Dp",name:"恩師",desc:"使命感が知識に方向を。"}]},careers:{top:["テクニカルコンサルタント","サイエンスコミュニケーター","ナレッジマネージャー"],good:["テクニカルライター","リサーチャー","教育プログラム設計"],surprise:["クイズ番組の常連","ポッドキャスター"],avoid:["感情中心のケア","単純な繰り返し作業"]},strengths:["幅広い知識","わかりやすい説明","知的好奇心","情報の橋渡し"],weaknesses:["深い専門性","感情面","行動のスピード","一つへの集中"],tips:{do:"「この複雑な話をわかりやすく説明してほしい」→知識の橋渡し力。",dont:"「余計なこと言わないで」→知識共有が生きがい。"},fullSections:[{title:"👤 この人はこんな人",content:"「あ、それ知ってる」が止まらない人。幅広い知識を持ち人に教えるのが好き。\n\n「他の分野ではこういうアプローチがある」と異分野の知見を持ち込む。\n\n弱点は一つの分野を深く極めるより広く知りたいタイプ。"},{title:"💼 仕事の進め方",content:"【着手】広く情報収集してから。【進行】知識を構造化して共有しながら。【完了】「わかりやすく伝えられたか」。【1日】インプットとアウトプットのバランスが大事。"},{title:"🗣️ 会議での振る舞い",content:"「他の分野ではこう」と異分野の知見を持ち込む。説明がわかりやすい。\n【ベスト】知識共有/異分野統合/教育設計"},{title:"💬 チャットでの傾向",content:"リンクや参考資料を大量に共有。「これ面白い」「こういう考え方もある」。\n【知っておくと楽】情報量が多いが悪気はない。必要なものだけ拾えばOK。"},{title:"👔 上司として／部下として",content:"【上司】教育者型。メンバーの知識レベルを上げる。管理は弱い。\n【部下】知識を活かせる仕事で最大の力。"},{title:"🔥 モチベーション",content:"【🚀】新しい知識/「わかった！」の反応/知識が役立った/知的対話\n【📉】知識を活かせない/知識軽視/単純作業/一人で閉じ込め"},{title:"📝 フィードバック",content:"【受ける】知的なFB歓迎。【伝える】「こう考えたらどう？」と問いかけ型。"},{title:"✅ 得意・苦手タスク",content:"【🎯】知識共有/説明/異分野統合/リサーチ\n【😰】深い専門性/感情面/スピード/一つに集中"},{title:"📖 頼み方マニュアル",content:"【✅】「わかりやすく説明して」→知識の橋渡し。\n【❌】「余計なこと言わないで」→知識共有が命。\n【💡】1.知識を活かす場 2.教育の機会 3.広さを認める"},{title:"🎯 適職マップ",content:"【🏆】テクニカルコンサル/サイエンスコミュニケーター/ナレッジマネージャー\n【⭐】テクニカルライター/リサーチャー/教育PG設計\n【💡】クイズ番組/ポッドキャスター\n【⚠️】感情中心ケア/単純繰り返し"},{title:"🤝 相性マップ",content:"【💎】ISFP-O-Dp「美の求道者」。ISFP-O-Br「美の探偵」。\n【🔥】INTP-G-Br「教育者」。ENTP-O-Br「アイデアマン」。\n【☀️】ENTP-G-Dp「設計屋」。ENTP-O-Dp「常識クラッシャー」。\n【⚡】ESFP-O-Dp「パフォーマー」。"},{title:"🌈 プライベートの顔",content:"本棚はジャンルバラバラ。最近のハマりものを嬉々として語る。友達との会話は情報交換会。博物館が好き。"}]},
+"ENTP-G-Dp":{name:"設計屋",character:"L（DEATH NOTE）",great:"アラン・チューリング",color:"#2471A3",summary:"「この仕組み、もっとエレガントにできる」が生きがい。守り×深型で一つの仕組みやシステムの設計に没入する。静かだが設計したものは芸術的。",compatibility:{complement:[{code:"ISFP-G-Br",name:"クラフト職人",desc:"設計に自然な温もりを。"},{code:"ISFP-G-Dp",name:"癒し職人",desc:"設計に人の温もりを。"}],chemistry:[{code:"INTJ-G-Dp",name:"設計狂",desc:"同じ設計者。芸術的精巧さ。"},{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"深い知的同盟。"}],comfort:[{code:"ENTP-G-Br",name:"歩く百科事典",desc:"同じENTP-G。"},{code:"INTP-G-Dp",name:"理論家",desc:"深い設計思想。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"自由な発想が設計に新しい入口を。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが設計だけの世界を開く。"}]},careers:{top:["システムアーキテクト","ゲームデザイナー","プロセス設計コンサルタント"],good:["DBエンジニア","UXデザイナー","組織設計"],surprise:["ボードゲームデザイナー","都市計画"],avoid:["対人サービス中心","即興のイベント運営"]},strengths:["仕組みの設計","エレガントな解法","深い没入","論理的構造化"],weaknesses:["スピード","社交","表舞台","変化対応"],tips:{do:"「この仕組みを設計してほしい」→没入する。",dont:"「適当でいいから早く」→エレガントさが命。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの仕組みの設計に没入する。「この構造、美しくない？」が本人の最高の褒め言葉。\n\n静かだが設計したものは芸術的な精巧さ。\n\n弱点はスピードと社交。完璧を求めすぎて遅くなる。"},{title:"💼 仕事の進め方",content:"【着手】全体構造を把握してから。【進行】一人で深く設計。【完了】「エレガントか」。【1日】静かな環境で集中。"},{title:"🗣️ 会議での振る舞い",content:"沈黙が多い。設計の議論では圧倒的。\n【ベスト】設計レビュー/アーキテクチャ議論"},{title:"💬 チャットでの傾向",content:"必要最小限。図やコードで語る。\n【知っておくと楽】沈黙は設計中。成果物で評価して。"},{title:"👔 上司として／部下として",content:"【上司】設計思想が美しい。管理は弱い。\n【部下】設計を任せると最高の成果物。"},{title:"🔥 モチベーション",content:"【🚀】美しい設計/エレガントな解法/没入/設計を理解された\n【📉】雑な仕組み/スピード優先/社交強制/浅い仕事"},{title:"📝 フィードバック",content:"【受ける】設計への論理的指摘歓迎。【伝える】構造的で論理的。"},{title:"✅ 得意・苦手タスク",content:"【🎯】仕組み設計/エレガントな解法/没入/構造化\n【😰】スピード/社交/表舞台/変化対応"},{title:"📖 頼み方マニュアル",content:"【✅】「仕組みを設計して」→没入。\n【❌】「適当に早く」→美しさが命。\n【💡】1.設計の自由 2.成果物で評価 3.時間を与える"},{title:"🎯 適職マップ",content:"【🏆】システムアーキテクト/ゲームデザイナー/プロセス設計コンサル\n【⭐】DBエンジニア/UXデザイナー/組織設計\n【💡】ボードゲームデザイナー/都市計画\n【⚠️】対人サービス/即興イベント"},{title:"🤝 相性マップ",content:"【💎】ISFP-G-Br「クラフト職人」。ISFP-G-Dp「癒し職人」。\n【🔥】INTJ-G-Dp「設計狂」。ENTP-O-Dp「常識クラッシャー」。\n【☀️】ENTP-G-Br「歩く百科事典」。INTP-G-Dp「理論家」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"個人プロジェクトが趣味。Webサービスやツールを作っては公開。部屋はモニター複数台。設計図を眺めるのが好き。"}]},
+"ESTP-O-Dp":{name:"エース",character:"ポートガス・D・エース（ONE PIECE）",great:"マイケル・ジョーダン",color:"#E74C3C",summary:"「ここ一番で決める」爆発力の持ち主。一つの目標に全エネルギーを注ぎ込み、圧倒的な成果を出す。普段は飄々としているが、スイッチが入ると止められない。",compatibility:{complement:[{code:"INFJ-G-Dp",name:"カウンセラー",desc:"爆発力に深い意味を与える。"},{code:"INFJ-G-Br",name:"語り部",desc:"エースの伝説を語り継ぐ。"}],chemistry:[{code:"ESTJ-O-Dp",name:"鬼教官",desc:"一点突破の実行力コンビ。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"現場力共通。攻めと万能。"}],comfort:[{code:"ESTP-G-Dp",name:"求道者",desc:"同じ深型。持続力と爆発力。"},{code:"ISTP-O-Dp",name:"一刀流の職人",desc:"一つを極める姿勢。"}],catalyst:[{code:"INFP-O-Br",name:"冒険作家",desc:"理想が勝利至上に問いを。"},{code:"ENFJ-G-Br",name:"守護霊",desc:"温かさが孤高に血を通わせる。"}]},careers:{top:["トップセールス","プロスポーツ選手","危機対応の司令塔"],good:["投資銀行のディールメーカー","救急医","特殊部隊"],surprise:["eスポーツ選手","オークショニア"],avoid:["ルーティン事務","長期的な基礎研究"]},strengths:["爆発的な実行力","ここ一番の集中力","度胸","現場での即時判断"],weaknesses:["持続的な努力","計画性","チームワーク","書類作業"],tips:{do:"「ここ一番を決めてほしい」→全エネルギーを注ぐ。",dont:"「コツコツやって」→爆発力型。持続は苦手。"},fullSections:[{title:"👤 この人はこんな人",content:"ここ一番で決める爆発力。普段は飄々としているがスイッチが入ると別人。\n\n「あいつに任せておけば最後は何とかなる」という信頼がある。\n\n弱点は持続的な努力と計画性。爆発力はあるが毎日コツコツは苦手。"},{title:"💼 仕事の進め方",content:"【着手】目標が見えたら即動く。【進行】一つの目標に全力。他は後回し。【完了】「勝ったか」が唯一の基準。【1日】テンション次第。高い日と低い日の差が激しい。"},{title:"🗣️ 会議での振る舞い",content:"「で、結局何をすればいい？」。行動に直結する議論を好む。\n【ベスト】作戦会議/短時間の意思決定/現場ブリーフィング"},{title:"💬 チャットでの傾向",content:"短い。「了解」「やる」「終わった」。結果報告は詳しい。\n【知っておくと楽】短い返信は信頼の表れ。「任せた」が響く。"},{title:"👔 上司として／部下として",content:"【上司】背中で見せる。結果を出す姿で人を引っ張る。管理は弱い。\n【部下】「ここ一番を決めてくれ」で120%の力。退屈な仕事は察してほしい。"},{title:"🔥 モチベーション",content:"【🚀】大きな勝負/ギリギリの状況/「お前しかいない」/圧倒的な結果\n【📉】ルーティン/スピードが遅い環境/結果が出ない/退屈"},{title:"📝 フィードバック",content:"【受ける】結果ベースのみ。「もっとこうすれば勝てる」は即採用。【伝える】ストレートで短い。"},{title:"✅ 得意・苦手タスク",content:"【🎯】ここ一番/爆発力/度胸/即時判断/クロージング\n【😰】持続/計画性/チームワーク/書類"},{title:"📖 頼み方マニュアル",content:"【✅】「ここ一番を決めて」→全エネルギー。「お前にしか頼めない」→燃える。\n【❌】「コツコツやって」→爆発型。「みんなと同じペースで」→合わない。\n【💡】1.明確な勝利条件 2.裁量を渡す 3.退屈な仕事は別の人に"},{title:"🎯 適職マップ",content:"【🏆】トップセールス/プロスポーツ選手/危機対応司令塔\n【⭐】ディールメーカー/救急医/特殊部隊\n【💡】eスポーツ/オークショニア\n【⚠️】ルーティン事務/基礎研究"},{title:"🤝 相性マップ",content:"【💎】INFJ-G-Dp「カウンセラー」。INFJ-G-Br「語り部」。\n【🔥】ESTJ-O-Dp「鬼教官」。ESTP-O-Br「トラブルシューター」。\n【☀️】ESTP-G-Dp「求道者」。ISTP-O-Dp「一刀流の職人」。\n【⚡】INFP-O-Br「冒険作家」。"},{title:"🌈 プライベートの顔",content:"勝負事が好き。スポーツ、格闘技、ポーカー。普段はのんびりしているが、勝負の場では目の色が変わる。友達は少ないが「こいつとなら」の信頼関係。"}]},
+"ENTJ-O-Br":{name:"総司令",character:"エルヴィン・スミス（進撃の巨人）",great:"ナポレオン",color:"#1A5276",summary:"「全体を見渡して最適な手を打つ」組織の頂点。複数の領域を同時に把握し、戦略を立てて実行まで持っていく。攻め×広型の指揮官。",compatibility:{complement:[{code:"ISFP-G-Dp",name:"癒し職人",desc:"冷徹な指揮に温もりを。"},{code:"INFP-G-Br",name:"やさしさ担当",desc:"戦略に人間味を。"}],chemistry:[{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"戦略と実行の最強両輪。"},{code:"ENTJ-O-Dp",name:"将軍",desc:"知的な同盟。"}],comfort:[{code:"ENTJ-G-Br",name:"参謀",desc:"堅実な裏方。"},{code:"ENTP-O-Br",name:"アイデアマン",desc:"知的好奇心。"}],catalyst:[{code:"INFP-O-Dp",name:"理想主義者",desc:"理想が戦略に問いを。"},{code:"ESFP-G-Dp",name:"ゴッドハンド",desc:"感覚が冷徹さに温度を。"}]},careers:{top:["CEO","経営コンサルタント","軍の戦略指揮官"],good:["投資銀行MD","政治家","事業再生の専門家"],surprise:["映画監督","オーケストラの指揮者"],avoid:["定型事務","単独の研究職"]},strengths:["全体俯瞰","戦略立案","複数領域の同時管理","決断力"],weaknesses:["感情面のケア","忍耐","細部","人に任せること"],tips:{do:"「全体を任せたい」→最大の力を発揮。権限と情報を。",dont:"「細かく報告して」→マイクロマネジメントは苦痛。"},fullSections:[{title:"👤 この人はこんな人",content:"組織の頂点で全体を見渡す指揮官。複数の領域を同時に把握し最適な手を打つ。\n\n「この人が決めたら間違いない」という信頼。決断が早く、実行力もある。\n\n弱点は人の感情に鈍いことと、全部自分でやりたがること。"},{title:"💼 仕事の進め方",content:"【着手】全体像を把握して戦略を立てる。【進行】複数領域を同時に管理。部下に指示を出しながら自分も動く。【完了】「目標を達成したか」。数字で振り返る。【1日】早朝から動く。朝に意思決定、午後に実行。"},{title:"🗣️ 会議での振る舞い",content:"場を支配する。「議題はこれ、結論を出す」と明確に仕切る。\n【ベスト】戦略会議/意思決定/キックオフ"},{title:"💬 チャットでの傾向",content:"短く明確。指示が多い。「これやって」「いつまで？」「結果は？」。\n【知っておくと楽】短いのは効率志向。感情的メッセージは苦手。"},{title:"👔 上司として／部下として",content:"【上司】明晰で決断力がある。結果で評価。感情面は弱い。\n【部下】上司を超えようとする。「自分の方がうまくやれる」と思いがち。"},{title:"🔥 モチベーション",content:"【🚀】大きな戦略が成功/組織が自分の指揮で動いている/決断が的中\n【📉】権限がない/非効率/感情論/自分より無能な上司"},{title:"📝 フィードバック",content:"【受ける】論理的で建設的なFBは歓迎。【伝える】ストレートで明快。容赦ない。"},{title:"✅ 得意・苦手タスク",content:"【🎯】全体俯瞰/戦略/複数管理/決断/実行\n【😰】感情ケア/忍耐/細部/人に任せる"},{title:"📖 頼み方マニュアル",content:"【✅】「全体を任せたい」→権限と情報を。\n【❌】「細かく報告して」→マイクロマネジメントは苦痛。\n【💡】1.権限を渡す 2.目標を明確に 3.感情面は別担当"},{title:"🎯 適職マップ",content:"【🏆】CEO/経営コンサル/戦略指揮官\n【⭐】投資銀行MD/政治家/事業再生\n【💡】映画監督/オーケストラ指揮者\n【⚠️】定型事務/単独研究"},{title:"🤝 相性マップ",content:"【💎】ISFP-G-Dp「癒し職人」。INFP-G-Br「やさしさ担当」。\n【🔥】ESTJ-O-Br「鬼軍曹」。ENTJ-O-Dp「将軍」。\n【☀️】ENTJ-G-Br「参謀」。ENTP-O-Br「アイデアマン」。\n【⚡】INFP-O-Dp「理想主義者」。"},{title:"🌈 プライベートの顔",content:"休日も戦略を考えている。ゴルフ、経営書、投資。「休む」が苦手。友達は少ないが信頼する相手とは深い絆。"}]},
+"ENTJ-O-Dp":{name:"将軍",character:"マダラ（NARUTO）",great:"アレクサンダー大王",color:"#0E3D5C",summary:"「全リソースをここに集中しろ」一つの目標に組織の全力を注ぎ込む。攻め×深型で圧倒的なカリスマと実行力を持つ。勝つためには手段を選ばない。",compatibility:{complement:[{code:"ISFP-G-Br",name:"クラフト職人",desc:"冷徹さに自然な温もり。"},{code:"INFP-G-Dp",name:"詩人",desc:"力に感性の奥行き。"}],chemistry:[{code:"ENTJ-O-Br",name:"総司令",desc:"知的同盟。"},{code:"ESTJ-O-Dp",name:"鬼教官",desc:"一点突破で全軍突進。"}],comfort:[{code:"ENTJ-G-Dp",name:"長期戦略家",desc:"深さ共通。"},{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"知的レベル。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"自由な発想が新しい可能性。"},{code:"ESFP-G-Br",name:"盛り上げ隊長",desc:"ユーモアが組織に血を通わせる。"}]},careers:{top:["創業CEO","軍の最高司令官","革命的な事業リーダー"],good:["ファンド代表","政党の党首","大型M&Aのリード"],surprise:["プロチームの監督","宗教の指導者"],avoid:["ルーティンの事務","合議制の多い組織"]},strengths:["圧倒的カリスマ","一点集中の組織動員","勝利への執念","大きな決断力"],weaknesses:["忍耐","部下の感情","撤退判断","多方面への配慮"],tips:{do:"「この戦いに勝ってほしい」→全軍で突進する。",dont:"「みんなの意見を聞いて」→合議は苦痛。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの目標に組織の全力を注ぎ込む。圧倒的なカリスマで人を引っ張る。\n\n「この人の下なら勝てる」と思わせる力。ただしついていけない人は容赦なく切る。\n\n弱点は部下の感情面と撤退判断。「負けを認める」が最も苦手。"},{title:"💼 仕事の進め方",content:"【着手】勝利のビジョンを描く。【進行】全リソースを集中。自分が先頭に立つ。【完了】「勝ったか」。部分的成功では満足しない。【1日】朝から晩まで。仕事が人生。"},{title:"🗣️ 会議での振る舞い",content:"方針を宣言する場。議論より決定。「これでいく。異論は？」。\n【ベスト】方針決定/大きな意思決定/士気を上げる全体会議"},{title:"💬 チャットでの傾向",content:"指示と確認。「やったか？」「結果は？」。\n【知っておくと楽】短い指示は信頼の表れ。結果で応えるのが最善。"},{title:"👔 上司として／部下として",content:"【上司】カリスマ型リーダー。勝利に導く。ただし厳しい。ついていけない人は去る。\n【部下】上司を超えることを常に考えている。忠誠よりも実力を尊重。"},{title:"🔥 モチベーション",content:"【🚀】大きな勝利/組織が自分で動いている/カリスマが認められた/圧倒的成果\n【📉】負け/権限なし/合議制/自分より弱い上司"},{title:"📝 フィードバック",content:"【受ける】実力のある人からのFBのみ受容。【伝える】結果で判断。容赦ない。"},{title:"✅ 得意・苦手タスク",content:"【🎯】カリスマ/一点集中/大きな決断/組織動員\n【😰】忍耐/感情ケア/撤退/多方面配慮"},{title:"📖 頼み方マニュアル",content:"【✅】「この戦いに勝ってほしい」→全力。\n【❌】「みんなの意見を聞いて」→合議は苦痛。\n【💡】1.大きな目標 2.全権を 3.勝利を認める"},{title:"🎯 適職マップ",content:"【🏆】創業CEO/最高司令官/革命的事業リーダー\n【⭐】ファンド代表/政党党首/M&Aリード\n【💡】プロチーム監督/宗教指導者\n【⚠️】ルーティン事務/合議制"},{title:"🤝 相性マップ",content:"【💎】ISFP-G-Br「クラフト職人」。INFP-G-Dp「詩人」。\n【🔥】ENTJ-O-Br「総司令」。ESTJ-O-Dp「鬼教官」。\n【☀️】ENTJ-G-Dp「長期戦略家」。ENTP-O-Dp「常識クラッシャー」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"仕事が趣味。休日も戦略を考えている。スポーツは勝負事。食事は効率重視。「弱い自分」を見せるのは極めて限られた相手だけ。"}]},
+"ENTJ-G-Br":{name:"参謀",character:"シカマル（NARUTO）",great:"諸葛亮",color:"#2C3E50",summary:"「裏で全部回してるの、実は自分」。守り×広型で組織を裏から支える参謀。表に出ないが、この人がいないと組織は崩壊する。堅実で緻密。",compatibility:{complement:[{code:"ESFP-O-Dp",name:"パフォーマー",desc:"緻密さに感覚の爆発が。"},{code:"INFP-O-Br",name:"冒険作家",desc:"堅実さに夢の彩り。"}],chemistry:[{code:"INTJ-G-Br",name:"黒幕参謀",desc:"堅実な知的同盟。"},{code:"ENTJ-O-Br",name:"総司令",desc:"表と裏の完璧な分業。"}],comfort:[{code:"ENTJ-G-Dp",name:"長期戦略家",desc:"堅実さ。"},{code:"ESTJ-G-Br",name:"なんでも屋",desc:"守りの広さ。"}],catalyst:[{code:"ENFP-O-Dp",name:"伝道師",desc:"情熱が堅実さに火を。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"即興力が計画に柔軟性を。"}]},careers:{top:["COO","経営企画部長","軍の参謀長"],good:["プロジェクト統括","リスク管理","経営管理"],surprise:["選挙参謀","チェスのコーチ"],avoid:["表舞台の営業","感覚重視のデザイン"]},strengths:["裏方の全体管理","堅実な戦略","リスク予測","緻密な計画"],weaknesses:["表舞台","革新的発想","感情面","リスクを取る勇気"],tips:{do:"「裏で全部回してほしい」→本領発揮。情報と権限を。",dont:"「もっと目立って」→裏方こそ最高。"},fullSections:[{title:"👤 この人はこんな人",content:"表に出ないが組織を裏から支える参謀。「この人がいないと回らない」。\n\n堅実で緻密。リスクを先回りして潰す。\n\n弱点は表舞台と革新的発想。守りに長けるが攻めは苦手。"},{title:"💼 仕事の進め方",content:"【着手】全体像を把握して計画。【進行】裏で緻密に管理。リスクを先手で潰す。【完了】「全体が安定しているか」。【1日】規則正しく効率的。"},{title:"🗣️ 会議での振る舞い",content:"発言は少ないが的確。「ここにリスクがある」と誰も気づかない点を指摘。\n【ベスト】リスクレビュー/実行計画の精査"},{title:"💬 チャットでの傾向",content:"簡潔で正確。データを添付。\n【知っておくと楽】短いのは効率志向。データで語ると話が早い。"},{title:"👔 上司として／部下として",content:"【上司】管理が緻密。ただし革新的ビジョンは弱い。\n【部下】裏方の参謀として最強。表に出す必要はない。"},{title:"🔥 モチベーション",content:"【🚀】全体が安定稼働/リスクを未然に防いだ/裏方で貢献/データで証明\n【📉】表舞台強制/非効率/感情論/データなしの判断"},{title:"📝 フィードバック",content:"【受ける】データベースのFB歓迎。【伝える】冷静で構造的。"},{title:"✅ 得意・苦手タスク",content:"【🎯】裏方管理/堅実な戦略/リスク予測/緻密な計画\n【😰】表舞台/革新/感情面/リスクを取る"},{title:"📖 頼み方マニュアル",content:"【✅】「裏で回してほしい」→情報と権限。\n【❌】「目立って」→裏方こそ価値。\n【💡】1.裏方の権限 2.情報アクセス 3.堅実さで評価"},{title:"🎯 適職マップ",content:"【🏆】COO/経営企画部長/参謀長\n【⭐】PJ統括/リスク管理/経営管理\n【💡】選挙参謀/チェスコーチ\n【⚠️】表舞台営業/感覚デザイン"},{title:"🤝 相性マップ",content:"【💎】ESFP-O-Dp「パフォーマー」。INFP-O-Br「冒険作家」。\n【🔥】INTJ-G-Br「黒幕参謀」。ENTJ-O-Br「総司令」。\n【☀️】ENTJ-G-Dp「長期戦略家」。ESTJ-G-Br「なんでも屋」。\n【⚡】ENFP-O-Dp「伝道師」。"},{title:"🌈 プライベートの顔",content:"効率的な生活。ボードゲーム、将棋、データ分析が趣味。旅行は計画的。無駄を嫌う。"}]},
+"ENTJ-G-Dp":{name:"長期戦略家",character:"痣バン（BLEACH）",great:"ビスマルク",color:"#1B2631",summary:"「10年後を見据えて今を設計する」超長期視点の戦略家。守り×深型で一つの組織や計画に深くコミットし、数十年単位で考える。重厚で変わらない。",compatibility:{complement:[{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"重厚さに楽しさが。"},{code:"INFP-O-Dp",name:"理想主義者",desc:"戦略に理想の炎を。"}],chemistry:[{code:"INTJ-G-Dp",name:"設計狂",desc:"重厚な設計思想の同志。"},{code:"ESTJ-G-Dp",name:"頑固職人",desc:"堅実に極める姿勢。"}],comfort:[{code:"ENTJ-G-Br",name:"参謀",desc:"堅実さ。"},{code:"ISTJ-G-Dp",name:"金庫番",desc:"寡黙な長期視点。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"短期の楽しさが長期計画に新鮮さ。"},{code:"ESTP-O-Dp",name:"エース",desc:"爆発力が重厚さを加速。"}]},careers:{top:["長期経営計画の責任者","財団の理事長","インフラ事業の統括"],good:["年金基金運用","都市計画","大学の学長"],surprise:["寺院の住職","ワイナリーのオーナー"],avoid:["短期トレーディング","毎週変わるスタートアップ"]},strengths:["超長期視点","重厚な戦略","一つへの深いコミット","変わらない信頼"],weaknesses:["スピード","柔軟性","短期的な変化","感情面"],tips:{do:"「10年後を見据えて設計してほしい」→本領。",dont:"「今すぐ結果を」→長期で考える人。"},fullSections:[{title:"👤 この人はこんな人",content:"10年後、20年後を見据えて今を設計する超長期視点の戦略家。\n\n重厚で変わらない。「この人が言うなら間違いない」という安定感。\n\n弱点はスピードと柔軟性。短期の変化に弱い。"},{title:"💼 仕事の進め方",content:"【着手】長期的な全体像を描いてから。【進行】ゆっくり確実に。短期的な揺れに動じない。【完了】「10年後に正しいか」。【1日】規則正しく重厚。"},{title:"🗣️ 会議での振る舞い",content:"発言は少ないが重い。「長期的に見ると」が口癖。\n【ベスト】長期戦略/中期計画のレビュー"},{title:"💬 チャットでの傾向",content:"少なめ。返信もゆっくり。ただし一言の重みが違う。\n【知っておくと楽】遅いのは慎重さ。急かさない。"},{title:"👔 上司として／部下として",content:"【上司】長期的な安定感。メンバーに安心を。短期的な判断は弱い。\n【部下】長期プロジェクトを任せると最高。"},{title:"🔥 モチベーション",content:"【🚀】長期計画が実を結んだ/10年越しの成果/組織が安定/信頼\n【📉】短期的な方針転換/朝令暮改/スピード要求/長期計画を軽視"},{title:"📝 フィードバック",content:"【受ける】長期的視点のFB歓迎。【伝える】重厚で的確。"},{title:"✅ 得意・苦手タスク",content:"【🎯】長期戦略/重厚な設計/深いコミット/安定\n【😰】スピード/柔軟性/短期変化/感情面"},{title:"📖 頼み方マニュアル",content:"【✅】「10年後を見据えて」→本領発揮。\n【❌】「今すぐ結果を」→長期型。\n【💡】1.長期視点で任せる 2.急かさない 3.重厚さを認める"},{title:"🎯 適職マップ",content:"【🏆】長期経営計画/財団理事長/インフラ統括\n【⭐】年金基金/都市計画/学長\n【💡】住職/ワイナリーオーナー\n【⚠️】短期トレーディング/毎週変わるスタートアップ"},{title:"🤝 相性マップ",content:"【💎】ESFP-O-Br「お祭り総隊長」。INFP-O-Dp「理想主義者」。\n【🔥】INTJ-G-Dp「設計狂」。ESTJ-G-Dp「頑固職人」。\n【☀️】ENTJ-G-Br「参謀」。ISTJ-G-Dp「金庫番」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"同じ趣味を長く。ワイン、盆栽、囲碁。変わらない日常を好む。少数の深い友人と年に数回。"}]},
+"ENFJ-O-Br":{name:"カリスマ委員長",character:"オールマイト（僕のヒーローアカデミア）",great:"オバマ",color:"#F39C12",summary:"「みんなを巻き込んで、もっといい場所にする」。攻め×広型で人を動かすビジョナリー。話すだけで人が「ついていきたい」と思う天性のカリスマ。",compatibility:{complement:[{code:"ISTP-O-Dp",name:"一刀流の職人",desc:"カリスマに寡黙な実力が重みを。"},{code:"ISTP-G-Dp",name:"専属オペレーター",desc:"ビジョンに職人的な深さを。"}],chemistry:[{code:"ENFP-O-Br",name:"着火マン",desc:"ビジョン×アイデアで場が盛り上がる。"},{code:"ENTJ-O-Br",name:"総司令",desc:"人を動かす力と戦略の最強タッグ。"}],comfort:[{code:"ENFJ-O-Dp",name:"恩師",desc:"同じENFJ-O。使命感。"},{code:"ENFJ-G-Br",name:"守護霊",desc:"同じENFJ-Br。温かさ。"}],catalyst:[{code:"INTP-O-Dp",name:"研究者",desc:"知性がカリスマに深みを。"},{code:"ISTP-O-Br",name:"現場の万能技師",desc:"技術がビジョンを現実に。"}]},careers:{top:["スタートアップCEO","政治家","教育のリーダー"],good:["人事責任者","ブランドディレクター","NGOリーダー"],surprise:["牧師・宗教指導者","TED級のスピーカー"],avoid:["一人のデータ分析","バックオフィスのルーティン"]},strengths:["人を動かすカリスマ","ビジョンの発信","チームのモチベーション","広い人脈"],weaknesses:["一人の地味な作業","厳しい判断","自分のケア","数字の管理"],tips:{do:"「人を巻き込んで変えてほしい」→カリスマ全開。",dont:"「一人で黙々とやって」→人といてこそ。"},fullSections:[{title:"👤 この人はこんな人",content:"話すだけで人が「ついていきたい」と思うカリスマ。ビジョンを語ると人が集まる。\n\n人の強みを見つけて引き出すのが天才的に上手い。\n\n弱点は自分のケアの後回しと、嫌われることへの恐怖。"},{title:"💼 仕事の進め方",content:"【着手】ビジョンを語って人を集める。【進行】チームを巻き込みながら。一人ひとりの役割を明確に。【完了】「みんなが成長できたか」。【1日】人との交流が多い日が好調。"},{title:"🗣️ 会議での振る舞い",content:"場を引っ張る。ビジョンを語り、メンバーの意見を引き出す。\n【ベスト】キックオフ/ビジョン共有/チームビルディング"},{title:"💬 チャットでの傾向",content:"メッセージは温かく励ます内容。個別DMでのケアも多い。\n【知っておくと楽】本人が疲れていても「大丈夫」と言いがち。"},{title:"👔 上司として／部下として",content:"【上司】カリスマ型。メンバーの成長を心から喜ぶ。ただし厳しい判断は苦手。\n【部下】ビジョンに共感すれば驚異的な力を発揮。"},{title:"🔥 モチベーション",content:"【🚀】ビジョンが前進/人が動いてくれた/メンバーの成長/感謝された\n【📉】ビジョンを否定/孤立/人が離れていく/嫌われた"},{title:"📝 フィードバック",content:"【受ける】人格を認めた上でのFBは受容。【伝える】温かく、相手の強みに焦点。"},{title:"✅ 得意・苦手タスク",content:"【🎯】ビジョン発信/人を動かす/チームのモチベ/人脈構築\n【😰】一人作業/厳しい判断/自分のケア/数字管理"},{title:"📖 頼み方マニュアル",content:"【✅】「人を巻き込んで変えてほしい」→カリスマ全開。\n【❌】「一人で黙々と」→人といてこそ。\n【💡】1.ビジョンを共有 2.人と関わる仕事 3.カリスマを認める"},{title:"🎯 適職マップ",content:"【🏆】スタートアップCEO/政治家/教育リーダー\n【⭐】人事責任者/ブランドディレクター/NGOリーダー\n【💡】宗教指導者/TEDスピーカー\n【⚠️】一人のデータ分析/バックオフィスルーティン"},{title:"🤝 相性マップ",content:"【💎】ISTP-O-Dp「一刀流の職人」。ISTP-G-Dp「専属オペレーター」。\n【🔥】ENFP-O-Br「着火マン」。ENTJ-O-Br「総司令」。\n【☀️】ENFJ-O-Dp「恩師」。ENFJ-G-Br「守護霊」。\n【⚡】INTP-O-Dp「研究者」。"},{title:"🌈 プライベートの顔",content:"人と過ごすことが充電。友達が多く週末は予定ぎっしり。人の相談に乗ることが多い。自分のケアは後回しになりがち。"}]},
+"ENFJ-O-Dp":{name:"恩師",character:"煉獄杏寿郎（鬼滅の刃）",great:"マザー・テレサ",color:"#D4AC0D",summary:"「この使命のためなら、全てを捧げる」。攻め×深型で一つの使命に人生を賭ける。人を育てることに命をかけ、弟子は一生忘れない。",compatibility:{complement:[{code:"ISTP-G-Br",name:"修理屋",desc:"使命を現場で支える。"},{code:"ISTJ-O-Dp",name:"任務遂行者",desc:"使命を確実に遂行。"}],chemistry:[{code:"ENFP-O-Dp",name:"伝道師",desc:"使命感が共鳴。"},{code:"INFJ-O-Dp",name:"真理の探究者",desc:"深い使命同士。"}],comfort:[{code:"ENFJ-O-Br",name:"カリスマ委員長",desc:"同じENFJ-O。"},{code:"ENFJ-G-Dp",name:"寮長",desc:"深いケア。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"「他の方法も」が使命を進化。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"行動力が使命を現実に。"}]},careers:{top:["人生を変える教師","道場の師範","使命型NPOリーダー"],good:["メンター","臨床心理士","宗教指導者"],surprise:["ドキュメンタリー制作","ホスピス"],avoid:["短期利益追求","価値観に反する仕事"]},strengths:["人を育てる力","揺るがない使命感","深い愛情","弟子との信頼関係"],weaknesses:["自分のケア","客観性","視野の広さ","使命以外への関心"],tips:{do:"「この人たちを育ててほしい」→命をかける。",dont:"「もっと広くいろいろ」→深さが命。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの使命に人生を賭ける。人を育てることに命をかけ、弟子は一生忘れない。\n\n「この人に出会えてよかった」と言われることが最高の報酬。\n\n弱点は自分のケアの後回しと使命への過剰な没入。"},{title:"💼 仕事の進め方",content:"【着手】使命が明確になったら全力。【進行】一人ひとりに深く向き合う。【完了】「この人が成長したか」。【1日】朝から夜まで。弟子のために時間を惜しまない。"},{title:"🗣️ 会議での振る舞い",content:"使命に関する議論では圧倒的な熱量。人の心を動かすスピーチ。\n【ベスト】使命の共有/人材育成の議論"},{title:"💬 チャットでの傾向",content:"個別のメンタリングDMが多い。全体には使命の発信。\n【知っておくと楽】燃え尽きに注意。本人は「大丈夫」と言う。"},{title:"👔 上司として／部下として",content:"【上司】弟子を育てる師匠。深い信頼関係。管理は弱い。\n【部下】使命に共感できれば命がけ。共感できないと沈黙。"},{title:"🔥 モチベーション",content:"【🚀】弟子の成長/使命の前進/「あなたのおかげ」/深い対話\n【📉】使命を否定/人が離れる/自分のケアなし/浅い仕事"},{title:"📝 フィードバック",content:"【受ける】使命を認めた上で。【伝える】愛情深く、時に厳しく。"},{title:"✅ 得意・苦手タスク",content:"【🎯】人を育てる/使命感/深い愛情/信頼構築\n【😰】自分のケア/客観性/視野の広さ/使命外"},{title:"📖 頼み方マニュアル",content:"【✅】「この人たちを育てて」→命をかける。\n【❌】「広くいろいろ」→深さが命。\n【💡】1.使命を共有 2.燃え尽き防止 3.献身を認める"},{title:"🎯 適職マップ",content:"【🏆】人生を変える教師/道場師範/使命型NPO\n【⭐】メンター/臨床心理士/宗教指導者\n【💡】ドキュメンタリー/ホスピス\n【⚠️】短期利益追求/価値観に反する仕事"},{title:"🤝 相性マップ",content:"【💎】ISTP-G-Br「修理屋」。ISTJ-O-Dp「任務遂行者」。\n【🔥】ENFP-O-Dp「伝道師」。INFJ-O-Dp「真理の探究者」。\n【☀️】ENFJ-O-Br「カリスマ委員長」。ENFJ-G-Dp「寮長」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"弟子との時間が中心。休日も相談に乗る。自分の時間は少ないが、それが幸せ。古い写真を大切に。"}]},
+"ENFJ-G-Br":{name:"守護霊",character:"マキマ（チェンソーマン）",great:"アウンサンスーチー",color:"#F7DC6F",summary:"「チームのみんなが安心して働けるように」。守り×広型でチーム全員をケアする。自分が目立つより、みんなが輝く環境を作る。",compatibility:{complement:[{code:"ISTP-O-Br",name:"現場の万能技師",desc:"温かさに技術の実行力。"},{code:"INTP-O-Br",name:"発明家",desc:"ケアに知的な構造。"}],chemistry:[{code:"ESFJ-G-Br",name:"調和の達人",desc:"心理的安全性が最高に。"},{code:"ISFJ-G-Br",name:"屋台骨",desc:"守りの温かさ最強チーム。"}],comfort:[{code:"ENFJ-O-Br",name:"カリスマ委員長",desc:"温かさ。"},{code:"ENFJ-G-Dp",name:"寮長",desc:"守り。"}],catalyst:[{code:"ENTJ-O-Dp",name:"将軍",desc:"強い指揮が守りに方向を。"},{code:"ESTP-O-Dp",name:"エース",desc:"行動力が慎重さの背中を押す。"}]},careers:{top:["人事（エンゲージメント）","チームリーダー（ケア型）","学校の副校長"],good:["カスタマーサクセス","福利厚生担当","メンタルヘルス推進"],surprise:["コミュニティマネージャー","ホスピタリティ"],avoid:["攻撃的な競争環境","一人の長時間分析"]},strengths:["チーム全員のケア","心理的安全性","場の空気づくり","信頼関係"],weaknesses:["自己主張","厳しい判断","ドライな決定","自分のケア"],tips:{do:"「チームをケアしてほしい」→天職。",dont:"「もっと厳しくして」→ケアの人。"},fullSections:[{title:"👤 この人はこんな人",content:"チーム全員をケアする守護霊のような存在。誰が疲れているか、誰が悩んでいるかを真っ先に察知する。\n\n自分が目立つよりみんなが輝く環境を作ることに喜びを感じる。\n\n弱点は自分の意見を飲み込むことと、厳しい判断が苦手なこと。"},{title:"💼 仕事の進め方",content:"【着手】チームの状態を確認してから。【進行】メンバーのケアをしながら。【完了】「みんなが安心して働けたか」。【1日】穏やかで人との交流が多い日が好調。"},{title:"🗣️ 会議での振る舞い",content:"場を和ませる。声の小さい人の意見を拾う。険悪なムードを和らげる。\n【ベスト】チームビルディング/振り返り/新メンバー歓迎"},{title:"💬 チャットでの傾向",content:"温かいメッセージ。ねぎらいと感謝が多い。個別DMでのケアも。\n【知っておくと楽】本人が疲れていても「大丈夫」。周囲がケアを。"},{title:"👔 上司として／部下として",content:"【上司】チームが安心できる環境を作る。厳しい判断は弱い。\n【部下】チームの心理的安全性を守る縁の下。"},{title:"🔥 モチベーション",content:"【🚀】チームが安心/「いてくれて助かる」/メンバーの成長/穏やかな環境\n【📉】チーム内対立/攻撃的な環境/孤立/ケアが報われない"},{title:"📝 フィードバック",content:"【受ける】「いつもありがとう」が前提にあると。【伝える】温かく配慮深い。"},{title:"✅ 得意・苦手タスク",content:"【🎯】チームケア/心理的安全性/空気づくり/信頼関係\n【😰】自己主張/厳しい判断/ドライな決定/一人作業"},{title:"📖 頼み方マニュアル",content:"【✅】「チームをケアしてほしい」→天職。\n【❌】「厳しくして」→ケアの人。\n【💡】1.人と関わる仕事 2.ケアを認める 3.厳しい場面は分担"},{title:"🎯 適職マップ",content:"【🏆】人事（エンゲージメント）/ケア型リーダー/副校長\n【⭐】カスタマーサクセス/福利厚生/メンタルヘルス\n【💡】コミュニティ/ホスピタリティ\n【⚠️】攻撃的競争/一人の長時間分析"},{title:"🤝 相性マップ",content:"【💎】ISTP-O-Br「現場の万能技師」。INTP-O-Br「発明家」。\n【🔥】ESFJ-G-Br「調和の達人」。ISFJ-G-Br「屋台骨」。\n【☀️】ENFJ-O-Br「カリスマ委員長」。ENFJ-G-Dp「寮長」。\n【⚡】ENTJ-O-Dp「将軍」。"},{title:"🌈 プライベートの顔",content:"友達や家族と過ごす時間が充電。季節のイベントを大切に。人の相談に乗ることが多い。一人の時間も必要だが長くは無理。"}]},
+"ENFJ-G-Dp":{name:"寮長",character:"マキマ（チェンソーマン）",great:"ヘレン・ケラー",color:"#D4AC0D",summary:"「この場所を、この人たちを、ずっと守り続ける」。守り×深型で一つの場所やコミュニティに深くコミットし、メンバー一人ひとりの成長を見守る。",compatibility:{complement:[{code:"ISTP-O-Dp",name:"一刀流の職人",desc:"温かさに寡黙な実行力。"},{code:"INTP-G-Dp",name:"理論家",desc:"温かさに深い知性。"}],chemistry:[{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"守りの深い愛情が共鳴。"},{code:"ISFJ-G-Dp",name:"守り神",desc:"ケアの心が完全一致。"}],comfort:[{code:"ENFJ-G-Br",name:"守護霊",desc:"守りの温かさ。"},{code:"ENFJ-O-Dp",name:"恩師",desc:"深いケア。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"新しい発想が閉じた世界を開く。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが真面目を解放。"}]},careers:{top:["寮や施設の長","長期メンタリングプログラムの運営","児童養護施設の管理者"],good:["学校の担任（長期）","介護施設のリーダー","コミュニティの運営"],surprise:["修道院の長","農業コミュニティの代表"],avoid:["短期プロジェクトの連続","ドライな効率追求"]},strengths:["一つの場への深いコミット","メンバー一人ひとりのケア","長期的な信頼関係","安心感の提供"],weaknesses:["変化への対応","外部との接点","自己主張","新しい環境"],tips:{do:"「この場所を長く守ってほしい」→天職。安定と敬意を。",dont:"「もっと外に出て」→深いケアが命。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの場所に深くコミットし、メンバーの成長を長年にわたって見守る。\n\n「ここにいれば安心」と思わせる存在。20年同じ場所にいることに全く抵抗がない。\n\n弱点は変化への対応と外部との接点。"},{title:"💼 仕事の進め方",content:"【着手】場の状態を丁寧に確認してから。【進行】毎日のルーティンを大切に。一人ひとりに目配り。【完了】「みんなが安心しているか」。【1日】規則正しく穏やか。"},{title:"🗣️ 会議での振る舞い",content:"メンバーのことを一番知っている。「〇〇さんは最近こういう状況」。\n【ベスト】メンバーケアの共有/長期計画/運用改善"},{title:"💬 チャットでの傾向",content:"個別の丁寧なケア連絡。全体への発信は少ない。\n【知っておくと楽】変化の際は丁寧な説明を。「いつもありがとう」が力に。"},{title:"👔 上司として／部下として",content:"【上司】安心感のあるリーダー。メンバーが成長できる。外部交渉は弱い。\n【部下】長く同じ場所で力を発揮。信頼関係に時間をかける。"},{title:"🔥 モチベーション",content:"【🚀】メンバーの成長/「あなたのおかげ」/場の安定/長年の信頼\n【📉】急な変化/長年のものが壊される/当たり前扱い/外部露出"},{title:"📝 フィードバック",content:"【受ける】「いつも見ています」が前提。【伝える】丁寧で温かい。時間をかけて。"},{title:"✅ 得意・苦手タスク",content:"【🎯】場への深いコミット/個別ケア/長期信頼/安心感\n【😰】変化/外部接点/自己主張/新環境"},{title:"📖 頼み方マニュアル",content:"【✅】「長く守ってほしい」→天職。安定と敬意を。\n【❌】「外に出て」「もっと広く」→深いケアが命。\n【💡】1.安定を保証 2.長年を認める 3.変化は小さなステップ"},{title:"🎯 適職マップ",content:"【🏆】寮・施設の長/メンタリングPG運営/児童養護管理\n【⭐】長期担任/介護リーダー/コミュニティ運営\n【💡】修道院/農業コミュニティ\n【⚠️】短期PJの連続/ドライな効率追求"},{title:"🤝 相性マップ",content:"【💎】ISTP-O-Dp「一刀流の職人」。INTP-G-Dp「理論家」。\n【🔥】ESFJ-G-Dp「ベテラン寮長」。ISFJ-G-Dp「守り神」。\n【☀️】ENFJ-G-Br「守護霊」。ENFJ-O-Dp「恩師」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"家族やコミュニティとの時間。季節の行事を丁寧に。写真を大切に。変わらない日常が幸せ。"}]},
+"ESTJ-O-Br":{name:"鬼軍曹",character:"赤犬サカズキ（ONE PIECE）",great:"ジュリアス・シーザー",color:"#922B21",summary:"「勝つために必要なことを全てやる」リーダー。広い視野と攻めの姿勢で複数戦線を同時管理。ルールと成果を重視し妥協を許さない。",compatibility:{complement:[{code:"INFP-G-Dp",name:"詩人",desc:"厳格さに感受性が人間味を。"},{code:"INFJ-G-Br",name:"語り部",desc:"語りの力が組織に魂を。"}],chemistry:[{code:"ENTJ-O-Br",name:"総司令",desc:"戦略と実行の最強両輪。"},{code:"ESTP-O-Dp",name:"エース",desc:"最前線と司令部。"}],comfort:[{code:"ESTJ-O-Dp",name:"鬼教官",desc:"実行力の根本同じ。"},{code:"ESTJ-G-Br",name:"なんでも屋",desc:"万能さ共通。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"自由な発想が新風。"},{code:"INFP-O-Br",name:"冒険作家",desc:"夢見る力が視野を広げる。"}]},careers:{top:["COO・事業部長","軍の指揮官","大規模PJのPM"],good:["経営コンサル（実行系）","法務部長","サプライチェーン責任者"],surprise:["プロスポーツ監督","大規模イベントディレクター"],avoid:["自由放任クリエイティブ","感情ケア中心カウンセリング"]},strengths:["複数戦線の同時管理","ルールと仕組み構築","迅速な意思決定","大規模組織運営"],weaknesses:["メンバーの感情ケア","柔軟な方向転換","クリエイティブ発想","曖昧な状況"],tips:{do:"「大規模PJを仕切って」→権限と明確な数値目標を。",dont:"「みんなの気持ちを大事に」→成果で判断する人。"},fullSections:[{title:"👤 この人はこんな人",content:"「勝つために必要なことを全てやる」リーダー。\n\n広い視野と攻めの姿勢で複数戦線を同時管理。「誰が」「いつまでに」「何を」を明確にしないと気が済まない。厳しいが公正。\n\n弱点は人の感情に鈍いこと。チームの離職率が高くなるのはケア不足のため。"},{title:"💼 仕事の進め方",content:"【着手】目標を数値化し計画。【進行】計画に沿い着実に。複数PJ並行管理が得意。【完了】数字で振り返りPDCA。【1日】早朝出勤。朝に意思決定、午後に実行。"},{title:"🗣️ 会議での振る舞い",content:"議長タイプ。「今日の議題はこれ、時間はこれだけ」。脱線を許さず結論を出す。\n【ベスト】進捗管理/意思決定/キックオフ"},{title:"💬 チャットでの傾向",content:"短く明確。「了解」「進めて」「いつまでに？」。\n【知っておくと楽】短いのは効率志向。成果報告に即レス。"},{title:"👔 上司として／部下として",content:"【上司】結果で評価する明快なリーダー。感情面弱い。\n【部下】期待を超える成果を出そうとする。曖昧な指示にイライラ。"},{title:"🔥 モチベーション",content:"【🚀】目標達成/チームが効率的/大規模PJ成功\n【📉】目標曖昧/非効率/感情論/権限なし"},{title:"📝 フィードバック",content:"【受ける】数字ベース。【伝える】ストレート。回りくどさゼロ。"},{title:"✅ 得意・苦手タスク",content:"【🎯】大規模PJ/複数チーム統括/ルール構築/効率化\n【😰】感情ケア/クリエイティブ/じっくり待つ/曖昧な判断"},{title:"📖 頼み方マニュアル",content:"【✅】「PJを仕切って」→大きいほど燃える。目標数字と権限を。\n【❌】「みんなで話し合って」→全員一致は苦手。\n【💡】1.明確な目標と権限 2.感情ケアは別担当 3.成果を認める"},{title:"🎯 適職マップ",content:"【🏆】COO/軍指揮官/大規模PM\n【⭐】経営コンサル/法務部長/サプライチェーン\n【💡】プロスポーツ監督/イベントディレクター\n【⚠️】自由放任クリエイティブ/感情ケア中心"},{title:"🤝 相性マップ",content:"【💎】INFP-G-Dp「詩人」。INFJ-G-Br「語り部」。\n【🔥】ENTJ-O-Br「総司令」。ESTP-O-Dp「エース」。\n【☀️】ESTJ-O-Dp「鬼教官」。ESTJ-G-Br「なんでも屋」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"休日も「やることリスト」。ジム、ゴルフ、DIY。成果が見えるもの。人間関係は戦友のような絆。"}]},
+"ESTJ-O-Dp":{name:"鬼教官",character:"リヴァイ兵長（進撃の巨人）",great:"パットン将軍",color:"#7B241C",summary:"「この一戦に全てを賭ける」指揮官。一点集中の実行力は64タイプ中トップクラス。妥協を知らず自他に厳しい。",compatibility:{complement:[{code:"INFP-G-Br",name:"やさしさ担当",desc:"鋭さに柔らかさを。"},{code:"INFJ-G-Dp",name:"カウンセラー",desc:"勝利に意味を与える。"}],chemistry:[{code:"ENTJ-O-Dp",name:"将軍",desc:"全軍突進。"},{code:"ESTP-O-Dp",name:"エース",desc:"現場突破力。"}],comfort:[{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"根本同じ。"},{code:"ESTJ-G-Dp",name:"頑固職人",desc:"極める姿勢。"}],catalyst:[{code:"ENFP-G-Br",name:"ムードメーカー",desc:"温かさが血を通わせる。"},{code:"INFP-O-Dp",name:"理想主義者",desc:"理想主義が問いを投げる。"}]},careers:{top:["特殊部隊指揮官","外科部長","危機管理最高責任者"],good:["ミッションクリティカルPM","法執行機関幹部","トップセールス"],surprise:["格闘技トレーナー","登山遠征隊リーダー"],avoid:["合議制の多い組織","ゆるいコミュニティ"]},strengths:["一点突破","圧倒的集中力","厳格な基準","危機時の冷静さ"],weaknesses:["多方面注意","感情ケア","長期的関係","敗北の受容"],tips:{do:"「絶対に勝って」→全権委任。明確な勝利条件。",dont:"「ペースに合わせて」→妥協はストレス。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの目標への集中力と実行力は64タイプ中トップクラス。120%を目指す。\n\n寡黙で言葉より行動。「この人が動けば結果が出る」。\n\n弱点は視野が狭くなること。チームが疲弊することも。"},{title:"💼 仕事の進め方",content:"【着手】目標を一つに絞り全力。【進行】一点集中、全リソース。【完了】完全な勝利で評価。【1日】誰より早く来て遅く帰る。"},{title:"🗣️ 会議での振る舞い",content:"「で、何をすれば？」。結論とアクションで終了。\n【ベスト】作戦会議/危機対応/短時間の意思決定"},{title:"💬 チャットでの傾向",content:"極めて短い。「了解」「やる」。結果報告だけは詳しい。\n【知っておくと楽】短い返信は信頼。「任せた」が響く。"},{title:"👔 上司として／部下として",content:"【上司】背中で見せる。ついていけない人には容赦なし。\n【部下】「達成しろ」で何でもやる。上司が努力していないと尊敬不可。"},{title:"🔥 モチベーション",content:"【🚀】困難な目標達成/限界突破/チーム一丸/「任せれば間違いない」\n【📉】目標なし/努力しない人/結果が出ない/権限なし"},{title:"📝 フィードバック",content:"【受ける】結果ベースのみ。「勝てる改善」は即採用。【伝える】直球。"},{title:"✅ 得意・苦手タスク",content:"【🎯】一点突破/危機の陣頭指揮/厳しい期限/品質引き上げ\n【😰】緩い案件並行/感情ケア/ゆるい議論"},{title:"📖 頼み方マニュアル",content:"【✅】「絶対に勝って」→全権委任。\n【❌】「ペースに合わせて」。\n【💡】1.一つの目標 2.権限と責任セット 3.感情ケアは別担当"},{title:"🎯 適職マップ",content:"【🏆】特殊部隊/外科部長/危機管理\n【⭐】ミッションクリティカルPM/法執行/トップセールス\n【💡】格闘技トレーナー/登山遠征\n【⚠️】合議制/ゆるいコミュニティ"},{title:"🤝 相性マップ",content:"【💎】INFP-G-Br「やさしさ担当」。INFJ-G-Dp「カウンセラー」。\n【🔥】ENTJ-O-Dp「将軍」。ESTP-O-Dp「エース」。\n【☀️】ESTJ-O-Br「鬼軍曹」。ESTJ-G-Dp「頑固職人」。\n【⚡】ENFP-G-Br「ムードメーカー」。"},{title:"🌈 プライベートの顔",content:"鍛えることが中心。ジム、武道。記録をつけ先週の自分を超える。友達少ないが戦友の絆。仕事が趣味。"}]},
+"ESTJ-G-Br":{name:"なんでも屋",character:"マッシュ・バーンデッド（マッシュル）",great:"アイゼンハワー",color:"#633974",summary:"「任されたことは全て完璧にこなす」万能型。守りの姿勢で既存組織を堅実に運営。「なんでも屋」で組織の屋台骨。",compatibility:{complement:[{code:"INFP-O-Dp",name:"理想主義者",desc:"堅実さに情熱を。"},{code:"INFJ-O-Br",name:"革命家",desc:"ビジョンを現実に。"}],chemistry:[{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"攻守の両輪。"},{code:"ENFJ-G-Br",name:"守護霊",desc:"仕組みと人を守る。"}],comfort:[{code:"ESTJ-G-Dp",name:"頑固職人",desc:"堅実さ。"},{code:"ISTJ-G-Br",name:"組織の記憶庫",desc:"真面目さ共通。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"破壊的アイデアが守りを進化。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが解放。"}]},careers:{top:["総務部長","施設管理責任者","自治体行政管理"],good:["品質管理マネージャー","社内SE","学校の教頭"],surprise:["農場経営者","マンション管理組合理事長"],avoid:["ゼロイチスタートアップ","芸術系フリーランス"]},strengths:["万能さ","堅実な運営","幅広い実務知識","問題の早期発見"],weaknesses:["革新的アイデア","大きなリスク","自己PR","やらなくていい判断"],tips:{do:"「組織を安定して回して」→守りの万能さ。",dont:"「もっと目立つことやって」→裏方こそ価値。"},fullSections:[{title:"👤 この人はこんな人",content:"いなくなったら組織は3日で回らなくなる。それくらいの縁の下の力持ち。\n\n守りの姿勢で「壊れる前に直す」予防保全。広型で経理もITも法務もわかる。\n\n弱点は革新的発想と引き受けすぎ。"},{title:"💼 仕事の進め方",content:"【着手】前例確認、リスク洗い出し。【進行】堅実に並行処理。【完了】漏れなし確認。【1日】規則正しい同じリズム。"},{title:"🗣️ 会議での振る舞い",content:"「それにはこの手続きが必要」「前にこういうケースが」。\n【ベスト】実行計画レビュー/リスク洗い出し"},{title:"💬 チャットでの傾向",content:"丁寧で正確。質問に即座に回答。\n【知っておくと楽】困ったらまずこの人に。過負荷注意。「ありがとう」がエネルギー源。"},{title:"👔 上司として／部下として",content:"【上司】安定した運営者。革新的ビジョンは弱い。\n【部下】何を頼んでも確実にこなす。"},{title:"🔥 モチベーション",content:"【🚀】安定稼働/問題未然防止/「いるから安心」/知識が活きた\n【📉】当たり前扱い/キャパ超え/新しいことばかり/ルール無視"},{title:"📝 フィードバック",content:"【受ける】具体的改善点。【伝える】丁寧だが直接的。"},{title:"✅ 得意・苦手タスク",content:"【🎯】安定運営/幅広い実務/早期発見/マニュアル/リスク管理\n【😰】ゼロからの創出/大きなリスク/自己PR"},{title:"📖 頼み方マニュアル",content:"【✅】「組織を安定して」→頼りにされて嬉しい。\n【❌】「目立つことやって」「ルール気にしないで」。\n【💡】1.過負荷管理 2.感謝 3.新挑戦は小ステップ"},{title:"🎯 適職マップ",content:"【🏆】総務部長/施設管理/自治体行政\n【⭐】品質管理/社内SE/教頭\n【💡】農場経営/管理組合理事長\n【⚠️】ゼロイチ/芸術フリーランス"},{title:"🤝 相性マップ",content:"【💎】INFP-O-Dp「理想主義者」。INFJ-O-Br「革命家」。\n【🔥】ESTJ-O-Br「鬼軍曹」。ENFJ-G-Br「守護霊」。\n【☀️】ESTJ-G-Dp「頑固職人」。ISTJ-G-Br「組織の記憶庫」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"家のメンテナンスが趣味。電球交換、庭の手入れ。料理はレシピ通り。旅行は計画的。約束は絶対守る。"}]},
+"ESTJ-G-Dp":{name:"頑固職人",character:"フランキー（ONE PIECE）",great:"ヘンリー・フォード",color:"#4A235A",summary:"「一つの技を極め仕組みで守る」職人気質リーダー。一つの領域で圧倒的専門性を持ち堅実な仕組みに落とし込む。",compatibility:{complement:[{code:"INFP-O-Br",name:"冒険作家",desc:"堅さに夢の彩り。"},{code:"INFJ-O-Dp",name:"真理の探究者",desc:"直観が仕組みに魂を。"}],chemistry:[{code:"ENTJ-G-Dp",name:"長期戦略家",desc:"重厚な設計思想の同志。"},{code:"ESTJ-O-Dp",name:"鬼教官",desc:"極める姿勢共通。"}],comfort:[{code:"ESTJ-G-Br",name:"なんでも屋",desc:"堅実さ。"},{code:"ISTJ-G-Dp",name:"金庫番",desc:"寡黙な信頼。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"自由な発想が可能性を。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"即興力が柔軟性を。"}]},careers:{top:["製造業工場長","品質保証責任者","インフラエンジニアリード"],good:["会計士・税理士","建築現場監督","ISO審査員"],surprise:["伝統工芸の師匠","醸造責任者"],avoid:["毎週変わるスタートアップ","感覚重視デザイン"]},strengths:["深い専門性","壊れない仕組み","品質基準維持","ルール策定遵守"],weaknesses:["変化への対応","新分野","柔軟な発想","社交"],tips:{do:"「品質を最高に」→職人魂。長期コミットと敬意を。",dont:"「ルール気にしないで」→仕組みが核。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの領域で何十年もかけて圧倒的専門性を築く。「10年後も動く」が基準。\n\nマニュアル作りが好きで「誰がやっても同じ結果」の仕組みが至福。\n\n弱点は変化への抵抗と社交。"},{title:"💼 仕事の進め方",content:"【着手】仕様を完全理解してから。【進行】一つに深く集中。品質を落とさないペース。【完了】品質基準を満たすまで完了としない。【1日】極めて規則正しい。"},{title:"🗣️ 会議での振る舞い",content:"専門領域では圧倒的。「技術的に不可能」と断言。それ以外は沈黙。\n【ベスト】技術レビュー/品質基準策定"},{title:"💬 チャットでの傾向",content:"必要最小限。技術質問には丁寧。図面やコードを添付。\n【知っておくと楽】沈黙は問題ない。技術の話で饒舌に。"},{title:"👔 上司として／部下として",content:"【上司】技術基準極めて高い。品質妥協なし。\n【部下】「この領域全部任せた」が最高の褒め言葉。"},{title:"🔥 モチベーション",content:"【🚀】精巧な仕組み完成/品質が守られている/専門性を認められた\n【📉】仕組みを雑に/「完璧じゃなくていい」/社交強制"},{title:"📝 フィードバック",content:"【受ける】技術的指摘歓迎。「もっとエレガントに」は最高。【伝える】品質に厳格。"},{title:"✅ 得意・苦手タスク",content:"【🎯】専門性/壊れない仕組み/品質維持/マニュアル\n【😰】変化/新分野/柔軟/社交"},{title:"📖 頼み方マニュアル",content:"【✅】「品質を最高に」→職人魂。「時間はかけていい」。\n【❌】「70%でいいから早く」→完璧主義が核。\n【💡】1.専門性尊重 2.品質で評価 3.変化は小ステップ"},{title:"🎯 適職マップ",content:"【🏆】工場長/品質保証/インフラリード\n【⭐】会計士/現場監督/ISO審査員\n【💡】伝統工芸師匠/醸造責任者\n【⚠️】毎週変わるスタートアップ/感覚デザイン"},{title:"🤝 相性マップ",content:"【💎】INFP-O-Br「冒険作家」。INFJ-O-Dp「真理の探究者」。\n【🔥】ENTJ-G-Dp「長期戦略家」。ESTJ-O-Dp「鬼教官」。\n【☀️】ESTJ-G-Br「なんでも屋」。ISTJ-G-Dp「金庫番」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"同じ趣味を20年。道具にこだわり手入れも欠かさない。工具箱が宝物。旅行より工房。友達は少ないが職人仲間と年に数回。"}]},
+"ESTP-O-Br":{name:"トラブルシューター",character:"サンジ（ONE PIECE）",great:"アーネスト・シャクルトン",color:"#E67E22",summary:"「なんとかなる、なんとかする」の体現者。臨機応変に対応し幅広いスキルで切り抜ける。冒険と社交を愛し人生を楽しむ天才。",compatibility:{complement:[{code:"INFJ-G-Dp",name:"カウンセラー",desc:"冒険に深い意味を。"},{code:"ISFJ-G-Dp",name:"守り神",desc:"帰る場所を作る。"}],chemistry:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"アイデアと行動の最速。"},{code:"ESTP-O-Dp",name:"エース",desc:"現場力共通。"}],comfort:[{code:"ESTP-G-Br",name:"安全番長",desc:"冒険と器用さ。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさ2倍。"}],catalyst:[{code:"INTJ-G-Dp",name:"設計狂",desc:"計画性が構造を。"},{code:"INFP-G-Dp",name:"詩人",desc:"内省が立ち止まる契機。"}]},careers:{top:["起業家","危機管理コンサル","冒険家"],good:["営業マネージャー","レストラン経営","戦地ジャーナリスト"],surprise:["即興料理人","イベントプロデューサー"],avoid:["定型デスクワーク","長期基礎研究"]},strengths:["臨機応変","幅広いスキル","社交力","環境適応"],weaknesses:["長期集中","ルーティン","内省","計画遵守"],tips:{do:"「現場をなんとかして」→自由度と現場裁量を。",dont:"「計画通りに」→型にはめると激減。"},fullSections:[{title:"👤 この人はこんな人",content:"計画が崩れても焦らない。「予定通りいかない方が面白い」。\n\n幅広いスキル。料理も機械修理も交渉もできる。「この人がいれば何とかなる」。\n\n弱点は長期集中が苦手。計画を立てるのも苦手。"},{title:"💼 仕事の進め方",content:"【着手】まず動く。考えるのは走りながら。【進行】臨機応変。【完了】「なんとかなった」が多い。【1日】決まったリズムなし。"},{title:"🗣️ 会議での振る舞い",content:"「現場ではこうだった」が説得力。長い会議は苦手。\n【ベスト】現場報告/即時解決/アクションプラン"},{title:"💬 チャットでの傾向",content:"即レス。写真や動画で「今こんな感じ」。\n【知っておくと楽】レスがないときは本当に忙しい。"},{title:"👔 上司として／部下として",content:"【上司】自由にやらせてくれる。現場主義。計画性弱い。\n【部下】「現場を任せた」で最大。"},{title:"🔥 モチベーション",content:"【🚀】新しい環境/困難突破/頼られた/多様なスキル\n【📉】同じ作業繰り返し/自由なし/計画書ばかり/一人で閉じ込め"},{title:"📝 フィードバック",content:"【受ける】具体的で短い。【伝える】ストレートだが明るい。"},{title:"✅ 得意・苦手タスク",content:"【🎯】危機対応/現場判断/人脈活用/新規開拓/交渉\n【😰】長期集中/ルーティン/内省/計画書"},{title:"📖 頼み方マニュアル",content:"【✅】「なんとかして」→自由と裁量。\n【❌】「計画通りに」→型にはめると激減。\n【💡】1.自由と裁量 2.多様な経験 3.結果で評価"},{title:"🎯 適職マップ",content:"【🏆】起業家/危機管理コンサル/冒険家\n【⭐】営業マネージャー/レストラン/戦地ジャーナリスト\n【💡】即興料理人/イベントプロデューサー\n【⚠️】定型デスクワーク/基礎研究"},{title:"🤝 相性マップ",content:"【💎】INFJ-G-Dp「カウンセラー」。ISFJ-G-Dp「守り神」。\n【🔥】ENTP-O-Br「アイデアマン」。ESTP-O-Dp「エース」。\n【☀️】ESTP-G-Br「安全番長」。ESFP-O-Br「お祭り総隊長」。\n【⚡】INTJ-G-Dp「設計狂」。"},{title:"🌈 プライベートの顔",content:"家にいることはほぼない。サーフィン、BBQ、飲み会、旅行。新しい店を見つける嗅覚。料理が上手い。人脈が広い。"}]},
+"ESTP-G-Br":{name:"安全番長",character:"冴羽獠（シティーハンター）",great:"ベア・グリルス",color:"#CA6F1E",summary:"「どんな状況でも生き延びる」サバイバリスト。冒険より安全な帰還を重視。幅広いスキルで現場の問題を確実に解決。",compatibility:{complement:[{code:"INFJ-O-Dp",name:"真理の探究者",desc:"直観が方向性を。"},{code:"ISFJ-O-Dp",name:"守護者",desc:"切り拓いた道を守る。"}],chemistry:[{code:"ESTP-O-Br",name:"トラブルシューター",desc:"攻守の最強現場チーム。"},{code:"ENTJ-G-Br",name:"参謀",desc:"戦略を現場で実行。"}],comfort:[{code:"ESTP-G-Dp",name:"求道者",desc:"堅実な現場力。"},{code:"ISTP-G-Br",name:"修理屋",desc:"寡黙な器用さ。"}],catalyst:[{code:"ENFJ-O-Br",name:"カリスマ委員長",desc:"ビジョンが視野を広げる。"},{code:"INFP-O-Dp",name:"理想主義者",desc:"理想が実利主義に深みを。"}]},careers:{top:["消防士隊長","救急救命士","フィールドエンジニア"],good:["施設管理","アウトドアインストラクター","現場監督"],surprise:["防災コンサル","サバイバル番組制作"],avoid:["抽象的戦略のみ","長期基礎研究"]},strengths:["現場での冷静さ","幅広い実践スキル","安全管理","堅実な問題解決"],weaknesses:["抽象的議論","長期ビジョン","感情ケア","書類仕事"],tips:{do:"「現場の安全をお願い」→確実に守る。",dont:"「計画書だけ作って」→現場で動かないと。"},fullSections:[{title:"👤 この人はこんな人",content:"オデュッセウスの攻めを守りに変えたタイプ。「やってみよう」より「大丈夫か？」が先。\n\n緊急時に最も頼りになるタイプ。\n\n弱点は抽象的議論。"},{title:"💼 仕事の進め方",content:"【着手】現場確認、リスク見積もり。【進行】堅実に一歩ずつ。安全マージン。【完了】「誰も怪我しなかった」が最高。【1日】規則正しいが緊急に即切り替え。"},{title:"🗣️ 会議での振る舞い",content:"「理論上はそうだけど現場ではこう」。\n【ベスト】安全対策/現場改善/緊急対応計画"},{title:"💬 チャットでの傾向",content:"簡潔で実務的。写真付き現場報告。\n【知っておくと楽】現場中はレス遅い。急ぎは電話。"},{title:"👔 上司として／部下として",content:"【上司】安全第一。メンバーを守る。\n【部下】現場を任せると最高の安定感。"},{title:"🔥 モチベーション",content:"【🚀】問題解決/安全を守った/スキルが活きた/「頼りになる」\n【📉】机上の空論/現場に出られない/書類だけ/安全軽視"},{title:"📝 フィードバック",content:"【受ける】具体的・実践的。【伝える】現場目線でストレート。"},{title:"✅ 得意・苦手タスク",content:"【🎯】冷静な判断/実践スキル/安全管理/問題解決\n【😰】抽象/ビジョン/感情ケア/書類"},{title:"📖 頼み方マニュアル",content:"【✅】「現場の安全をお願い」→実践的裁量を。\n【❌】「計画書だけ」→現場で動かないと。\n【💡】1.現場裁量 2.スキルを活かす 3.安全を信頼"},{title:"🎯 適職マップ",content:"【🏆】消防士隊長/救急救命士/フィールドエンジニア\n【⭐】施設管理/アウトドアインストラクター/現場監督\n【💡】防災コンサル/サバイバル番組\n【⚠️】抽象戦略のみ/基礎研究"},{title:"🤝 相性マップ",content:"【💎】INFJ-O-Dp「真理の探究者」。ISFJ-O-Dp「守護者」。\n【🔥】ESTP-O-Br「トラブルシューター」。ENTJ-G-Br「参謀」。\n【☀️】ESTP-G-Dp「求道者」。ISTP-G-Br「修理屋」。\n【⚡】ENFJ-O-Br「カリスマ委員長」。"},{title:"🌈 プライベートの顔",content:"アウトドア派だが無茶はしない。安全装備は完璧。DIYも得意。料理は実用的。"}]},
+"ESTP-G-Dp":{name:"求道者",character:"緑谷出久（僕のヒーローアカデミア）",great:"イチロー",color:"#A04000",summary:"「一つの技を磨き続け確実に結果を出す」堅実な実行者。コツコツ積み上げた実力で確実に成果。守りの姿勢で深く一つの道を極める。",compatibility:{complement:[{code:"INFJ-O-Br",name:"革命家",desc:"堅実さにビジョンが方向を。"},{code:"ISFJ-O-Br",name:"献身サポーター",desc:"実行力に温かさ。"}],chemistry:[{code:"ESTP-O-Dp",name:"エース",desc:"爆発力と持続力。"},{code:"ISTJ-G-Dp",name:"金庫番",desc:"堅実に極める。"}],comfort:[{code:"ESTP-G-Br",name:"安全番長",desc:"堅実な現場力。"},{code:"ISTP-G-Dp",name:"専属オペレーター",desc:"寡黙で深い技術。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"多様な可能性を。"},{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"常識を壊す発想が進化。"}]},careers:{top:["プロスポーツ選手","伝統技能の職人","専門技術者"],good:["パイロット","外科医","スポーツトレーナー"],surprise:["寿司職人","時計修理士"],avoid:["抽象コンサル","毎日変わるクリエイティブ"]},strengths:["持続的向上","確実な実行","冷静な判断","忍耐"],weaknesses:["新分野への転換","抽象的思考","自己PR","変化のスピード"],tips:{do:"「この技術を極めて」→一つに没頭で最強。長期成長環境を。",dont:"「いろいろやって」→広く浅くは性に合わない。"},fullSections:[{title:"👤 この人はこんな人",content:"エースの爆発力を持続力に変えたタイプ。毎日同じルーティンで少しずつ上達する。\n\n地道さが最大の武器。「これしかできない」という不安も抱える。"},{title:"💼 仕事の進め方",content:"【着手】やり方確認から。実績のある方法を選ぶ。【進行】毎日一定ペースで確実に。品質ブレなし。【完了】「手を抜いていない」が誇り。【1日】極めて規則正しい。ルーティンが基盤。"},{title:"🗣️ 会議での振る舞い",content:"発言少なめ。専門領域で「こうやればできます」。\n【ベスト】技術問題解決/品質レビュー"},{title:"💬 チャットでの傾向",content:"短く実務的。絵文字なし。業務連絡のみ。\n【知っておくと楽】寡黙は性格。技術の話で詳しく。"},{title:"👔 上司として／部下として",content:"【上司】技術で背中を見せる。自分もそれ以上をやる。\n【部下】「技術を極めてくれ」が最高。放置でOK。"},{title:"🔥 モチベーション",content:"【🚀】技術向上の実感/努力が実った/「さすが」/完璧な仕事\n【📉】技術活かせない/雑用/分散/上達実感なし"},{title:"📝 フィードバック",content:"【受ける】技術的改善は素直に。【伝える】実演で見せる。"},{title:"✅ 得意・苦手タスク",content:"【🎯】持続的向上/確実な実行/冷静な判断/品質一貫性\n【😰】新分野/抽象思考/自己PR/変化スピード"},{title:"📖 頼み方マニュアル",content:"【✅】「技術を極めて」→一つに没頭。長期成長環境。\n【❌】「いろいろやって」→広く浅くは不可。\n【💡】1.専門技術に集中 2.長期視点 3.寡黙さを理解"},{title:"🎯 適職マップ",content:"【🏆】プロスポーツ選手/職人/専門技術者\n【⭐】パイロット/外科医/スポーツトレーナー\n【💡】寿司職人/時計修理士\n【⚠️】抽象コンサル/毎日変わるクリエイティブ"},{title:"🤝 相性マップ",content:"【💎】INFJ-O-Br「革命家」。ISFJ-O-Br「献身サポーター」。\n【🔥】ESTP-O-Dp「エース」。ISTJ-G-Dp「金庫番」。\n【☀️】ESTP-G-Br「安全番長」。ISTP-G-Dp「専属オペレーター」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"毎日同じルーティン。朝トレ、同じ朝食、同じ通勤路。趣味は一つを長く。少数の親友と年に数回。"}]},
+"ESFJ-O-Br":{name:"総支配人",character:"ハンコック（ONE PIECE）",great:"ココ・シャネル",color:"#EC7063",summary:"「人を魅了し場を華やかにする」社交の女王。おもてなしの天才で空間の美しさにもこだわる。",compatibility:{complement:[{code:"INTP-G-Dp",name:"数式が友達",desc:"社交力に深い分析が奥行きを。"},{code:"INTJ-G-Dp",name:"設計狂",desc:"華やかさと静かな戦略。"}],chemistry:[{code:"ENFP-O-Br",name:"着火マン",desc:"場が最高に盛り上がる。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"エンタメ最強コンビ。"}],comfort:[{code:"ESFJ-O-Dp",name:"肝っ玉番長",desc:"思いやり共通。"},{code:"ESFJ-G-Br",name:"調和の達人",desc:"調和志向。"}],catalyst:[{code:"ISTP-O-Dp",name:"一刀流の職人",desc:"寡黙な実力が深みを。"},{code:"INTJ-O-Br",name:"軍師",desc:"戦略的思考が武器に。"}]},careers:{top:["ホテル支配人","ブランドマネージャー","ウェディングプランナー"],good:["PR・広報","インテリアデザイナー","イベントプロデューサー"],surprise:["外交官","高級レストランのマダム"],avoid:["一人データ分析","工場ライン"]},strengths:["社交力","おもてなし","空間の美的センス","広い人脈"],weaknesses:["一人の地味な作業","厳しいFB","数字評価","孤独"],tips:{do:"「人との関係を広げて」→社交の天才。",dont:"「一人で黙々と」→人との接点がないと消耗。"},fullSections:[{title:"👤 この人はこんな人",content:"人間関係のネットワークを広く張る。パーティーの主催が得意で「この人が仕切ると華やぐ」。\n\n相手が何を求めているかを瞬時に察し先回りする。\n\n弱点は人からの評価を気にしすぎること。"},{title:"💼 仕事の進め方",content:"【着手】人に会い情報収集。【進行】人を巻き込み華やかに。【完了】「みんなが満足しているか」。【1日】予定が詰まっている方が調子いい。"},{title:"🗣️ 会議での振る舞い",content:"場を明るくする。初対面同士を繋げる。会議後の懇親会で真価。\n【ベスト】キックオフ/クライアント対応"},{title:"💬 チャットでの傾向",content:"明るく絵文字多め。褒めメッセージが多い。グループの盛り上げ役。\n【知っておくと楽】既読スルーされると不安。リアクションで安心。"},{title:"👔 上司として／部下として",content:"【上司】モチベを上げる。チームの空気が明るい。厳しい判断は苦手。\n【部下】上司との関係構築が得意。橋渡し役。"},{title:"🔥 モチベーション",content:"【🚀】感謝/場が華やいだ/人脈拡大/美しいもの\n【📉】無視/一人作業/美意識否定/人間関係トラブル"},{title:"📝 フィードバック",content:"【受ける】褒めてから改善点。人格否定は深く傷つく。【伝える】配慮たっぷり。"},{title:"✅ 得意・苦手タスク",content:"【🎯】人脈構築/おもてなし/空間演出/PR\n【😰】一人作業/厳しいFB/数字だけ/孤独"},{title:"📖 頼み方マニュアル",content:"【✅】「関係を広げて」「場を華やかに」。\n【❌】「一人で黙々と」「見た目はどうでもいい」。\n【💡】1.人と関わる仕事 2.美的センス活用 3.感謝を言葉に"},{title:"🎯 適職マップ",content:"【🏆】ホテル支配人/ブランドマネージャー/ウェディングプランナー\n【⭐】PR・広報/インテリア/イベント\n【💡】外交官/高級レストランマダム\n【⚠️】一人データ分析/工場ライン"},{title:"🤝 相性マップ",content:"【💎】INTP-G-Dp「理論家」。INTJ-G-Dp「設計狂」。\n【🔥】ENFP-O-Br「着火マン」。ESFP-O-Br「お祭り総隊長」。\n【☀️】ESFJ-O-Dp「肝っ玉番長」。ESFJ-G-Br「調和の達人」。\n【⚡】ISTP-O-Dp「一刀流の職人」。"},{title:"🌈 プライベートの顔",content:"SNS映え。おしゃれなカフェ、花のインテリア。友達が多く週末はぎっしり。美容やファッションへの投資は惜しまない。"}]},
+"ESFJ-O-Dp":{name:"肝っ玉番長",character:"レイア姫（スター・ウォーズ）",great:"エリザベス女王二世",color:"#CD6155",summary:"「この人たちを絶対に守る」覚悟の人。一つのコミュニティに深くコミットし深い愛情を注ぐ。威厳と温かさを併せ持つ。",compatibility:{complement:[{code:"INTP-G-Br",name:"教育者",desc:"情熱に冷静な知性が調和。"},{code:"INTJ-O-Dp",name:"ラスボス",desc:"人への愛に戦略の翼。"}],chemistry:[{code:"ENTJ-O-Dp",name:"将軍",desc:"王と女王。"},{code:"ENFJ-O-Dp",name:"恩師",desc:"深い使命感共鳴。"}],comfort:[{code:"ESFJ-O-Br",name:"総支配人",desc:"思いやりの根本同じ。"},{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"深いケア。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"「もっと自由に」が守りを解放。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"型破りな行動力。"}]},careers:{top:["病院長","自治体首長","慈善団体トップ"],good:["看護部長","学校長","大使"],surprise:["映画プロデューサー","ワイナリーオーナー"],avoid:["人と無関係な研究","短期転売"]},strengths:["深い愛情と責任感","威厳あるリーダーシップ","守るための勇気","一人ひとりへのケア"],weaknesses:["自分のケア後回し","客観的距離","切る判断","視野の狭さ"],tips:{do:"「この人たちを守って」→覚悟で全力。",dont:"「ドライに判断して」→人を切り捨てるのが最も辛い。"},fullSections:[{title:"👤 この人はこんな人",content:"メンバー全員の名前、家族、悩みまで把握。守るためなら組織改革も辞さない。\n\n威厳と温かさ。厳しいことも言えるが根底に深い愛。\n\n弱点は自分のケア後回しと過剰な介入。"},{title:"💼 仕事の進め方",content:"【着手】「誰のためか」が明確になると動く。【進行】メンバーの状態を見ながら矢面に。【完了】「みんなが安全で幸せか」。【1日】朝からメンバー確認。"},{title:"🗣️ 会議での振る舞い",content:"発言に重み。メンバーの代弁者。\n【ベスト】方向性決定/人事/危機対応"},{title:"💬 チャットでの傾向",content:"個別DMでケア。全体には方向性発信。\n【知っておくと楽】疲れていても「大丈夫」と言いがち。周囲がケアを。"},{title:"👔 上司として／部下として",content:"【上司】威厳と温かさ。深く慕われる。過保護になることも。\n【部下】使命に共感すれば驚異的献身。"},{title:"🔥 モチベーション",content:"【🚀】守るべき人々が安全/覚悟が認められた/メンバーの成長\n【📉】メンバーが傷ついた/守れなかった/切り捨て判断"},{title:"📝 フィードバック",content:"【受ける】献身を認めた上で。【伝える】愛がある厳しさ。"},{title:"✅ 得意・苦手タスク",content:"【🎯】コミュニティ守護/ケア/危機リーダーシップ/信頼構築\n【😰】ドライな判断/自分のケア/客観的距離"},{title:"📖 頼み方マニュアル",content:"【✅】「この人たちを守って」→覚悟で全力。\n【❌】「ドライに」→最も辛い。\n【💡】1.守る対象を明確に 2.レイア自身のケアも 3.献身を認める"},{title:"🎯 適職マップ",content:"【🏆】病院長/自治体首長/慈善団体トップ\n【⭐】看護部長/学校長/大使\n【💡】映画プロデューサー/ワイナリー\n【⚠️】人と無関係な研究/短期転売"},{title:"🤝 相性マップ",content:"【💎】INTP-G-Br「教育者」。INTJ-O-Dp「ラスボス」。\n【🔥】ENTJ-O-Dp「将軍」。ENFJ-O-Dp「恩師」。\n【☀️】ESFJ-O-Br「総支配人」。ESFJ-G-Dp「ベテラン寮長」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"「家族」が世界の中心。手料理、季節行事、写真アルバム。お金は家族のために。"}]},
+"ESFJ-G-Br":{name:"調和の達人",character:"サクラ（NARUTO）",great:"黒柳徹子",color:"#F1948A",summary:"「みんなが笑顔でいられる場を守りたい」。チームの調和を保つ天才。誰一人取りこぼさない。",compatibility:{complement:[{code:"INTP-O-Dp",name:"研究者",desc:"調和に鋭い分析が深みを。"},{code:"INTJ-O-Br",name:"軍師",desc:"戦略に温もり。"}],chemistry:[{code:"ENFJ-G-Br",name:"守護霊",desc:"心理的安全性最高。"},{code:"ENFP-G-Br",name:"ムードメーカー",desc:"場の雰囲気極上。"}],comfort:[{code:"ESFJ-O-Br",name:"総支配人",desc:"調和志向。"},{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"守りの温かさ。"}],catalyst:[{code:"ENTJ-O-Dp",name:"将軍",desc:"強いリーダーシップが方向を。"},{code:"ESTP-O-Dp",name:"エース",desc:"行動力が背中を押す。"}]},careers:{top:["カスタマーサポート責任者","養護教諭","コミュニティマネージャー"],good:["人事（福利厚生）","医療ソーシャルワーカー","図書館司書"],surprise:["結婚相談所アドバイザー","地域FMパーソナリティ"],avoid:["厳格な監査","一人の長時間プログラミング"]},strengths:["調和維持","幅広い気配り","心理的安全性","包容力"],weaknesses:["自分の意見主張","厳しい判断","対立の直接解決","大きなリスク"],tips:{do:"「チームの雰囲気を良くして」→調和の天才。",dont:"「強く言って」→対立がストレス。"},fullSections:[{title:"👤 この人はこんな人",content:"誰が機嫌が悪いか、疲れているかを真っ先に察知して声をかける。\n\n新メンバーに真っ先に声をかけ孤立しがちな人にも自然に話しかける。\n\n弱点は自分の意見を飲み込むこと。"},{title:"💼 仕事の進め方",content:"【着手】周囲の状況確認。【進行】チームと協調。【完了】「みんなが満足しているか」。【1日】穏やか。人との交流で充電。"},{title:"🗣️ 会議での振る舞い",content:"場を和ませる。声の小さい人の意見を拾う。\n【ベスト】チームビルディング/新メンバー歓迎"},{title:"💬 チャットでの傾向",content:"リアクション多め。ねぎらいと感謝。雑談の盛り上げ役。\n【知っておくと楽】「何でもいいよ」は本心でないことがある。"},{title:"👔 上司として／部下として",content:"【上司】好かれるリーダー。心理的安全性高い。厳しい判断苦手。\n【部下】チームの空気を守る縁の下。"},{title:"🔥 モチベーション",content:"【🚀】雰囲気良い/「いてくれて助かる」/新メンバー馴染んだ\n【📉】チーム内対立/孤立/攻撃的環境"},{title:"📝 フィードバック",content:"【受ける】柔らかく。「いつもありがとう。ここをこうすると」。【伝える】とても優しい。核心が伝わらないことも。"},{title:"✅ 得意・苦手タスク",content:"【🎯】調和/気配り/安全性/包容力/オンボーディング\n【😰】主張/厳しい判断/対立解決/リスク決断"},{title:"📖 頼み方マニュアル",content:"【✅】「雰囲気を良くして」「新メンバーの面倒を」。\n【❌】「強く言って」「一人で」。\n【💡】1.人関わり多く 2.貢献を見える化 3.厳しい場面は分担"},{title:"🎯 適職マップ",content:"【🏆】カスタマーサポート/養護教諭/コミュニティマネージャー\n【⭐】人事/医療SW/図書館司書\n【💡】結婚相談所/FM\n【⚠️】厳格な監査/長時間プログラミング"},{title:"🤝 相性マップ",content:"【💎】INTP-O-Dp「研究者」。INTJ-O-Br「軍師」。\n【🔥】ENFJ-G-Br「守護霊」。ENFP-G-Br「ムードメーカー」。\n【☀️】ESFJ-O-Br「総支配人」。ESFJ-G-Dp「ベテラン寮長」。\n【⚡】ENTJ-O-Dp「将軍」。"},{title:"🌈 プライベートの顔",content:"友達とカフェ、ショッピング。誕生日カードは手書き。友達が始めたことに付き合って始める。"}]},
+"ESFJ-G-Dp":{name:"ベテラン寮長",character:"お母さん（あたしンち）",great:"津田梅子",color:"#D98880",summary:"「この子たちを丁寧に育て守る」。一つのコミュニティに深くコミットしメンバーの成長を見守る。静かだが確かな愛情。",compatibility:{complement:[{code:"INTP-O-Br",name:"発明家",desc:"温かさに知的好奇心が新鮮さ。"},{code:"INTJ-G-Br",name:"黒幕参謀",desc:"献身を効率化。"}],chemistry:[{code:"ENFJ-G-Dp",name:"寮長",desc:"守りの愛情共鳴。"},{code:"ISFJ-G-Dp",name:"守り神",desc:"ケアの心一致。"}],comfort:[{code:"ESFJ-G-Br",name:"調和の達人",desc:"守りの温かさ。"},{code:"ESFJ-O-Dp",name:"肝っ玉番長",desc:"深いケア。"}],catalyst:[{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"安定志向を揺さぶる。"},{code:"ENFP-O-Br",name:"着火マン",desc:"新しい風が世界を開く。"}]},careers:{top:["保育士リーダー","民生委員","老人ホーム施設長"],good:["小学校教員","栄養士","介護福祉士"],surprise:["寺子屋の先生","家庭菜園講師"],avoid:["金融トレーディング","ハイペースのスタートアップ"]},strengths:["丁寧なケア","長年の信頼","安定運営","静かな影響力"],weaknesses:["変化","自己主張","外部接点","新環境"],tips:{do:"「この場所を長く守って」→丁寧なケアが天職。",dont:"「もっと広く早く」→深いケアが生命線。"},fullSections:[{title:"👤 この人はこんな人",content:"20年同じ場所にいることに抵抗なく「長くいるからこそわかること」に価値を見出す。\n\n卒業生が何年後かに訪ねてくるタイプ。\n\n弱点は変化への抵抗と外部接点の少なさ。"},{title:"💼 仕事の進め方",content:"【着手】前例確認、丁寧に準備。【進行】毎日のルーティンを大切に。【完了】「みんなが安心」。【1日】規則正しく穏やか。"},{title:"🗣️ 会議での振る舞い",content:"メンバーのことを一番知っている。「〇〇さんは最近こういう状況」。\n【ベスト】ケア共有/長期計画"},{title:"💬 チャットでの傾向",content:"丁寧で温かい個別連絡。全体への発信は少ない。\n【知っておくと楽】変化には丁寧な説明と移行期間を。"},{title:"👔 上司として／部下として",content:"【上司】お母さんのようなリーダー。外部交渉弱い。\n【部下】長く同じ上司の下で力を発揮。"},{title:"🔥 モチベーション",content:"【🚀】メンバーの成長/「あなたのおかげ」/長年が実った/安定\n【📉】急な変化/壊される/当たり前扱い/外部露出強制"},{title:"📝 フィードバック",content:"【受ける】「いつも見ています」が前提。【伝える】丁寧で温かい。相手のペースで。"},{title:"✅ 得意・苦手タスク",content:"【🎯】丁寧ケア/長期信頼/安定運営/静かな影響力\n【😰】変化/主張/外部接点/スピード"},{title:"📖 頼み方マニュアル",content:"【✅】「長く守って」→安定と敬意。\n【❌】「広く早く」→深いケアが命。\n【💡】1.安定保証 2.長年の貢献を認める 3.変化は小さく"},{title:"🎯 適職マップ",content:"【🏆】保育士リーダー/民生委員/施設長\n【⭐】小学校教員/栄養士/介護福祉士\n【💡】寺子屋/家庭菜園講師\n【⚠️】金融トレーディング/ハイペーススタートアップ"},{title:"🤝 相性マップ",content:"【💎】INTP-O-Br「発明家」。INTJ-G-Br「黒幕参謀」。\n【🔥】ENFJ-G-Dp「寮長」。ISFJ-G-Dp「守り神」。\n【☀️】ESFJ-G-Br「調和の達人」。ESFJ-O-Dp「肝っ玉番長」。\n【⚡】ENTP-O-Dp「常識クラッシャー」。"},{title:"🌈 プライベートの顔",content:"季節行事を丁寧に。毎日手作り食事。園芸、編み物、保存食。お裾分けが日常。地元のお祭りに毎年参加。"}]},
+"ESFP-O-Br":{name:"お祭り総隊長",character:"ルパン三世",great:"マドンナ",color:"#AF7AC5",summary:"「人生は楽しむためにある」を全身で体現。圧倒的エンタメ力で場を支配する。新しい経験を求めて次々冒険する。",compatibility:{complement:[{code:"INTJ-G-Dp",name:"設計狂",desc:"自由に構造で持続可能性。"},{code:"ISTJ-G-Dp",name:"金庫番",desc:"楽しさを仕組みで継続。"}],chemistry:[{code:"ESFJ-O-Br",name:"総支配人",desc:"場が最高に華やぐ。"},{code:"ENFP-O-Br",name:"着火マン",desc:"アイデア止まらない。"}],comfort:[{code:"ESFP-O-Dp",name:"パフォーマー",desc:"楽しむ情熱。"},{code:"ESFP-G-Br",name:"盛り上げ隊長",desc:"表現力。"}],catalyst:[{code:"INTJ-O-Dp",name:"ラスボス",desc:"才能をビジネスに。"},{code:"INFJ-G-Dp",name:"カウンセラー",desc:"深みが意味を与える。"}]},careers:{top:["エンターテイナー","イベントプロデューサー","ブランドアンバサダー"],good:["トップセールス","旅行プランナー","MC"],surprise:["体験型教育講師","フードトラック経営"],avoid:["定型事務","一人の研究職"]},strengths:["エンタメ力","空気を変える力","開放性","人を楽しませる才能"],weaknesses:["長期集中","ルーティン","内省","計画性"],tips:{do:"「場を盛り上げて」→天性。自由にやらせる。",dont:"「地味にコツコツ」→楽しさがないと魂が抜ける。"},fullSections:[{title:"👤 この人はこんな人",content:"この人がいるだけで空気が変わる。つまらない飲み会もパンテオーラが来た瞬間に楽しくなる。\n\n昨日はサーフィン、今日は料理教室、明日はジャズバー。\n\n弱点は長期集中と計画性。お金の管理が苦手。"},{title:"💼 仕事の進め方",content:"【着手】楽しそうなら即。つまらなそうなら後回し。【進行】勢いとノリ。【完了】「楽しかった」が基準。【1日】毎日違うリズム。"},{title:"🗣️ 会議での振る舞い",content:"重い空気を一瞬で変える。ユーモアで活性化。長い会議は無理。\n【ベスト】ブレスト/キックオフ/チームビルディング"},{title:"💬 チャットでの傾向",content:"絵文字、スタンプ、面白いネタ。テンポ速い。\n【知っておくと楽】事務連絡はリマインド。楽しいトーンで依頼。"},{title:"👔 上司として／部下として",content:"【上司】楽しいチーム。個性を引き出す。管理甘い。\n【部下】楽しい仕事なら120%。つまらないと…察して。"},{title:"🔥 モチベーション",content:"【🚀】楽しい！新しい！人が喜んでる！注目！\n【📉】退屈…同じこと…一人…計画書…"},{title:"📝 フィードバック",content:"【受ける】ポジティブ大好き。ネガティブは軽いトーンで。【伝える】明るく面白く。"},{title:"✅ 得意・苦手タスク",content:"【🎯】エンタメ/人を楽しませる/新規開拓/プレゼン\n【😰】長期集中/ルーティン/内省/計画"},{title:"📖 頼み方マニュアル",content:"【✅】「盛り上げて」「面白いことやって」。\n【❌】「地味にコツコツ」「一人で」。\n【💡】1.楽しさを組み込む 2.自由度最大 3.退屈を排除"},{title:"🎯 適職マップ",content:"【🏆】エンターテイナー/イベントプロデューサー/アンバサダー\n【⭐】トップセールス/旅行プランナー/MC\n【💡】体験型教育/フードトラック\n【⚠️】定型事務/一人の研究"},{title:"🤝 相性マップ",content:"【💎】INTJ-G-Dp「設計狂」。ISTJ-G-Dp「金庫番」。\n【🔥】ESFJ-O-Br「総支配人」。ENFP-O-Br「着火マン」。\n【☀️】ESFP-O-Dp「パフォーマー」。ESFP-G-Br「盛り上げ隊長」。\n【⚡】INTJ-O-Dp「ラスボス」。"},{title:"🌈 プライベートの顔",content:"家にいることはほぼない。クラブ、ライブ、フェス、旅行。お金は「体験」に。SNSは積極発信。"}]},
+"ESFP-O-Dp":{name:"パフォーマー",character:"嘴平伊之助（鬼滅の刃）",great:"フレディ・マーキュリー",color:"#8E44AD",summary:"「これだけは誰にも負けない表現がある」。一つの表現に全てを注ぎ、舞台で命を燃やすような圧倒的パフォーマンスで魂を揺さぶる。",compatibility:{complement:[{code:"ISTJ-G-Br",name:"組織の記憶庫",desc:"爆発力を記録で後世に。"},{code:"INTJ-G-Dp",name:"設計狂",desc:"天才を長寿命化。"}],chemistry:[{code:"ENFP-O-Dp",name:"伝道師",desc:"表現×情熱=芸術。"},{code:"ESTP-O-Dp",name:"エース",desc:"爆発力で伝説。"}],comfort:[{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しむ情熱。"},{code:"ESFP-G-Dp",name:"ゴッドハンド",desc:"深さ。"}],catalyst:[{code:"ISTJ-O-Br",name:"ルール番人",desc:"規律が狂気に方向を。"},{code:"INFJ-O-Br",name:"革命家",desc:"社会的意味を与える。"}]},careers:{top:["アーティスト","独創シェフ","スポーツ選手（個人種目）"],good:["振付師","クリエイティブディレクター","パフォーマー"],surprise:["祭りプロデューサー","ストリートアーティスト"],avoid:["定型事務","コンプライアンス管理"]},strengths:["圧倒的パフォーマンス","没入","魂を揺さぶるインパクト","直感的創造"],weaknesses:["ルーティン","金銭管理","長期計画","協調性"],tips:{do:"「好きなように表現して」→全てを賭ける。自由を。",dont:"「マニュアル通りに」→才能が死ぬ。"},fullSections:[{title:"👤 この人はこんな人",content:"舞台で命を燃やす。全てのエネルギーを一身に集める力。「見たら忘れられない」。\n\n弱点は日常生活がめちゃくちゃ。表現以外の全てが苦手。"},{title:"💼 仕事の進め方",content:"【着手】インスピレーションが来たら一気に。【進行】没入。時間の感覚なし。【完了】「自分が満足したか」。【1日】極めて不規則。"},{title:"🗣️ 会議での振る舞い",content:"型にはまった会議は苦手。クリエイティブレビューでは圧倒的。\n【ベスト】プレゼン/パフォーマンスレビュー"},{title:"💬 チャットでの傾向",content:"気分次第。盛り上がると連投。沈んでると音信不通。\n【知っておくと楽】連絡速度は気分バロメーター。事務は別経由。"},{title:"👔 上司として／部下として",content:"【上司】カリスマ。管理は壊滅的。\n【部下】自由をくれる上司なら最強。管理されると爆発。"},{title:"🔥 モチベーション",content:"【🚀】最高のパフォーマンス/魂を揺さぶった/新しい表現/自由\n【📉】型にはめ/ルーティン/観客なし/自由なし"},{title:"📝 フィードバック",content:"【受ける】表現への理解があるFBのみ。【伝える】感覚的。"},{title:"✅ 得意・苦手タスク",content:"【🎯】パフォーマンス/没入/インパクト/創造\n【😰】ルーティン/金銭/計画/協調"},{title:"📖 頼み方マニュアル",content:"【✅】「好きなように」「最高のものを見せて」。\n【❌】「マニュアル通り」「コツコツ」。\n【💡】1.自由最大化 2.日常サポート 3.表現の場を用意"},{title:"🎯 適職マップ",content:"【🏆】アーティスト/独創シェフ/個人種目\n【⭐】振付師/クリエイティブディレクター/パフォーマー\n【💡】祭りプロデューサー/ストリートアーティスト\n【⚠️】定型事務/コンプライアンス"},{title:"🤝 相性マップ",content:"【💎】ISTJ-G-Br「組織の記憶庫」。INTJ-G-Dp「設計狂」。\n【🔥】ENFP-O-Dp「伝道師」。ESTP-O-Dp「エース」。\n【☀️】ESFP-O-Br「お祭り総隊長」。ESFP-G-Dp「ゴッドハンド」。\n【⚡】ISTJ-O-Br「ルール番人」。"},{title:"🌈 プライベートの顔",content:"生活は混沌。楽器や画材だけは大切。夜型。食事不規則だが美味しいものへのこだわりは強い。お金はあるだけ使う。"}]},
+"ESFP-G-Br":{name:"盛り上げ隊長",character:"ウソップ（ONE PIECE）",great:"オプラ・ウィンフリー",color:"#BB8FCE",summary:"「みんなを笑顔にする表現力」。今いる場所を楽しくする。温かくてユーモアがあり自然と人が集まる。",compatibility:{complement:[{code:"INTJ-O-Dp",name:"ラスボス",desc:"表現力に戦略で事業化。"},{code:"ISTJ-O-Dp",name:"任務遂行者",desc:"自由さに規律で安定。"}],chemistry:[{code:"ENFP-G-Br",name:"ムードメーカー",desc:"温かさ×表現力。"},{code:"ESFJ-G-Br",name:"調和の達人",desc:"笑顔の力が共鳴。"}],comfort:[{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"表現力。"},{code:"ESFP-G-Dp",name:"ゴッドハンド",desc:"守りの温かさ。"}],catalyst:[{code:"ENTJ-O-Dp",name:"将軍",desc:"ビジョンが舞台を。"},{code:"INTP-O-Dp",name:"研究者",desc:"分析が構造を。"}]},careers:{top:["エンタメ教育者","コミュニティイベント","お笑い・MC"],good:["保育士","レク指導員","YouTuber"],surprise:["動物園ガイド","高齢者施設レク"],avoid:["厳密な会計","一人の長期研究"]},strengths:["人を元気にする","温かいユーモア","空気を読む力","コミュニケーション"],weaknesses:["数字","長期計画","シリアス対立","一人作業"],tips:{do:"「みんなを楽しませて」→天性。",dont:"「真面目にやって」→ユーモア封じは力半減。"},fullSections:[{title:"👤 この人はこんな人",content:"派手に攻めるより今いる場所を楽しくする。\n\n重い雰囲気を自然に和ませる。「この人がいると楽しい」と全員が思う。\n\n弱点はシリアスな場面。"},{title:"💼 仕事の進め方",content:"【着手】楽しそうなら即。チームでやるのが好き。【進行】明るい雰囲気で。【完了】「楽しかったか」。【1日】人との交流が多い日が好調。"},{title:"🗣️ 会議での振る舞い",content:"緊張をユーモアで解く。真剣議論では薄くなることも。\n【ベスト】チームビルディング/ブレスト"},{title:"💬 チャットでの傾向",content:"楽しいメッセージ。スタンプや面白ネタ。\n【知っておくと楽】シリアス連絡は別途。ユーモアは悪気なし。"},{title:"👔 上司として／部下として",content:"【上司】楽しいチーム。距離が近い。管理苦手。\n【部下】楽しい仕事で最大。雰囲気メーカー。"},{title:"🔥 モチベーション",content:"【🚀】笑顔/表現が伝わった/楽しいチーム/感謝\n【📉】シリアスすぎる/ユーモア通じない/一人/退屈"},{title:"📝 フィードバック",content:"【受ける】明るいトーンで。【伝える】ユーモア交え。深刻にならない。"},{title:"✅ 得意・苦手タスク",content:"【🎯】盛り上げ/ユーモア/表現力/雰囲気づくり\n【😰】数字/計画/シリアス対立/一人集中"},{title:"📖 頼み方マニュアル",content:"【✅】「楽しませて」「雰囲気を」。\n【❌】「真面目に」「一人で」。\n【💡】1.表現の場 2.人との関わり 3.ユーモアを認める"},{title:"🎯 適職マップ",content:"【🏆】エンタメ教育者/コミュニティイベント/MC\n【⭐】保育士/レク指導員/YouTuber\n【💡】動物園ガイド/高齢者レク\n【⚠️】厳密な会計/一人の研究"},{title:"🤝 相性マップ",content:"【💎】INTJ-O-Dp「ラスボス」。ISTJ-O-Dp「任務遂行者」。\n【🔥】ENFP-G-Br「ムードメーカー」。ESFJ-G-Br「調和の達人」。\n【☀️】ESFP-O-Br「お祭り総隊長」。ESFP-G-Dp「ゴッドハンド」。\n【⚡】ENTJ-O-Dp「将軍」。"},{title:"🌈 プライベートの顔",content:"友達と過ごす。カラオケ、ゲーム、スポーツ。面白いコンテンツ探し。ボードゲームコレクター。"}]},
+"ESFP-G-Dp":{name:"ゴッドハンド",character:"チョッパー（ONE PIECE）",great:"野口英世",color:"#7D3C98",summary:"「目の前のこの人を確実に癒す」。一つの専門分野（ケア）に深くコミット。感覚が鋭く言葉にならない苦痛を察知する。",compatibility:{complement:[{code:"INTJ-O-Br",name:"軍師",desc:"ケアに戦略で効率。"},{code:"ENTP-G-Br",name:"歩く百科事典",desc:"深さに広がりを。"}],chemistry:[{code:"ISFJ-G-Dp",name:"守り神",desc:"ケア×ケア。"},{code:"ENFJ-G-Dp",name:"寮長",desc:"安心空間。"}],comfort:[{code:"ESFP-G-Br",name:"盛り上げ隊長",desc:"守りの温かさ。"},{code:"ESFP-O-Dp",name:"パフォーマー",desc:"深さ。"}],catalyst:[{code:"ENTJ-O-Br",name:"総司令",desc:"ケアを組織規模に。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"行動力が新しい可能性を。"}]},careers:{top:["理学療法士","動物病院の獣医","ホスピス専門家"],good:["鍼灸師","作業療法士","小児科医"],surprise:["アニマルセラピスト","和菓子職人"],avoid:["ハイスピードトレーディング","大規模営業目標"]},strengths:["感覚的苦痛察知","一人への深いケア","静かな治癒力","専門技術"],weaknesses:["大人数","スピード","自己PR","感情的巻き込まれ"],tips:{do:"「この人を癒して」→一人に向き合わせると最強。静かな環境。",dont:"「もっと多くの人を」→深いケアが生命線。"},fullSections:[{title:"👤 この人はこんな人",content:"患者の言葉にならない苦痛を察知する。触れるだけで安心させる力。\n\n技術と人柄の両方で信頼される。\n\n弱点は感情的に巻き込まれすぎて燃え尽きること。"},{title:"💼 仕事の進め方",content:"【着手】一人に丁寧に向き合う。【進行】深く集中。【完了】「楽になったか」が唯一の基準。【1日】穏やかなリズム。"},{title:"🗣️ 会議での振る舞い",content:"発言少なめ。ケースの深い理解で重い意見。\n【ベスト】ケースカンファレンス/少人数の深い議論"},{title:"💬 チャットでの傾向",content:"穏やかで丁寧。ケアに関する連絡中心。\n【知っておくと楽】燃え尽きケアしてあげて。「休んでいい」。"},{title:"👔 上司として／部下として",content:"【上司】ケアに全力。組織管理弱い。\n【部下】一人の顧客に向き合わせると最高。"},{title:"🔥 モチベーション",content:"【🚀】「楽になりました」/技術向上/深い関わり/静かな達成感\n【📉】大人数/スピード/深く関われない/燃え尽き"},{title:"📝 フィードバック",content:"【受ける】技術助言歓迎。「もっと多く」はプレッシャー。【伝える】繊細で丁寧。"},{title:"✅ 得意・苦手タスク",content:"【🎯】苦痛察知/深いケア/専門技術/治癒力\n【😰】大人数/スピード/PR/感情巻き込まれ"},{title:"📖 頼み方マニュアル",content:"【✅】「この人を癒して」→一人に向き合わせる。静かな環境と時間。\n【❌】「もっと多くの人を」→深いケアが命。「早く」→急がせない。\n【💡】1.一人集中 2.燃え尽き防止 3.技術深化支援"},{title:"🎯 適職マップ",content:"【🏆】理学療法士/動物病院の獣医/ホスピス\n【⭐】鍼灸師/作業療法士/小児科医\n【💡】アニマルセラピスト/和菓子職人\n【⚠️】ハイスピードトレーディング/大規模営業"},{title:"🤝 相性マップ",content:"【💎】INTJ-O-Br「軍師」。ENTP-G-Br「歩く百科事典」。\n【🔥】ISFJ-G-Dp「守り神」。ENFJ-G-Dp「寮長」。\n【☀️】ESFP-G-Br「盛り上げ隊長」。ESFP-O-Dp「パフォーマー」。\n【⚡】ENTJ-O-Br「総司令」。"},{title:"🌈 プライベートの顔",content:"動物好き。ペットが癒し。自然の中で過ごす。体に優しい料理。友達は少数で深い。穏やかな音楽。"}]},
+"INFP-O-Br":{name:"冒険作家",character:"ルーシィ（FAIRY TAIL）",great:"サン＝テグジュペリ",color:"#5DADE2",summary:"「世界はもっと美しくなれるはず」と本気で信じる人。豊かな想像力で理想を追い行動する。物語で人の心を動かす。",compatibility:{complement:[{code:"ESTJ-G-Dp",name:"頑固職人",desc:"夢を仕組みに。"},{code:"ENTJ-G-Dp",name:"長期戦略家",desc:"理想に持続力。"}],chemistry:[{code:"ENFP-O-Br",name:"着火マン",desc:"想像力×行動力。"},{code:"INFJ-O-Br",name:"革命家",desc:"世界を変える対話。"}],comfort:[{code:"INFP-O-Dp",name:"理想主義者",desc:"理想の情熱。"},{code:"INFP-G-Br",name:"やさしさ担当",desc:"想像力。"}],catalyst:[{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"現実が夢を鍛える。"},{code:"ESTP-O-Dp",name:"エース",desc:"即行動が打破。"}]},careers:{top:["小説家","NPO創設者","クリエイティブディレクター"],good:["UXライター","絵本作家","映画脚本家"],surprise:["旅行記ブロガー","社会起業家"],avoid:["定型経理","厳格品質管理"]},strengths:["想像力","物語で動かす力","情熱","感受性"],weaknesses:["実行計画","数字","対立","ルーティン"],tips:{do:"「理想を形にして」→自由と信頼。",dont:"「夢はいいから現実を」→理想がエンジン。"},fullSections:[{title:"👤 この人はこんな人",content:"豊かな想像力で理想を追い求める。内向型だが攻めでリスクも取れる。\n\n書いた文章やデザインで世界が変わると思わせる力。\n\n弱点は現実との折り合い。お金や時間の管理が苦手。"},{title:"💼 仕事の進め方",content:"【着手】インスピレーションで。【進行】没入すると凄いが乗らないと動けない。【完了】「理想に近いか」。【1日】不規則。創造の波。"},{title:"🗣️ 会議での振る舞い",content:"質が高い。「こういう世界を目指しませんか」。\n【ベスト】ビジョン共有/クリエイティブレビュー"},{title:"💬 チャットでの傾向",content:"好きなテーマに熱い長文。事務は苦手。\n【知っておくと楽】長文は情熱。感性を認めると湧く。"},{title:"👔 上司として／部下として",content:"【上司】ビジョンで引きつける。管理弱い。\n【部下】自由と理想を共有できる上司で最高。"},{title:"🔥 モチベーション",content:"【🚀】理想が形に/心を動かした/自由/同じ理想の仲間\n【📉】理想否定/ルーティン/創造性なし/現実に押される"},{title:"📝 フィードバック",content:"【受ける】理想を認めた上で。【伝える】感性豊か。良いところを見つける天才。"},{title:"✅ 得意・苦手タスク",content:"【🎯】物語/ビジョン/デザイン・文章/共感\n【😰】数字/対立/ルーティン/スケジュール"},{title:"📖 頼み方マニュアル",content:"【✅】「理想を形にして」「世界観を作って」→自由と信頼。\n【❌】「夢はいいから現実を」。\n【💡】1.創造の自由 2.現実面サポート 3.理想を認める"},{title:"🎯 適職マップ",content:"【🏆】小説家/NPO創設者/クリエイティブディレクター\n【⭐】UXライター/絵本作家/脚本家\n【💡】旅行記ブロガー/社会起業家\n【⚠️】定型経理/厳格品質管理"},{title:"🤝 相性マップ",content:"【💎】ESTJ-G-Dp「頑固職人」。ENTJ-G-Dp「長期戦略家」。\n【🔥】ENFP-O-Br「着火マン」。INFJ-O-Br「革命家」。\n【☀️】INFP-O-Dp「理想主義者」。INFP-G-Br「やさしさ担当」。\n【⚡】ESTJ-O-Br「鬼軍曹」。"},{title:"🌈 プライベートの顔",content:"カフェで読書、美術館、一人旅。日記やブログ。部屋にお気に入りの本と植物。"}]},
+"INFP-O-Dp":{name:"理想主義者",character:"エレン・イェーガー（進撃の巨人）",great:"ジャンヌ・ダルク",color:"#2E86C1",summary:"「この一つの理想のために全てを賭ける」覚悟の人。何度倒れても立ち上がる。内に燃える炎は誰よりも熱い。",compatibility:{complement:[{code:"ESTJ-G-Br",name:"なんでも屋",desc:"理想を堅実に。"},{code:"ENTJ-O-Br",name:"総司令",desc:"炎を最大化。"}],chemistry:[{code:"ENFJ-O-Dp",name:"恩師",desc:"使命感共鳴。"},{code:"INFJ-O-Dp",name:"真理の探究者",desc:"内なる炎同士。"}],comfort:[{code:"INFP-O-Br",name:"冒険作家",desc:"理想の情熱。"},{code:"INFP-G-Dp",name:"詩人",desc:"深い内省。"}],catalyst:[{code:"ESTP-O-Br",name:"トラブルシューター",desc:"行動に火を。"},{code:"ENTP-O-Br",name:"アイデアマン",desc:"視野を広げる。"}]},careers:{top:["人権活動家","ドキュメンタリー監督","社会運動リーダー"],good:["臨床心理士","社会派作家","教育改革者"],surprise:["僧侶","サバイバル活動家"],avoid:["価値観に反する営業","効率だけの定型"]},strengths:["揺るがない信念","回復力","深い共感","献身"],weaknesses:["視野の狭さ","自分のケア","客観性","妥協"],tips:{do:"「理想を実現して」→信念に火。長期コミット。",dont:"「諦めたら」→絶対NG。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの信念に人生を捧げ何度倒れても立ち上がる。粘り強さは64タイプ随一。\n\n信念のテーマでは目の色が変わる。\n\n弱点は視野の狭さと自分のケア後回し。"},{title:"💼 仕事の進め方",content:"【着手】「なぜやるか」が最重要。【進行】一つに深く。【完了】「理想に近づいたか」。【1日】不規則だが信念の仕事は何時間でも。"},{title:"🗣️ 会議での振る舞い",content:"普段静か。信念テーマでは圧倒的説得力。\n【ベスト】使命共有/価値観議論"},{title:"💬 チャットでの傾向",content:"テーマ発信は熱い。他は静か。\n【知っておくと楽】沈黙は充電中。信念を否定しない。"},{title:"👔 上司として／部下として",content:"【上司】使命感で引きつける。管理手薄。\n【部下】信念共有できる上司で最強。"},{title:"🔥 モチベーション",content:"【🚀】理想に近づいた/信念が認められた/同志/復活\n【📉】理想否定/矛盾する仕事/孤立/燃え尽き"},{title:"📝 フィードバック",content:"【受ける】信念を認めた上で。【伝える】深い共感ベース。"},{title:"✅ 得意・苦手タスク",content:"【🎯】信念/回復力/共感/献身/魂の発信\n【😰】視野/自分のケア/客観性/妥協"},{title:"📖 頼み方マニュアル",content:"【✅】「理想を実現して」→長期コミット。\n【❌】「現実的に」→理想が命。\n【💡】1.信念と仕事を接続 2.燃え尽き防止 3.長期支援"},{title:"🎯 適職マップ",content:"【🏆】人権活動家/ドキュメンタリー/社会運動\n【⭐】臨床心理士/社会派作家/教育改革\n【💡】僧侶/サバイバル\n【⚠️】価値観に反する営業/効率だけの定型"},{title:"🤝 相性マップ",content:"【💎】ESTJ-G-Br「なんでも屋」。ENTJ-O-Br「総司令」。\n【🔥】ENFJ-O-Dp「恩師」。INFJ-O-Dp「真理の探究者」。\n【☀️】INFP-O-Br「冒険作家」。INFP-G-Dp「詩人」。\n【⚡】ESTP-O-Br「トラブルシューター」。"},{title:"🌈 プライベートの顔",content:"一人の時間が多い。読書、映画、散歩。ドキュメンタリー好き。友達少ないが魂の繋がり。"}]},
+"INFP-G-Br":{name:"やさしさ担当",character:"のび太（ドラえもん）",great:"宮沢賢治",color:"#85C1E9",summary:"「みんなが優しくいられる世界がいいな」。想像力豊かで日常の美しさを見つける天才。争いが苦手で誰にでも優しい。",compatibility:{complement:[{code:"ESTJ-O-Dp",name:"鬼教官",desc:"柔らかさが鋭さに人間味。"},{code:"ENTJ-O-Dp",name:"将軍",desc:"力に優しさ。"}],chemistry:[{code:"ENFP-G-Br",name:"ムードメーカー",desc:"温かさ×想像力。"},{code:"INFJ-G-Br",name:"語り部",desc:"静かで深い対話。"}],comfort:[{code:"INFP-O-Br",name:"冒険作家",desc:"想像力。"},{code:"INFP-G-Dp",name:"詩人",desc:"穏やかさ。"}],catalyst:[{code:"ENTJ-O-Br",name:"総司令",desc:"眠る力を呼び覚ます。"},{code:"ESTP-O-Dp",name:"エース",desc:"外の世界に。"}]},careers:{top:["絵本作家","児童カウンセラー","図書館司書"],good:["UXデザイナー","ガーデンデザイナー","音楽療法士"],surprise:["ペットシッター","手芸作家"],avoid:["厳しいノルマ","競争的トレーディング"]},strengths:["想像力","日常の美","優しさ","幅広い関心"],weaknesses:["自己主張","対立","ストレス耐性","決断力"],tips:{do:"「感性で作って」→安全な環境と自由。急がせない。",dont:"「強くなれ」→優しさが強み。"},fullSections:[{title:"👤 この人はこんな人",content:"雨粒、木漏れ日に感動できる。争いが苦手で誰にでも優しい。\n\n弱点はストレスに弱い。対立や競争では力が出ない。"},{title:"💼 仕事の進め方",content:"【着手】ゆっくり安心してから。【進行】穏やかに丁寧。【完了】「優しい仕上がりか」。【1日】穏やか。静かな環境必須。"},{title:"🗣️ 会議での振る舞い",content:"「こういう見方もあるかも」と優しい視点。\n【ベスト】少人数の穏やかな対話"},{title:"💬 チャットでの傾向",content:"優しい言葉。攻撃的やり取りで萎縮。\n【知っておくと楽】安全な場が必要。"},{title:"👔 上司として／部下として",content:"【上司】優しい。決断遅い。\n【部下】安心環境で穏やかに発揮。"},{title:"🔥 モチベーション",content:"【🚀】穏やか/想像力/喜び/美しいもの\n【📉】対立/競争/厳しい環境/想像力否定"},{title:"📝 フィードバック",content:"【受ける】「素敵、ここをこうすると」。【伝える】優しすぎて伝わらないことも。"},{title:"✅ 得意・苦手タスク",content:"【🎯】想像力/日常の美/優しいコミュニケーション\n【😰】主張/対立/ストレス/決断"},{title:"📖 頼み方マニュアル",content:"【✅】「感性で作って」→安全と自由。\n【❌】「強くなれ」「競争しろ」。\n【💡】1.安全な環境 2.想像力を活かす 3.穏やかなペース"},{title:"🎯 適職マップ",content:"【🏆】絵本作家/児童カウンセラー/図書館司書\n【⭐】UXデザイナー/ガーデン/音楽療法\n【💡】ペットシッター/手芸\n【⚠️】厳しいノルマ/競争トレーディング"},{title:"🤝 相性マップ",content:"【💎】ESTJ-O-Dp「鬼教官」。ENTJ-O-Dp「将軍」。\n【🔥】ENFP-G-Br「ムードメーカー」。INFJ-G-Br「語り部」。\n【☀️】INFP-O-Br「冒険作家」。INFP-G-Dp「詩人」。\n【⚡】ENTJ-O-Br「総司令」。"},{title:"🌈 プライベートの顔",content:"カフェ、公園、猫。絵を描く、手紙を書く、花を育てる。雑踏より自然。"}]},
+"INFP-G-Dp":{name:"詩人",character:"カナヲ（鬼滅の刃）",great:"エミリー・ディキンソン",color:"#1F618D",summary:"「世界の奥底の真実を言葉にしたい」。最も内省的タイプの一つ。一つのテーマを深く掘り下げ誰も見たことのない景色を言葉にする。",compatibility:{complement:[{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"感受性が組織に人間味。"},{code:"ENTJ-G-Br",name:"参謀",desc:"合理性に感性。"}],chemistry:[{code:"INFJ-G-Dp",name:"カウンセラー",desc:"最も深い対話。"},{code:"ENFP-G-Dp",name:"共感屋",desc:"深い共感。光へ。"}],comfort:[{code:"INFP-G-Br",name:"やさしさ担当",desc:"穏やかさ。"},{code:"INFP-O-Dp",name:"理想主義者",desc:"内省。"}],catalyst:[{code:"ESTP-O-Br",name:"トラブルシューター",desc:"外の世界を教える。"},{code:"ENFP-O-Br",name:"着火マン",desc:"明るさが闇を照らす。"}]},careers:{top:["詩人・文学作家","哲学研究者","深層心理カウンセラー"],good:["作曲家","芸術映像作家","文学翻訳者"],surprise:["占星術師","香水調香師"],avoid:["大規模営業","ハイテンポ接客"]},strengths:["深い内省","魂に触れる表現","没入","言語化"],weaknesses:["社交","スピード","実務","明るい環境"],tips:{do:"「深く掘り下げて」→静かな環境で最高の作品。",dont:"「明るく社交的に」→闇に真実を見つける人。"},fullSections:[{title:"👤 この人はこんな人",content:"一つのテーマを深く掘り下げ誰も見たことのない景色を言葉にする。\n\n普段は存在感薄い。書いた文章を読んだ人が「心を見透かしている」と震える。\n\n弱点は社交とスピード。"},{title:"💼 仕事の進め方",content:"【着手】長い沈黙の後。【進行】一人で深く。【完了】魂が納得するまで。【1日】静かな一人の時間がベスト。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。求められると本質を突く。\n【ベスト】2-3人の深い対話"},{title:"💬 チャットでの傾向",content:"ほぼ無言。テーマの投稿は驚くほど深い。\n【知っておくと楽】沈黙は普通。急かさない。"},{title:"👔 上司として／部下として",content:"【上司】深い個別関係。組織管理不向き。\n【部下】一人で深く掘り下げる仕事で最高。"},{title:"🔥 モチベーション",content:"【🚀】深い真実/表現が魂に触れた/静かな時間/内省の深まり\n【📉】社交強制/浅い作業/騒がしい/表現否定"},{title:"📝 フィードバック",content:"【受ける】深い理解のFBのみ。【伝える】魂に語りかける。"},{title:"✅ 得意・苦手タスク",content:"【🎯】内省/魂の表現/没入/言語化\n【😰】社交/スピード/実務/大人数"},{title:"📖 頼み方マニュアル",content:"【✅】「深く掘り下げて」→静かな環境。時間制限ゆるく。\n【❌】「明るく社交的に」。\n【💡】1.静かな環境 2.一人の時間 3.表現を深く読む"},{title:"🎯 適職マップ",content:"【🏆】詩人/哲学研究者/深層心理カウンセラー\n【⭐】作曲家/芸術映像/文学翻訳\n【💡】占星術師/香水調香師\n【⚠️】大規模営業/ハイテンポ接客"},{title:"🤝 相性マップ",content:"【💎】ESTJ-O-Br「鬼軍曹」。ENTJ-G-Br「参謀」。\n【🔥】INFJ-G-Dp「カウンセラー」。ENFP-G-Dp「共感屋」。\n【☀️】INFP-G-Br「やさしさ担当」。INFP-O-Dp「理想主義者」。\n【⚡】ESTP-O-Br「トラブルシューター」。"},{title:"🌈 プライベートの顔",content:"薄暗い部屋で本を読む、深夜に詩を書く、雨の音。友達は一人か二人。自然の散歩が唯一のアウトドア。"}]},
+"INFJ-O-Br":{name:"革命家",character:"ヤハクィザシュニナ（正解するカド）",great:"ガンジー",color:"#48C9B0",summary:"「世界はこう変わるべきだ」を持ち静かに行動する革命家。幅広い知見で社会構造を見抜き未来を予見する。",compatibility:{complement:[{code:"ESTP-G-Dp",name:"求道者",desc:"ビジョンを堅実に。"},{code:"ESTJ-G-Br",name:"なんでも屋",desc:"仕組みに落とす。"}],chemistry:[{code:"INFP-O-Br",name:"冒険作家",desc:"世界を変える対話。"},{code:"ENTJ-O-Br",name:"総司令",desc:"戦略で実現。"}],comfort:[{code:"INFJ-O-Dp",name:"真理の探究者",desc:"直観。"},{code:"INFJ-G-Br",name:"語り部",desc:"知見。"}],catalyst:[{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが真面目を解放。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"即行動。"}]},careers:{top:["シンクタンク研究員","社会起業家","政策アドバイザー"],good:["未来学者","戦略コンサル","調査報道"],surprise:["SF作家","宗教指導者"],avoid:["定型事務","短期利益追求"]},strengths:["洞察","予見力","知見統合","静かな行動力"],weaknesses:["孤独","消耗","日常管理","期待過剰"],tips:{do:"「社会をどう変えるべきか」→知的自由を。",dont:"「考えすぎ」→洞察力が武器。"},fullSections:[{title:"👤 この人はこんな人",content:"「3年後にこうなる」が当たる。ただし信じてもらえないもどかしさ。\n\n内向型だが攻めの姿勢で静かに行動。\n\n弱点は孤独と消耗。"},{title:"💼 仕事の進め方",content:"【着手】全体構造把握。【進行】一人で深く、必要に応じ巻き込む。【完了】「社会インパクト」。【1日】朝に内省、日中行動、夜振り返り。"},{title:"🗣️ 会議での振る舞い",content:"「本質はこう」と核心。場が静まる。\n【ベスト】戦略議論/社会課題/少人数"},{title:"💬 チャットでの傾向",content:"洞察に満ちた長文を突然。日常は少なめ。\n【知っておくと楽】「面白い視点」と反応すると喜ぶ。"},{title:"👔 上司として／部下として",content:"【上司】ビジョナリー。日常管理弱い。\n【部下】ビジョン共有できる上司で最強参謀。"},{title:"🔥 モチベーション",content:"【🚀】予見的中/社会が良い方向に/深い対話/ビジョン共有\n【📉】理解されない/否定/表面的/消耗"},{title:"📝 フィードバック",content:"【受ける】知的FB歓迎。【伝える】洞察に基づく深いFB。"},{title:"✅ 得意・苦手タスク",content:"【🎯】洞察/予見/知見統合/行動力/戦略\n【😰】日常管理/表面的社交/定型/短期成果"},{title:"📖 頼み方マニュアル",content:"【✅】「社会をどう変えるべきか」→知的自由。\n【❌】「考えすぎ」「普通にして」。\n【💡】1.知的自由 2.ビジョン尊重 3.孤独をケア"},{title:"🎯 適職マップ",content:"【🏆】シンクタンク/社会起業/政策アドバイザー\n【⭐】未来学者/戦略コンサル/調査報道\n【💡】SF作家/宗教指導者\n【⚠️】定型事務/短期利益"},{title:"🤝 相性マップ",content:"【💎】ESTP-G-Dp「求道者」。ESTJ-G-Br「なんでも屋」。\n【🔥】INFP-O-Br「冒険作家」。ENTJ-O-Br「総司令」。\n【☀️】INFJ-O-Dp「真理の探究者」。INFJ-G-Br「語り部」。\n【⚡】ESFP-O-Br「お祭り総隊長」。"},{title:"🌈 プライベートの顔",content:"読書が中心。社会学、哲学、SF。一人で考える時間が充電。少数の深い友人と長い対話。異文化の旅。"}]},
+"INFJ-O-Dp":{name:"真理の探究者",character:"綾波レイ（エヴァンゲリオン）",great:"シモーヌ・ヴェイユ",color:"#1ABC9C",summary:"「この一つの真理を世界に届ける」使命の人。一つの真理に深く没入し守り伝える。直観が鋭く本質を見抜く。静謐だが揺るがない芯。",compatibility:{complement:[{code:"ESTP-G-Br",name:"安全番長",desc:"真理を現場で。"},{code:"ESTJ-G-Dp",name:"頑固職人",desc:"直観を仕組みに。"}],chemistry:[{code:"INFP-O-Dp",name:"理想主義者",desc:"内なる炎同士。"},{code:"ENFJ-O-Dp",name:"恩師",desc:"使命感共鳴。"}],comfort:[{code:"INFJ-O-Br",name:"革命家",desc:"直観。"},{code:"INFJ-G-Dp",name:"カウンセラー",desc:"深さ。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"自由な発想が視野を。"},{code:"ESFP-O-Dp",name:"パフォーマー",desc:"感覚が知性に身体性を。"}]},careers:{top:["哲学者","宗教学者","精神科医"],good:["心理療法士","倫理委員","古典翻訳"],surprise:["茶道師範","瞑想指導者"],avoid:["ハイテンポ営業","表面的エンタメ"]},strengths:["直観力","本質看破","揺るがない芯","真理への献身"],weaknesses:["柔軟性","日常管理","大人数","軽い社交"],tips:{do:"「真理を探求して」→静かな環境で最高の洞察。",dont:"「もっと軽く広く」→深さが命。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの真理に深く没入し守り伝える。初対面の人の本質を見抜く。\n\n静謐だが絶対に揺るがない芯。「何があっても変わらない」安心感。\n\n弱点は柔軟性と日常管理。"},{title:"💼 仕事の進め方",content:"【着手】直観で「これだ」と。【進行】一つに深く。【完了】「真理に近づいたか」。【1日】静かで規律的。瞑想的。"},{title:"🗣️ 会議での振る舞い",content:"沈黙が多い。発言すると本質を突く。\n【ベスト】本質対話/倫理的判断/少人数"},{title:"💬 チャットでの傾向",content:"極めて少ない。一言の重みが違う。\n【知っておくと楽】沈黙は思索中。短い返信は信頼。"},{title:"👔 上司として／部下として",content:"【上司】精神的導師。日常管理弱い。\n【部下】真理を探求できる環境で最高。"},{title:"🔥 モチベーション",content:"【🚀】真理に近づいた/直観的中/深い対話/静かな没入\n【📉】表面的/真理否定/騒がしい/軽い社交強制"},{title:"📝 フィードバック",content:"【受ける】真理への理解あるFBのみ。【伝える】一言で本質。"},{title:"✅ 得意・苦手タスク",content:"【🎯】直観/本質/真理への献身/深い洞察\n【😰】柔軟性/日常管理/大人数/軽い社交"},{title:"📖 頼み方マニュアル",content:"【✅】「真理を探求して」→静かな環境。\n【❌】「軽く広く」→深さが命。\n【💡】1.静かな環境 2.探求の自由 3.直観を信頼"},{title:"🎯 適職マップ",content:"【🏆】哲学者/宗教学者/精神科医\n【⭐】心理療法/倫理委員/古典翻訳\n【💡】茶道師範/瞑想指導\n【⚠️】ハイテンポ営業/表面エンタメ"},{title:"🤝 相性マップ",content:"【💎】ESTP-G-Br「安全番長」。ESTJ-G-Dp「頑固職人」。\n【🔥】INFP-O-Dp「理想主義者」。ENFJ-O-Dp「恩師」。\n【☀️】INFJ-O-Br「革命家」。INFJ-G-Dp「カウンセラー」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"静かな生活。哲学、宗教、古典。瞑想、散歩。寺や神社。友達は極少。一人の時間が全て。"}]},
+"INFJ-G-Br":{name:"語り部",character:"シェヘラザード（マギ）",great:"トールキン",color:"#76D7C4",summary:"「世界の物語を守り伝える」語り部。幅広い知見を統合し物語として紡ぐ。静かだが豊かな表現力。人と知識の橋渡し。",compatibility:{complement:[{code:"ESTP-O-Dp",name:"エース",desc:"生きた体験を物語に。"},{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"物語を組織の力に。"}],chemistry:[{code:"INFP-G-Br",name:"やさしさ担当",desc:"静かで深い対話。"},{code:"ENFJ-G-Br",name:"守護霊",desc:"物語と人をつなぐ。"}],comfort:[{code:"INFJ-O-Br",name:"革命家",desc:"知見。"},{code:"INFJ-G-Dp",name:"カウンセラー",desc:"深さ。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"予想外の展開。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"エンタメ力が物語を大衆に。"}]},careers:{top:["編集者","文化人類学者","博物館キュレーター"],good:["ノンフィクションライター","人文系教育者","ポッドキャスター"],surprise:["語り部・朗読家","ワインソムリエ"],avoid:["数値目標営業","短期利益金融"]},strengths:["物語の構成力","知見統合","静かな表現力","橋渡し"],weaknesses:["スピード","自己主張","数字","競争"],tips:{do:"「知識を物語にして」→語りの力。じっくり時間を。",dont:"「目立って」「数字で」→物語は数字で測れない。"},fullSections:[{title:"👤 この人はこんな人",content:"歴史、文化、心理学、哲学—様々な知識が一つの物語に。\n\n書いた文章で「この人はこう世界を見ている」と驚く。\n\n弱点はスピードと自己主張。"},{title:"💼 仕事の進め方",content:"【着手】広く情報を集め構造化。【進行】じっくり紡ぐ。【完了】「物語として美しいか」。【1日】穏やか。朝にインプット、午後にアウトプット。"},{title:"🗣️ 会議での振る舞い",content:"「物語として捉えると」と独自視点。情報を構造化。\n【ベスト】コンテンツ企画/知見共有/振り返り"},{title:"💬 チャットでの傾向",content:"丁寧で構造的。リンクや参考資料をよく共有。\n【知っておくと楽】じっくり考えるので返信遅め。"},{title:"👔 上司として／部下として",content:"【上司】メンバーの物語を大切に。管理弱い。\n【部下】知識を活かせる仕事で最大。語りの場で輝く。"},{title:"🔥 モチベーション",content:"【🚀】物語が届いた/知見統合/深い対話/新しい知識\n【📉】スピード/数字だけ/表面的/物語軽視"},{title:"📝 フィードバック",content:"【受ける】構造への指摘歓迎。【伝える】物語として。相手の強みを語る。"},{title:"✅ 得意・苦手タスク",content:"【🎯】物語/知見統合/表現/橋渡し/コンテンツ\n【😰】スピード/主張/数字/競争"},{title:"📖 頼み方マニュアル",content:"【✅】「知識を物語にして」→じっくり時間を。\n【❌】「目立って」「数字で」。\n【💡】1.じっくり時間 2.知識を活かす場 3.語りの場を用意"},{title:"🎯 適職マップ",content:"【🏆】編集者/文化人類学者/博物館キュレーター\n【⭐】ノンフィクション/人文教育/ポッドキャスター\n【💡】語り部/ソムリエ\n【⚠️】数値営業/短期利益金融"},{title:"🤝 相性マップ",content:"【💎】ESTP-O-Dp「エース」。ESTJ-O-Br「鬼軍曹」。\n【🔥】INFP-G-Br「やさしさ担当」。ENFJ-G-Br「守護霊」。\n【☀️】INFJ-O-Br「革命家」。INFJ-G-Dp「カウンセラー」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"本に囲まれた生活。カフェで書き物。映画や音楽も「物語」として。旅行先で歴史や文化に触れる。"}]},
+"INFJ-G-Dp":{name:"カウンセラー",character:"シェリル・ノーム（マクロスF）",great:"ユング",color:"#1ABC9C",summary:"「言葉にならない痛みに、そっと寄り添う」。守り×深型で一人の人に深く寄り添うカウンセラー。静かだが最も深い共感力。この人といると魂が安らぐ。",compatibility:{complement:[{code:"ESTP-O-Br",name:"トラブルシューター",desc:"静かな共感に行動力が。"},{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"深い共感が厳しさに温もりを。"}],chemistry:[{code:"INFP-G-Dp",name:"詩人",desc:"最も深い対話。言葉少なくても通じる。"},{code:"ENFP-G-Dp",name:"共感屋",desc:"深い共感同士。"}],comfort:[{code:"INFJ-G-Br",name:"語り部",desc:"深さ。"},{code:"INFJ-O-Dp",name:"真理の探究者",desc:"深さ。"}],catalyst:[{code:"ENTJ-O-Br",name:"総司令",desc:"強い指揮が守りに方向を。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが深刻になりすぎるのを防ぐ。"}]},careers:{top:["臨床心理士","スピリチュアルカウンセラー","ホスピスケア"],good:["アートセラピスト","瞑想指導者","緩和ケア"],surprise:["占い師","香りのセラピスト"],avoid:["ハイスピードの営業","大規模イベント運営"]},strengths:["最も深い共感","魂レベルの寄り添い","言葉にならないものを察する","静かな癒し"],weaknesses:["大人数","スピード","自己主張","感情の巻き込まれ"],tips:{do:"「この人に寄り添ってほしい」→一人に深く。静かな環境で。",dont:"「もっと多くの人を」→深さが生命線。"},fullSections:[{title:"👤 この人はこんな人",content:"一人の人に深く寄り添うカウンセラー。言葉にならない痛みを察する力がある。\n\nこの人といると魂が安らぐ。「何も言わなくてもわかってくれる」感覚。\n\n弱点は感情の巻き込まれと燃え尽き。"},{title:"💼 仕事の進め方",content:"【着手】相手の状態を感じ取ってから。【進行】一人に深く。急がない。【完了】「この人が楽になったか」。【1日】穏やかで静か。エネルギー回復の時間が必要。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。でも場の感情を最も正確に把握している。\n【ベスト】1on1/少人数の深い対話/ケースカンファレンス"},{title:"💬 チャットでの傾向",content:"少なめだが温かい。個別のケア連絡。\n【知っておくと楽】燃え尽きに注意。「休んでいい」が必要。"},{title:"👔 上司として／部下として",content:"【上司】メンバーの心理状態に最も敏感。安心空間を作る。管理は弱い。\n【部下】一人に寄り添う仕事で最高の力。"},{title:"🔥 モチベーション",content:"【🚀】深い共感ができた/「楽になった」/魂の対話/静かな達成感\n【📉】大人数/スピード/感情無視の環境/燃え尽き"},{title:"📝 フィードバック",content:"【受ける】信頼関係がベース。【伝える】魂に語りかけるように。"},{title:"✅ 得意・苦手タスク",content:"【🎯】深い共感/魂の寄り添い/察する力/静かな癒し\n【😰】大人数/スピード/自己主張/感情巻き込まれ"},{title:"📖 頼み方マニュアル",content:"【✅】「寄り添ってほしい」→一人に深く。静かな環境で。\n【❌】「多くの人を」→深さが命。\n【💡】1.一人に集中 2.燃え尽き防止 3.静かな環境"},{title:"🎯 適職マップ",content:"【🏆】臨床心理士/スピリチュアルカウンセラー/ホスピス\n【⭐】アートセラピスト/瞑想指導/緩和ケア\n【💡】占い師/香りのセラピスト\n【⚠️】ハイスピード営業/大規模イベント"},{title:"🤝 相性マップ",content:"【💎】ESTP-O-Br「トラブルシューター」。ESTJ-O-Br「鬼軍曹」。\n【🔥】INFP-G-Dp「詩人」。ENFP-G-Dp「共感屋」。\n【☀️】INFJ-G-Br「語り部」。INFJ-O-Dp「真理の探究者」。\n【⚡】ENTJ-O-Br「総司令」。"},{title:"🌈 プライベートの顔",content:"静かな暮らし。自然の中を散歩、お茶を丁寧に淹れる、瞑想。友達は極少数で深い。一人の時間が充電。音楽は静かなものを好む。"}]},
+"INTJ-O-Br":{name:"軍師",character:"リューク（DEATH NOTE）",great:"孫子",color:"#2C3E50",summary:"「あらゆる可能性を計算し最適解を導く」戦略家。幅広い知識で複数戦略を同時に。冷静で論理的。",compatibility:{complement:[{code:"ESFP-G-Dp",name:"ゴッドハンド",desc:"冷静さに温かさ。"},{code:"ESFJ-G-Br",name:"調和の達人",desc:"戦略に温もり。"}],chemistry:[{code:"ENTJ-O-Br",name:"総司令",desc:"戦略×実行の最強頭脳。"},{code:"INTJ-O-Dp",name:"ラスボス",desc:"知的同盟。"}],comfort:[{code:"INTJ-G-Br",name:"黒幕参謀",desc:"知的広さ。"},{code:"INTP-O-Br",name:"発明家",desc:"好奇心。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"計算外の可能性。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが人間味を。"}]},careers:{top:["戦略コンサル","CTO","投資ファンドマネージャー"],good:["データサイエンティスト","政策立案","システムアーキテクト"],surprise:["チェスグランドマスター","推理小説家"],avoid:["感情労働接客","ルーティン事務"]},strengths:["多角的戦略","冷静な意思決定","幅広い知識応用","複数シナリオ"],weaknesses:["感情配慮","空気","直感判断","人に任せる"],tips:{do:"「最適な戦略を」→知的自由と情報を。",dont:"「感覚で」「みんなの気持ちを」。"},fullSections:[{title:"👤 この人はこんな人",content:"「プランA,B,C」が常に頭にある。冷静で論理的。\n\n弱点は感情面の配慮。「論理的に正しい」が全て。"},{title:"💼 仕事の進め方",content:"【着手】全体像分析。【進行】複数シナリオ並行。データで判断。【完了】「最適解か」。【1日】効率的。無駄嫌い。"},{title:"🗣️ 会議での振る舞い",content:"「この問題の構造はこう」と図解。\n【ベスト】戦略立案/意思決定/分析"},{title:"💬 チャットでの傾向",content:"簡潔で論理的。図やデータ添付。\n【知っておくと楽】短いのは効率。感情的メッセージには薄め。"},{title:"👔 上司として／部下として",content:"【上司】明晰な指示。基準明確。感情面弱い。\n【部下】戦略を任されると最強。"},{title:"🔥 モチベーション",content:"【🚀】複雑な問題を解いた/戦略的中/知的挑戦/効率化\n【📉】非論理/感情論/情報不足/自由なし"},{title:"📝 フィードバック",content:"【受ける】論理的FB歓迎。【伝える】構造的で冷たく感じることも。"},{title:"✅ 得意・苦手タスク",content:"【🎯】戦略/分析/シナリオ/意思決定/効率化\n【😰】感情/空気/直感/任せる"},{title:"📖 頼み方マニュアル",content:"【✅】「最適な戦略を」→知的自由と情報。\n【❌】「感覚で」「気持ちを」。\n【💡】1.知的自由 2.情報 3.論理で評価"},{title:"🎯 適職マップ",content:"【🏆】戦略コンサル/CTO/ファンドマネージャー\n【⭐】データサイエンス/政策/システムアーキテクト\n【💡】チェス/推理小説\n【⚠️】感情労働/ルーティン"},{title:"🤝 相性マップ",content:"【💎】ESFP-G-Dp「ゴッドハンド」。ESFJ-G-Br「調和の達人」。\n【🔥】ENTJ-O-Br「総司令」。INTJ-O-Dp「ラスボス」。\n【☀️】INTJ-G-Br「黒幕参謀」。INTP-O-Br「発明家」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"効率的生活。読書（戦略、経済、SF）、チェス。知的に対等な友人と議論。"}]},
+"INTJ-O-Dp":{name:"ラスボス",character:"空（ノーゲーム・ノーライフ）",great:"ニュートン",color:"#1B2631",summary:"「この一つの分野で誰にも負けない知性」。圧倒的体系を構築する究極の知的探求者。冷徹で完璧主義。",compatibility:{complement:[{code:"ESFP-G-Br",name:"盛り上げ隊長",desc:"冷徹さに温かさ。"},{code:"ESFJ-O-Dp",name:"肝っ玉番長",desc:"人への愛が戦略に翼。"}],chemistry:[{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"議論が哲学の域に。"},{code:"INTJ-O-Br",name:"軍師",desc:"知的同盟。"}],comfort:[{code:"INTJ-G-Dp",name:"設計狂",desc:"深さ。"},{code:"INTP-O-Dp",name:"研究者",desc:"没入。"}],catalyst:[{code:"ENFJ-O-Br",name:"カリスマ委員長",desc:"知性を社会に届ける。"},{code:"ESTP-O-Dp",name:"エース",desc:"理論を現実に。"}]},careers:{top:["AI研究者","理論物理学者","最高戦略責任者"],good:["特許弁護士","暗号研究","脳神経科学"],surprise:["碁の棋士","数学オリンピック指導"],avoid:["対人サービス","感情管理"]},strengths:["圧倒的知的深さ","体系的思考","完璧な論理","没入力"],weaknesses:["人の感情","柔軟性","社交","完璧主義弊害"],tips:{do:"「この分野を極めて」→知的自由を最大に。",dont:"「人に優しく」→知性が武器。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの分野で圧倒的体系を構築。「この理論に穴はないか」を延々検証。\n\n弱点は感情と柔軟性。完璧を求めスピードを犠牲にすることも。"},{title:"💼 仕事の進め方",content:"【着手】徹底分析。【進行】一人で深く。完璧追求。【完了】論理的に完全で美しいか。【1日】深夜型。"},{title:"🗣️ 会議での振る舞い",content:"「この論理の欠陥はここ」と即座に。\n【ベスト】技術レビュー/戦略/難問分析"},{title:"💬 チャットでの傾向",content:"極めて簡潔。知的議論には長文で応える。\n【知っておくと楽】短いのは性格。"},{title:"👔 上司として／部下として",content:"【上司】知的基準極めて高い。ついていける人には最高の師。\n【部下】知的自由で最強。"},{title:"🔥 モチベーション",content:"【🚀】ブレイクスルー/完璧な体系/没入/知的同志\n【📉】退屈/感情論/自由なし/浅い仕事"},{title:"📝 フィードバック",content:"【受ける】論理的欠陥指摘歓迎。【伝える】冷徹に正確。容赦ない。"},{title:"✅ 得意・苦手タスク",content:"【🎯】知的深さ/体系/論理/没入/戦略\n【😰】感情/柔軟性/社交/完璧主義弊害"},{title:"📖 頼み方マニュアル",content:"【✅】「分野を極めて」→知的自由最大に。\n【❌】「人に優しく」。\n【💡】1.知的自由 2.一人の時間 3.論理で評価"},{title:"🎯 適職マップ",content:"【🏆】AI研究/理論物理/最高戦略責任者\n【⭐】特許弁護士/暗号/脳神経\n【💡】碁の棋士/数学オリンピック\n【⚠️】対人サービス/感情管理"},{title:"🤝 相性マップ",content:"【💎】ESFP-G-Br「盛り上げ隊長」。ESFJ-O-Dp「肝っ玉番長」。\n【🔥】ENTP-O-Dp「常識クラッシャー」。INTJ-O-Br「軍師」。\n【☀️】INTJ-G-Dp「設計狂」。INTP-O-Dp「研究者」。\n【⚡】ENFJ-O-Br「カリスマ委員長」。"},{title:"🌈 プライベートの顔",content:"研究が趣味。論文、理論、コード。生活最小限。知的に対等な1-2人の友人。"}]},
+"INTJ-G-Br":{name:"黒幕参謀",character:"クロロ（HUNTER×HUNTER）",great:"マキャベリ",color:"#34495E",summary:"「全てを把握し最適に運用する」管理の天才。守り×広型で既存システムを最効率で運用。裏方の最強戦略家。",compatibility:{complement:[{code:"ESFP-O-Dp",name:"パフォーマー",desc:"管理に爆発力。"},{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"緻密さに温かさ。"}],chemistry:[{code:"ENTJ-G-Br",name:"参謀",desc:"堅実な戦略同盟。"},{code:"INTJ-O-Br",name:"軍師",desc:"知的広さ。"}],comfort:[{code:"INTJ-G-Dp",name:"設計狂",desc:"同じINTJ-G。"},{code:"INTP-G-Br",name:"教育者",desc:"守り知的。"}],catalyst:[{code:"ENFP-O-Dp",name:"伝道師",desc:"情熱が管理に火を。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"即興が柔軟性を。"}]},careers:{top:["CFO","リスク管理責任者","軍の参謀"],good:["PJコントローラー","情報セキュリティ","アクチュアリー"],surprise:["将棋戦略研究","選挙参謀"],avoid:["感情カウンセリング","ゼロイチ芸術"]},strengths:["緻密管理","全体把握","効率運用","リスク予測"],weaknesses:["革新","感情面","表舞台","リスクを取る"],tips:{do:"「全体を最適に管理して」→裏方の天才。",dont:"「表に出て」→裏方こそ最高効率。"},fullSections:[{title:"👤 この人はこんな人",content:"既存システムを最も効率的に運用する管理の天才。「モイラがチェックしたなら大丈夫」。\n\n弱点は革新と感情面。"},{title:"💼 仕事の進め方",content:"【着手】全体把握、計画。【進行】緻密に。リスク予測し先手。【完了】「全体が最適か」。【1日】規則正しく効率的。"},{title:"🗣️ 会議での振る舞い",content:"「ここにリスクがある」と誰も気づかない点。\n【ベスト】リスクレビュー/予算/効率化"},{title:"💬 チャットでの傾向",content:"簡潔正確。データ添付。\n【知っておくと楽】データで語ると早い。"},{title:"👔 上司として／部下として",content:"【上司】管理緻密。感情面弱い。\n【部下】裏方参謀で最強。"},{title:"🔥 モチベーション",content:"【🚀】全体最適/リスク回避/効率化/データで証明\n【📉】非効率/感情論/表舞台/データなし判断"},{title:"📝 フィードバック",content:"【受ける】データベース。【伝える】冷静で構造的。"},{title:"✅ 得意・苦手タスク",content:"【🎯】管理/把握/効率/リスク予測\n【😰】革新/感情/表舞台/大リスク"},{title:"📖 頼み方マニュアル",content:"【✅】「全体を最適に」→裏方権限を。\n【❌】「表に出て」「感覚で」。\n【💡】1.裏方権限 2.データアクセス 3.効率で評価"},{title:"🎯 適職マップ",content:"【🏆】CFO/リスク管理/参謀\n【⭐】PJコントローラー/セキュリティ/アクチュアリー\n【💡】将棋研究/選挙参謀\n【⚠️】感情カウンセリング/ゼロイチ芸術"},{title:"🤝 相性マップ",content:"【💎】ESFP-O-Dp「パフォーマー」。ESFJ-G-Dp「ベテラン寮長」。\n【🔥】ENTJ-G-Br「参謀」。INTJ-O-Br「軍師」。\n【☀️】INTJ-G-Dp「設計狂」。INTP-G-Br「教育者」。\n【⚡】ENFP-O-Dp「伝道師」。"},{title:"🌈 プライベートの顔",content:"効率的生活。ボードゲーム、パズル、データ分析。家計管理は完璧。"}]},
+"INTJ-G-Dp":{name:"設計狂",character:"キルア（HUNTER×HUNTER）",great:"チューリング",color:"#17202A",summary:"「完璧な仕組みを設計し永遠に動かす」究極の設計者。一つのシステムを極限まで洗練。寡黙で孤高。芸術的精巧さ。",compatibility:{complement:[{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"自由に構造で持続性。"},{code:"ESFJ-O-Br",name:"総支配人",desc:"華やかさと構造。"}],chemistry:[{code:"ENTP-G-Dp",name:"設計屋",desc:"同じ設計者。"},{code:"ENTJ-G-Dp",name:"長期戦略家",desc:"重厚な同志。"}],comfort:[{code:"INTJ-G-Br",name:"黒幕参謀",desc:"同じINTJ-G。"},{code:"INTP-G-Dp",name:"理論家",desc:"深い設計。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"新しい入口。"},{code:"ESTP-O-Dp",name:"エース",desc:"設計だけを実行に。"}]},careers:{top:["暗号システム設計","AI倫理設計","原子力安全設計"],good:["半導体設計","セキュリティアーキテクト","数学者"],surprise:["時計師","ダンジョン設計"],avoid:["即興営業","感情管理"]},strengths:["極限の精巧さ","深い没入","長期設計","完璧主義"],weaknesses:["スピード","社交","表舞台","変化対応"],tips:{do:"「完璧に設計して」→静かな環境と無限の時間。",dont:"「早く」「完璧じゃなくていい」→精巧さが命。"},fullSections:[{title:"👤 この人はこんな人",content:"一つのシステムを極限まで洗練。「この設計は100年持つ」。\n\n弱点はスピードと社交。"},{title:"💼 仕事の進め方",content:"【着手】頭で完成させてから。【進行】一人で極限まで。【完了】「完璧か」。【1日】深夜型。静寂。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。技術の核心で一言。\n【ベスト】設計レビュー/アーキテクチャ"},{title:"💬 チャットでの傾向",content:"最小限。図面やコード。\n【知っておくと楽】沈黙は設計中。成果物で評価。"},{title:"👔 上司として／部下として",content:"【上司】技術の最高峰。管理不向き。\n【部下】「全部任せた」が最高。"},{title:"🔥 モチベーション",content:"【🚀】完璧な設計/精巧さを理解/没入/長期安定\n【📉】急かされる/雑に扱われる/社交強制/浅い仕事"},{title:"📝 フィードバック",content:"【受ける】設計改善歓迎。【伝える】成果物で。"},{title:"✅ 得意・苦手タスク",content:"【🎯】精巧さ/没入/長期設計/完璧\n【😰】スピード/社交/表舞台/変化"},{title:"📖 頼み方マニュアル",content:"【✅】「完璧に設計して」→静かな環境と時間。\n【❌】「早く」「完璧じゃなくていい」。\n【💡】1.設計の自由 2.成果物で評価 3.時間を与える"},{title:"🎯 適職マップ",content:"【🏆】暗号/AI倫理/原子力安全\n【⭐】半導体/セキュリティ/数学者\n【💡】時計師/ダンジョン設計\n【⚠️】即興営業/感情管理"},{title:"🤝 相性マップ",content:"【💎】ESFP-O-Br「お祭り総隊長」。ESFJ-O-Br「総支配人」。\n【🔥】ENTP-G-Dp「設計屋」。ENTJ-G-Dp「長期戦略家」。\n【☀️】INTJ-G-Br「黒幕参謀」。INTP-G-Dp「理論家」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"設計が趣味。個人PJ、パズル、レゴ。部屋は整然。複数モニター。友達1-2人。"}]},
+"INTP-O-Br":{name:"発明家",character:"うちはイタチ（NARUTO）",great:"レオナルド・ダ・ヴィンチ",color:"#7FB3D8",summary:"「あらゆる分野を繋げて新しい知を生む」万能型知識人。異分野の知識を組み合わせ誰も思いつかない解を導く。",compatibility:{complement:[{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"知的好奇心に温かさ。"},{code:"ESTJ-G-Dp",name:"頑固職人",desc:"知識を仕組みに。"}],chemistry:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"知的好奇心の爆発。"},{code:"INTJ-O-Br",name:"軍師",desc:"知的広さ。"}],comfort:[{code:"INTP-O-Dp",name:"研究者",desc:"探求。"},{code:"INTP-G-Br",name:"教育者",desc:"広さ。"}],catalyst:[{code:"ENFJ-O-Br",name:"カリスマ委員長",desc:"知識を社会に届ける。"},{code:"ESTP-O-Dp",name:"エース",desc:"考えるだけを打破。"}]},careers:{top:["発明家","フルスタックエンジニア","科学ジャーナリスト"],good:["R&D研究者","テクニカルコンサル","データアナリスト"],surprise:["マジシャン","サイエンスコミュニケーター"],avoid:["感情労働","単調製造ライン"]},strengths:["異分野統合","知的好奇心","独創的解法","幅広い知識"],weaknesses:["完遂","感情面","一つへの集中","日常管理"],tips:{do:"「分野を超えた解を」→知的自由を最大に。",dont:"「一つに集中して」→広さが武器。"},fullSections:[{title:"👤 この人はこんな人",content:"「物理学の原理をマーケティングに応用したら？」が自然に出る。\n\n弱点はアイデアは山ほどあるが形にするのが苦手。"},{title:"💼 仕事の進め方",content:"【着手】知的好奇心で即。【進行】複数同時並行。気分で切替。【完了】「面白い発見があったか」。完遂苦手。【1日】不規則。"},{title:"🗣️ 会議での振る舞い",content:"「他の分野ではこういうアプローチが」。\n【ベスト】ブレスト/異分野統合"},{title:"💬 チャットでの傾向",content:"リンクや参考資料を大量共有。「これ面白い」が口癖。\n【知っておくと楽】興味幅広い。事務は別途。"},{title:"👔 上司として／部下として",content:"【上司】知的刺激に溢れる。管理弱い。\n【部下】知的自由で最高のアイデアメーカー。"},{title:"🔥 モチベーション",content:"【🚀】新しい知識/異分野統合/独創解法/知的対話\n【📉】知的退屈/閉じ込め/感情労働/ルーティン"},{title:"📝 フィードバック",content:"【受ける】知的FB歓迎。【伝える】「こう考えたら」。"},{title:"✅ 得意・苦手タスク",content:"【🎯】統合/独創/広い知識/ブレスト\n【😰】完遂/感情/集中/日常管理"},{title:"📖 頼み方マニュアル",content:"【✅】「分野を超えた解を」→知的自由。\n【❌】「一つに集中」→広さが武器。\n【💡】1.知的自由 2.完遂サポート 3.好奇心を認める"},{title:"🎯 適職マップ",content:"【🏆】発明家/フルスタック/科学ジャーナリスト\n【⭐】R&D/テクニカルコンサル/データ\n【💡】マジシャン/サイエンスコミュニケーター\n【⚠️】感情労働/単調ライン"},{title:"🤝 相性マップ",content:"【💎】ESFJ-G-Dp「ベテラン寮長」。ESTJ-G-Dp「頑固職人」。\n【🔥】ENTP-O-Br「アイデアマン」。INTJ-O-Br「軍師」。\n【☀️】INTP-O-Dp「研究者」。INTP-G-Br「教育者」。\n【⚡】ENFJ-O-Br「カリスマ委員長」。"},{title:"🌈 プライベートの顔",content:"Wikipedia巡回。本棚ジャンルバラバラ。DIYや電子工作。友達との「最近面白かったこと」の交換。"}]},
+"INTP-O-Dp":{name:"研究者",character:"シカマル（NARUTO）",great:"アインシュタイン",color:"#5B7D9A",summary:"「この一つの問いに人生を賭ける」純粋な探究者。根本的な問いを追い続ける。天才的洞察だが社会性は最小限。",compatibility:{complement:[{code:"ESFJ-G-Br",name:"調和の達人",desc:"探究に調和。"},{code:"ESTJ-O-Dp",name:"鬼教官",desc:"発見を結果に。"}],chemistry:[{code:"INTJ-O-Dp",name:"ラスボス",desc:"深い没入。知的同盟。"},{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"深い知的探究。"}],comfort:[{code:"INTP-O-Br",name:"発明家",desc:"探求。"},{code:"INTP-G-Dp",name:"理論家",desc:"深さ。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"「他にも面白い」。"},{code:"ESFP-O-Dp",name:"パフォーマー",desc:"感覚が知性に身体性を。"}]},careers:{top:["理論研究者","数学者","哲学者"],good:["量子物理","アルゴリズム","言語学者"],surprise:["チェスプレイヤー","暗号解読"],avoid:["接客業","感情管理"]},strengths:["根本問いへの没入","天才的洞察","論理的純粋さ","献身"],weaknesses:["社会性","実用化","日常生活","コミュニケーション"],tips:{do:"「問いを追究して」→一人の時間と自由。",dont:"「もっと実用的に」→純粋探究こそ価値。"},fullSections:[{title:"👤 この人はこんな人",content:"「なぜ」を延々と問い続け誰も辿り着かない深さに到達する。\n\n弱点は社会性。研究以外の全てが苦手。"},{title:"💼 仕事の進め方",content:"【着手】問いが生まれてから。【進行】一人で深く。何日でも。【完了】「真理に近づいたか」。【1日】極めて不規則。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。専門テーマで驚異的深さ。\n【ベスト】専門的議論のみ"},{title:"💬 チャットでの傾向",content:"ほぼ無言。思索の結果を突然。\n【知っておくと楽】反応なくても気にしない。"},{title:"👔 上司として／部下として",content:"【上司】知的指導最高。管理壊滅。\n【部下】「好きに研究して」が最高。"},{title:"🔥 モチベーション",content:"【🚀】真理に近づいた/没入/ブレイクスルー\n【📉】実用化急がされ/社交強制/浅い仕事"},{title:"📝 フィードバック",content:"【受ける】論理的指摘のみ。【伝える】「これは間違い。なぜなら」。"},{title:"✅ 得意・苦手タスク",content:"【🎯】根本問い/洞察/論理/没入\n【😰】社会性/実用化/日常/コミュニケーション"},{title:"📖 頼み方マニュアル",content:"【✅】「問いを追究して」→自由と時間。\n【❌】「実用的に」→純粋探究が価値。\n【💡】1.自由 2.日常サポート 3.成果を待つ"},{title:"🎯 適職マップ",content:"【🏆】理論研究/数学者/哲学者\n【⭐】量子物理/アルゴリズム/言語学\n【💡】チェス/暗号解読\n【⚠️】接客/感情管理"},{title:"🤝 相性マップ",content:"【💎】ESFJ-G-Br「調和の達人」。ESTJ-O-Dp「鬼教官」。\n【🔥】INTJ-O-Dp「ラスボス」。ENTP-O-Dp「常識クラッシャー」。\n【☀️】INTP-O-Br「発明家」。INTP-G-Dp「理論家」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"部屋はホワイトボードとメモ。食事忘れがち。散歩でアイデア。友達は知的に対等な1人。"}]},
+"INTP-G-Br":{name:"教育者",character:"殺せんせー（暗殺教室）",great:"ソクラテス",color:"#A9CCE3",summary:"「正しい問いを見つけることが最も大切」。守り×広型で人に「考えること」を教える教育者。答えではなく問いで導く。",compatibility:{complement:[{code:"ESFJ-O-Dp",name:"肝っ玉番長",desc:"問いに愛。"},{code:"ESTJ-G-Br",name:"なんでも屋",desc:"知識を実務に。"}],chemistry:[{code:"ENTP-G-Br",name:"歩く百科事典",desc:"広さ共通。最高の知的対話。"},{code:"INTJ-G-Br",name:"黒幕参謀",desc:"守りの知的同盟。"}],comfort:[{code:"INTP-O-Br",name:"発明家",desc:"広さ。"},{code:"INTP-G-Dp",name:"理論家",desc:"同じINTP-G。"}],catalyst:[{code:"ENTJ-O-Dp",name:"将軍",desc:"「動け」が加速。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"行動が思索に現実を。"}]},careers:{top:["大学教授","教育PG設計","知識管理コンサル"],good:["テクニカルライター","図書館情報学","サイエンスライター"],surprise:["教養ポッドキャスター","ゲーム理論講師"],avoid:["スピード営業","感情中心ケア"]},strengths:["正しい問い","幅広い知識","教育力","論理"],weaknesses:["行動スピード","感情面","決断","実行"],tips:{do:"「考える力を教えて」→教育の天才。",dont:"「答えだけ」→問いこそ価値。"},fullSections:[{title:"👤 この人はこんな人",content:"「正しい問いを見つけることが最も大切」。答えではなく問いで導く。\n\n弱点は行動が遅い。考えすぎて動けない。"},{title:"💼 仕事の進め方",content:"【着手】問いを立てるところから。【進行】広く調べ構造化。【完了】「正しい問いが見つかったか」。【1日】規則的。朝インプット、午後対話。"},{title:"🗣️ 会議での振る舞い",content:"「本当の問いは何か」。議論を深める。\n【ベスト】教育設計/知識共有/深い議論"},{title:"💬 チャットでの傾向",content:"参考資料を共有。「こういう考え方もある」。\n【知っておくと楽】長文は教育欲。"},{title:"👔 上司として／部下として",content:"【上司】教育者型。成長に投資。管理弱い。\n【部下】知識を活かす仕事で最大。"},{title:"🔥 モチベーション",content:"【🚀】正しい問い/「わかった！」/知識統合/深い対話\n【📉】考える時間なし/知識軽視/スピード要求"},{title:"📝 フィードバック",content:"【受ける】知的FB歓迎。【伝える】問いで導く。"},{title:"✅ 得意・苦手タスク",content:"【🎯】問い/知識/教育/論理\n【😰】スピード/感情/決断/実行"},{title:"📖 頼み方マニュアル",content:"【✅】「考える力を教えて」→教育の天才。\n【❌】「答えだけ」→問いが価値。\n【💡】1.考える時間 2.教育の場 3.知識を認める"},{title:"🎯 適職マップ",content:"【🏆】大学教授/教育PG/知識管理\n【⭐】テクニカルライター/図書館情報/サイエンスライター\n【💡】教養ポッドキャスター/ゲーム理論\n【⚠️】スピード営業/感情ケア"},{title:"🤝 相性マップ",content:"【💎】ESFJ-O-Dp「肝っ玉番長」。ESTJ-G-Br「なんでも屋」。\n【🔥】ENTP-G-Br「歩く百科事典」。INTJ-G-Br「黒幕参謀」。\n【☀️】INTP-O-Br「発明家」。INTP-G-Dp「理論家」。\n【⚡】ENTJ-O-Dp「将軍」。"},{title:"🌈 プライベートの顔",content:"読書と対話。哲学、科学、歴史。カフェで友人と議論が至福。博物館と古本屋。"}]},
+"INTP-G-Dp":{name:"理論家",character:"コナン（名探偵コナン）",great:"ゲーデル",color:"#2471A3",summary:"「この一つの根本原理を見つけるまで止まらない」究極の理論家。一つの原理を何十年も追究する最も純粋な知的探究者。",compatibility:{complement:[{code:"ESFJ-O-Br",name:"総支配人",desc:"探究に社交力が窓を。"},{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"原理を実行に。"}],chemistry:[{code:"INTJ-G-Dp",name:"設計狂",desc:"深い設計。"},{code:"ENTP-G-Dp",name:"設計屋",desc:"深い知的同盟。"}],comfort:[{code:"INTP-G-Br",name:"教育者",desc:"同じINTP-G。"},{code:"INTP-O-Dp",name:"研究者",desc:"深さ。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"他にも面白い世界が。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"感覚が新しい入力を。"}]},careers:{top:["理論数学者","基礎物理学","論理学者"],good:["コンパイラ設計","形式検証","カテゴリー理論"],surprise:["パズル作家","暗号理論"],avoid:["対人営業","即興イベント"]},strengths:["根本原理","純粋論理","長期没入","理論構築"],weaknesses:["実用化","社交","日常","説明力"],tips:{do:"「根本原理を見つけて」→無限の時間と自由。",dont:"「何の役に」→純粋探究が知の基盤。"},fullSections:[{title:"👤 この人はこんな人",content:"「なぜ」を最も深い階層まで問い続ける。他の誰もが諦めた深さまで潜る。\n\n弱点は実用化と社交。理論の世界に住んでいる。"},{title:"💼 仕事の進め方",content:"【着手】問いが熟成してから。【進行】一人で何年でも。【完了】「原理が見つかったか」。完了しないことも。【1日】深夜型。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。根本的問いを発すると場が凍る。\n【ベスト】理論的議論のみ"},{title:"💬 チャットでの傾向",content:"ほぼ無言。数式を突然共有。\n【知っておくと楽】没入中。数式で語る人。"},{title:"👔 上司として／部下として",content:"【上司】理論指導最高。管理壊滅的。\n【部下】「好きに研究して」。成果を待てる上司が必要。"},{title:"🔥 モチベーション",content:"【🚀】原理発見/長期没入/論理的美しさ/ブレイクスルー\n【📉】「何の役に」/社交強制/浅い仕事/実用化を急がされ"},{title:"📝 フィードバック",content:"【受ける】論理的欠陥のみ。【伝える】「この前提が間違い」。"},{title:"✅ 得意・苦手タスク",content:"【🎯】根本原理/純粋論理/長期没入/理論構築\n【😰】実用化/社交/日常/説明"},{title:"📖 頼み方マニュアル",content:"【✅】「根本原理を」→無限の時間と自由。\n【❌】「何の役に」→純粋探究が知の基盤。\n【💡】1.自由 2.成果を待つ 3.日常サポート"},{title:"🎯 適職マップ",content:"【🏆】理論数学/基礎物理/論理学\n【⭐】コンパイラ/形式検証/カテゴリー理論\n【💡】パズル作家/暗号理論\n【⚠️】対人営業/即興イベント"},{title:"🤝 相性マップ",content:"【💎】ESFJ-O-Br「総支配人」。ESTJ-O-Br「鬼軍曹」。\n【🔥】INTJ-G-Dp「設計狂」。ENTP-G-Dp「設計屋」。\n【☀️】INTP-G-Br「教育者」。INTP-O-Dp「研究者」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"ホワイトボードの前で一日。数式が美しいと思える人。食事忘れる。年一回の学会で同志と。"}]},
+"ISFJ-O-Br":{name:"献身サポーター",character:"日向ヒナタ（NARUTO）",great:"ナイチンゲール",color:"#F5B041",summary:"「目の前の人を幅広く支える」献身の人。攻め×広型で自ら動いて人を助ける。気配りが広く多方面のケアを同時にこなす。",compatibility:{complement:[{code:"ENTP-G-Dp",name:"設計屋",desc:"設計を温かい運用に。"},{code:"ENTJ-O-Dp",name:"将軍",desc:"組織をエイレネが支える。"}],chemistry:[{code:"ESFJ-O-Br",name:"総支配人",desc:"思いやりの同盟。"},{code:"ISFJ-O-Dp",name:"守護者",desc:"同じISFJ-O。"}],comfort:[{code:"ISFJ-G-Br",name:"屋台骨",desc:"ケア共通。"},{code:"ISFP-O-Br",name:"美の探偵",desc:"温かさ。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"新しいやり方を。"},{code:"ESTP-O-Dp",name:"エース",desc:"行動力が突破。"}]},careers:{top:["看護師長","経営秘書","社会福祉士"],good:["人事（労務）","学校事務長","医療事務リーダー"],surprise:["パーソナルアシスタント","ケータリング経営"],avoid:["競争トレーディング","攻撃的営業"]},strengths:["幅広いケア","実務的献身","気配り","多方面サポート"],weaknesses:["自分のケア","自己主張","変化","ノーを言う"],tips:{do:"「支えてほしい」→献身の天才。感謝を。",dont:"「自分は後回しで」→既に後回し。"},fullSections:[{title:"👤 この人はこんな人",content:"自ら動いて人を助ける献身の人。気配りが広く多方面のケアを同時にこなす。\n\n「ありがとう」が最高の報酬。\n\n弱点は自分のケアの後回しと「ノー」が言えないこと。"},{title:"💼 仕事の進め方",content:"【着手】人のニーズを察して。【進行】丁寧に複数並行。【完了】「みんなが助かったか」。【1日】規則正しく穏やか。"},{title:"🗣️ 会議での振る舞い",content:"サポート役。資料準備、議事録。\n【ベスト】チームサポート/運用改善"},{title:"💬 チャットでの傾向",content:"丁寧で温かい。確認連絡が多い。\n【知っておくと楽】過負荷注意。「ありがとう」が力に。"},{title:"👔 上司として／部下として",content:"【上司】ケアに全力。厳しい決定は苦手。\n【部下】最も頼りになるサポーター。"},{title:"🔥 モチベーション",content:"【🚀】感謝された/みんなが助かった/ケアが活きた\n【📉】当たり前扱い/過負荷/感謝なし"},{title:"📝 フィードバック",content:"【受ける】感謝付きで。【伝える】優しく丁寧。"},{title:"✅ 得意・苦手タスク",content:"【🎯】幅広いケア/実務的献身/気配り\n【😰】自分のケア/自己主張/変化/ノー"},{title:"📖 頼み方マニュアル",content:"【✅】「支えてほしい」→感謝を。\n【❌】「自分は後回しで」→既に後回し。\n【💡】1.感謝を言葉に 2.過負荷管理 3.ケアのケア"},{title:"🎯 適職マップ",content:"【🏆】看護師長/経営秘書/社会福祉士\n【⭐】人事/学校事務長/医療事務\n【💡】パーソナルアシスタント/ケータリング\n【⚠️】競争トレーディング/攻撃的営業"},{title:"🤝 相性マップ",content:"【💎】ENTP-G-Dp「設計屋」。ENTJ-O-Dp「将軍」。\n【🔥】ESFJ-O-Br「総支配人」。ISFJ-O-Dp「守護者」。\n【☀️】ISFJ-G-Br「屋台骨」。ISFP-O-Br「美の探偵」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"家族のケアが中心。手料理、季節の行事。趣味は手芸や園芸。穏やかな生活。"}]},
+"ISFJ-O-Dp":{name:"守護者",character:"ネジ（NARUTO）",great:"マザー・テレサ",color:"#D4AC0D",summary:"「この人を絶対に守る」と決めたら何があっても貫く人。一つに深くコミットし全てを捧げる。静かだが揺るがない献身。",compatibility:{complement:[{code:"ENTP-G-Br",name:"歩く百科事典",desc:"知識を実践に。"},{code:"ENTJ-G-Dp",name:"長期戦略家",desc:"献身を仕組みに。"}],chemistry:[{code:"ISFJ-O-Br",name:"献身サポーター",desc:"献身共通。"},{code:"ENFJ-G-Dp",name:"寮長",desc:"守りの愛情共鳴。"}],comfort:[{code:"ISFJ-G-Dp",name:"守り神",desc:"深いケア。"},{code:"ISFP-O-Dp",name:"美の求道者",desc:"深さ。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"視野を広げる。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"他の守り方も。"}]},careers:{top:["ホスピスナース","専属秘書","寺院管理"],good:["介護福祉士","児童養護","個人付き医師"],surprise:["忠犬トレーナー","文化財保存修復"],avoid:["変わるPJ","広く浅い営業"]},strengths:["揺るがない献身","深いコミット","忍耐","長期信頼"],weaknesses:["自分のケア","視野","変化","自己主張"],tips:{do:"「この人を守って」→全力。長期コミットを。",dont:"「いろいろ」→深いケアが命。"},fullSections:[{title:"👤 この人はこんな人",content:"「この人を絶対に守る」と決めたら何があっても貫く。\n\n20年同じ場所で同じ人を支えることに抵抗がない。\n\n弱点は自分のケアと視野の狭さ。"},{title:"💼 仕事の進め方",content:"【着手】守る対象が明確になったら。【進行】一つに深く丁寧。【完了】「守れたか」。【1日】規則正しく穏やか。"},{title:"🗣️ 会議での振る舞い",content:"守るべき対象の代弁者。\n【ベスト】ケース検討/長期ケア計画"},{title:"💬 チャットでの傾向",content:"個別ケア連絡。温かく丁寧。\n【知っておくと楽】燃え尽きに注意。"},{title:"👔 上司として／部下として",content:"【上司】メンバーを深く守る。外部交渉弱い。\n【部下】一つの役割に深くコミットで最高。"},{title:"🔥 モチベーション",content:"【🚀】守れた/「あなたのおかげ」/長年の信頼\n【📉】守れなかった/変化強制/当たり前扱い"},{title:"📝 フィードバック",content:"【受ける】献身を認めた上で。【伝える】丁寧。"},{title:"✅ 得意・苦手タスク",content:"【🎯】献身/コミット/忍耐/信頼\n【😰】自分のケア/広い視野/変化/自己主張"},{title:"📖 頼み方マニュアル",content:"【✅】「守って」→全力。\n【❌】「いろいろ」→深いケアが命。\n【💡】1.対象を明確に 2.燃え尽き防止 3.献身を認める"},{title:"🎯 適職マップ",content:"【🏆】ホスピスナース/専属秘書/寺院管理\n【⭐】介護福祉士/児童養護/個人付き医師\n【💡】忠犬トレーナー/文化財保存\n【⚠️】変わるPJ/広く浅い営業"},{title:"🤝 相性マップ",content:"【💎】ENTP-G-Br「歩く百科事典」。ENTJ-G-Dp「長期戦略家」。\n【🔥】ISFJ-O-Br「献身サポーター」。ENFJ-G-Dp「寮長」。\n【☀️】ISFJ-G-Dp「守り神」。ISFP-O-Dp「美の求道者」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"家族との時間。写真アルバムを丁寧に。季節行事を守る。穏やかで変わらない日々。"}]},
+"ISFJ-G-Br":{name:"屋台骨",character:"しのぶ（鬼滅の刃）",great:"フローレンス・ナイチンゲール",color:"#F7DC6F",summary:"「みんなが安心して暮らせる場を守る」縁の下の力持ち。守り×広型で幅広いケアを静かに提供。いなくなると全てが回らない。",compatibility:{complement:[{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"破壊的発想を人間味ある形に。"},{code:"ENTJ-O-Br",name:"総司令",desc:"戦略を温かい現場に。"}],chemistry:[{code:"ISFJ-O-Br",name:"献身サポーター",desc:"ケアの同盟。"},{code:"ENFJ-G-Br",name:"守護霊",desc:"守りの温かさ最強。"}],comfort:[{code:"ISFJ-G-Dp",name:"守り神",desc:"同じISFJ-G。"},{code:"ISFP-G-Br",name:"クラフト職人",desc:"穏やかさ。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"新しい方法。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが解放。"}]},careers:{top:["保健室の先生","包括支援センター長","病棟師長"],good:["管理栄養士","保育園園長","地域コーディネーター"],surprise:["給食調理師","ハーブティー専門店"],avoid:["攻撃的M&A","ハイリスク起業"]},strengths:["幅広いケア","場の安定","誰も取りこぼさない","長期信頼"],weaknesses:["自己主張","革新","自分のケア","変化"],tips:{do:"「場を守って」→安定の天才。感謝を。",dont:"「目立って」→縁の下こそ価値。"},fullSections:[{title:"👤 この人はこんな人",content:"いなくなると全てが回らなくなる縁の下の力持ち。\n\n幅広いケアを静かに提供。\n\n弱点は自己主張と変化への対応。"},{title:"💼 仕事の進め方",content:"【着手】ニーズを察して。【進行】複数ケアを丁寧に。【完了】「みんなが安心しているか」。【1日】規則正しく穏やか。"},{title:"🗣️ 会議での振る舞い",content:"見落とされがちな視点を提供。\n【ベスト】運用改善/ケア共有"},{title:"💬 チャットでの傾向",content:"丁寧で温かい。\n【知っておくと楽】過負荷注意。当たり前にしない。"},{title:"👔 上司として／部下として",content:"【上司】安心環境を作る。攻め弱い。\n【部下】最も安定したサポーター。"},{title:"🔥 モチベーション",content:"【🚀】安定/安心/感謝/ケア\n【📉】当たり前/過負荷/変化急/貢献見えない"},{title:"📝 フィードバック",content:"【受ける】感謝込みで。【伝える】丁寧で優しい。"},{title:"✅ 得意・苦手タスク",content:"【🎯】ケア/安定/信頼/サポート\n【😰】主張/革新/自分のケア/変化"},{title:"📖 頼み方マニュアル",content:"【✅】「場を守って」→感謝を。\n【❌】「目立って」。\n【💡】1.感謝 2.過負荷管理 3.安定保証"},{title:"🎯 適職マップ",content:"【🏆】保健室/包括支援/病棟師長\n【⭐】栄養士/保育園長/地域コーディネーター\n【💡】給食調理/ハーブティー店\n【⚠️】M&A/ハイリスク起業"},{title:"🤝 相性マップ",content:"【💎】ENTP-O-Dp「常識クラッシャー」。ENTJ-O-Br「総司令」。\n【🔥】ISFJ-O-Br「献身サポーター」。ENFJ-G-Br「守護霊」。\n【☀️】ISFJ-G-Dp「守り神」。ISFP-G-Br「クラフト職人」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"家庭を丁寧に守る。季節の料理。園芸と手料理。ご近所との穏やかな付き合い。"}]},
+"ISFJ-G-Dp":{name:"守り神",character:"キルア母（HUNTER×HUNTER）",great:"津田梅子",color:"#D4AC0D",summary:"「この一つの場を一生かけて守る」究極の守護者。変わらない愛と忍耐で人と場を支え続ける。",compatibility:{complement:[{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"壊しと修復。"},{code:"ENTJ-O-Dp",name:"将軍",desc:"組織を根底で支える。"}],chemistry:[{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"ケアの心一致。"},{code:"ISFJ-O-Dp",name:"守護者",desc:"深いケア。"}],comfort:[{code:"ISFJ-G-Br",name:"屋台骨",desc:"同じISFJ-G。"},{code:"ISFP-G-Dp",name:"癒し職人",desc:"深い守り。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"新しい風。"},{code:"ESTP-O-Br",name:"トラブルシューター",desc:"外の世界。"}]},careers:{top:["寺院住職","老舗旅館女将","修道院管理"],good:["介護主任","図書館長期職員","文化財保存"],surprise:["味噌蔵職人","お茶の先生"],avoid:["短期転職","攻撃的競争"]},strengths:["究極の忍耐","生涯コミット","変わらない愛","深い信頼"],weaknesses:["変化","自己主張","外部接点","新環境"],tips:{do:"「一生守って」→安定と敬意を。",dont:"「もっと新しく」→変わらないことの価値。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの場を一生かけて守る究極の守護者。\n\n20年30年同じ場所で同じ仕事。それが誇り。\n\n弱点は変化と外部接点。"},{title:"💼 仕事の進め方",content:"【着手】慎重に。【進行】毎日同じリズムで丁寧に。【完了】「守れているか」。【1日】極めて規則正しい。"},{title:"🗣️ 会議での振る舞い",content:"長年の知見が重い。\n【ベスト】長期運営振り返り/伝統継承"},{title:"💬 チャットでの傾向",content:"最小限で丁寧。\n【知っておくと楽】変化には丁寧な説明と時間を。"},{title:"👔 上司として／部下として",content:"【上司】変わらない安心感。\n【部下】同じ上司の下で長く発揮。"},{title:"🔥 モチベーション",content:"【🚀】安定して守れている/長年の信頼/伝統継承\n【📉】急な変化/壊される/当たり前扱い"},{title:"📝 フィードバック",content:"【受ける】長年を認めた上で。【伝える】丁寧で温かい。"},{title:"✅ 得意・苦手タスク",content:"【🎯】忍耐/生涯コミット/愛/信頼\n【😰】変化/主張/外部/新環境"},{title:"📖 頼み方マニュアル",content:"【✅】「一生守って」→安定と敬意。\n【❌】「新しく」→変わらないことの価値。\n【💡】1.安定保証 2.長年を認める 3.変化は小さく"},{title:"🎯 適職マップ",content:"【🏆】寺院住職/旅館女将/修道院管理\n【⭐】介護主任/図書館職員/文化財保存\n【💡】味噌蔵/お茶の先生\n【⚠️】短期転職/攻撃的競争"},{title:"🤝 相性マップ",content:"【💎】ENTP-O-Dp「常識クラッシャー」。ENTJ-O-Dp「将軍」。\n【🔥】ESFJ-G-Dp「ベテラン寮長」。ISFJ-O-Dp「守護者」。\n【☀️】ISFJ-G-Br「屋台骨」。ISFP-G-Dp「癒し職人」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"変わらない日常。同じ時間に起き同じ散歩道。季節を静かに楽しむ。家族や地域の行事を守る。"}]},
+"ISFP-O-Br":{name:"美の探偵",character:"チャーリー（チャーリーとチョコレート工場）",great:"フリーダ・カーロ",color:"#E59866",summary:"「美しいものを見つけて世界に届ける」感覚の冒険者。五感が鋭く美しいものを見つける天才。攻め×広型。",compatibility:{complement:[{code:"ENTJ-G-Dp",name:"長期戦略家",desc:"感性を長期事業に。"},{code:"ENTP-G-Dp",name:"設計屋",desc:"迷宮に道筋を。"}],chemistry:[{code:"ENFP-O-Br",name:"着火マン",desc:"好奇心×感性。"},{code:"ISFP-O-Dp",name:"美の求道者",desc:"感性共通。"}],comfort:[{code:"ISFP-G-Br",name:"クラフト職人",desc:"穏やかな感性。"},{code:"ISFJ-O-Br",name:"献身サポーター",desc:"温かさ。"}],catalyst:[{code:"ENTJ-O-Dp",name:"将軍",desc:"大きなビジョンが舞台を。"},{code:"ESTJ-O-Dp",name:"鬼教官",desc:"規律が構造を。"}]},careers:{top:["テキスタイルデザイナー","フォトグラファー","フローリスト"],good:["インテリアスタイリスト","パティシエ","アクセサリーデザイナー"],surprise:["旅行ライター","ヴィンテージショップ"],avoid:["数値管理経理","大規模組織管理"]},strengths:["五感の鋭さ","美の発見","行動力","幅広い感性"],weaknesses:["長期計画","数字","対立","ルーティン"],tips:{do:"「美しいものを見つけて」→五感が輝く。自由を。",dont:"「数字で証明して」→感性は測れない。"},fullSections:[{title:"👤 この人はこんな人",content:"美しいものを見つけて世界に届ける感覚の冒険者。\n\n五感が鋭く色、音、香りに敏感。「素敵」を見つける天才。\n\n弱点は長期計画と数字管理。"},{title:"💼 仕事の進め方",content:"【着手】感覚で「いい」と思ったら。【進行】直感で。【完了】「美しいか」。【1日】不規則。インスピレーション次第。"},{title:"🗣️ 会議での振る舞い",content:"「なんか違う気がする」が的を射る。\n【ベスト】デザインレビュー/感性企画"},{title:"💬 チャットでの傾向",content:"写真をよく共有。事務苦手。\n【知っておくと楽】感性で語る人。"},{title:"👔 上司として／部下として",content:"【上司】感性で導く。管理弱い。\n【部下】感性を活かす場で最高。"},{title:"🔥 モチベーション",content:"【🚀】美/感性/新しい体験/自由\n【📉】ルーティン/数字/感性否定/閉じ込め"},{title:"📝 フィードバック",content:"【受ける】感性を認めた上で。【伝える】感覚的。"},{title:"✅ 得意・苦手タスク",content:"【🎯】五感/美の発見/行動力/感性\n【😰】計画/数字/対立/ルーティン"},{title:"📖 頼み方マニュアル",content:"【✅】「美しいものを」→自由を。\n【❌】「数字で」。\n【💡】1.感性 2.自由 3.数字はサポート"},{title:"🎯 適職マップ",content:"【🏆】テキスタイル/フォトグラファー/フローリスト\n【⭐】インテリア/パティシエ/アクセサリー\n【💡】旅行ライター/ヴィンテージ\n【⚠️】数値経理/大規模管理"},{title:"🤝 相性マップ",content:"【💎】ENTJ-G-Dp「長期戦略家」。ENTP-G-Dp「設計屋」。\n【🔥】ENFP-O-Br「着火マン」。ISFP-O-Dp「美の求道者」。\n【☀️】ISFP-G-Br「クラフト職人」。ISFJ-O-Br「献身サポーター」。\n【⚡】ENTJ-O-Dp「将軍」。"},{title:"🌈 プライベートの顔",content:"美しいものに囲まれた生活。花、良い音楽。休日はマーケットや美術館。旅行は感覚重視。"}]},
+"ISFP-O-Dp":{name:"美の求道者",character:"鬼舞辻無惨（鬼滅の刃）",great:"ミケランジェロ",color:"#BA4A00",summary:"「この一つの美を極限まで追求する」究極の美意識。一つの表現に生涯を捧げ完璧を目指す。",compatibility:{complement:[{code:"ENTP-G-Br",name:"歩く百科事典",desc:"知的構造に感性の彩り。"},{code:"ENTJ-G-Br",name:"参謀",desc:"美を事業に。"}],chemistry:[{code:"ISFP-O-Br",name:"美の探偵",desc:"感性共通。"},{code:"ENFP-O-Dp",name:"伝道師",desc:"深い情熱。"}],comfort:[{code:"ISFP-G-Dp",name:"癒し職人",desc:"深さ。"},{code:"ISFJ-O-Dp",name:"守護者",desc:"深さ。"}],catalyst:[{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが完璧主義を解放。"},{code:"ENTP-O-Br",name:"アイデアマン",desc:"他のアプローチも。"}]},careers:{top:["彫刻家","ハイブランドデザイナー","ミシュランシェフ"],good:["建築デザイナー","香水師","研師"],surprise:["盆栽師","和菓子職人"],avoid:["量産品管理","定型事務"]},strengths:["極限の美意識","生涯献身","完璧主義","感覚の鋭さ"],weaknesses:["コミュニケーション","柔軟性","日常管理","他者基準"],tips:{do:"「最高の美を」→時間と自由を。",dont:"「そこそこで」→美の妥協は死。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの美を極限まで追求する。妥協を知らない。\n\n「完璧でなければ出さない」。作品は見る人を圧倒。\n\n弱点はコミュニケーションと柔軟性。"},{title:"💼 仕事の進め方",content:"【着手】美のビジョンが見えてから。【進行】一人で極限まで。【完了】「完璧か」。【1日】不規則。創造の波に。"},{title:"🗣️ 会議での振る舞い",content:"美の議題でのみ。「これは美しくない」。\n【ベスト】デザインレビュー/品質審査"},{title:"💬 チャットでの傾向",content:"最小限。作品で語る。\n【知っておくと楽】沈黙は創造中。"},{title:"👔 上司として／部下として",content:"【上司】美の基準が圧倒的。ついていける人には最高の師。\n【部下】美を追求できる環境で最強。"},{title:"🔥 モチベーション",content:"【🚀】完璧な美/極限/認められた/自由\n【📉】妥協強制/否定/量産/時間なし"},{title:"📝 フィードバック",content:"【受ける】美の理解あるFBのみ。【伝える】作品で。"},{title:"✅ 得意・苦手タスク",content:"【🎯】極限の美/献身/完璧主義/感覚\n【😰】コミュニケーション/柔軟性/日常/他者基準"},{title:"📖 頼み方マニュアル",content:"【✅】「最高の美を」→時間と自由。\n【❌】「そこそこで」→妥協は死。\n【💡】1.自由と時間 2.美で評価 3.日常サポート"},{title:"🎯 適職マップ",content:"【🏆】彫刻家/ハイブランド/ミシュランシェフ\n【⭐】建築デザイナー/香水師/研師\n【💡】盆栽師/和菓子職人\n【⚠️】量産品/定型事務"},{title:"🤝 相性マップ",content:"【💎】ENTP-G-Br「歩く百科事典」。ENTJ-G-Br「参謀」。\n【🔥】ISFP-O-Br「美の探偵」。ENFP-O-Dp「伝道師」。\n【☀️】ISFP-G-Dp「癒し職人」。ISFJ-O-Dp「守護者」。\n【⚡】ESFP-O-Br「お祭り総隊長」。"},{title:"🌈 プライベートの顔",content:"美に囲まれた部屋。食事も美しさ重視。一人で美術館に何時間も。"}]},
+"ISFP-G-Br":{name:"クラフト職人",character:"マルクル（ハウルの動く城）",great:"ターシャ・テューダー",color:"#E8DAEF",summary:"「自然と調和し穏やかに暮らす」森の精霊。守り×広型で幅広い感性を持ちながら穏やかに日常を彩る。",compatibility:{complement:[{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"美意識が無骨さを洗練。"},{code:"ENTJ-O-Br",name:"総司令",desc:"感性が温もりを。"}],chemistry:[{code:"ISFP-O-Br",name:"美の探偵",desc:"穏やかな感性。"},{code:"ISFJ-G-Br",name:"屋台骨",desc:"穏やかさ。"}],comfort:[{code:"ISFP-G-Dp",name:"癒し職人",desc:"同じISFP-G。"},{code:"INFP-G-Br",name:"やさしさ担当",desc:"優しさ。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"外の世界も。"},{code:"ESTP-O-Dp",name:"エース",desc:"刺激。"}]},careers:{top:["ガーデンデザイナー","動物保護施設","手工芸作家"],good:["フラワーアレンジメント","自然写真家","アロマセラピスト"],surprise:["養蜂家","森林セラピスト"],avoid:["激しい営業","大規模管理"]},strengths:["自然との調和","穏やかな美意識","五感の繊細さ","静かな創造力"],weaknesses:["競争","自己主張","スピード","都市環境"],tips:{do:"「自然と美を活かして」→穏やかな環境で。",dont:"「攻めて」→穏やかさが武器。"},fullSections:[{title:"👤 この人はこんな人",content:"自然と調和し穏やかに暮らす。花を活ける、庭を整える、手仕事。\n\n弱点は競争と自己主張。"},{title:"💼 仕事の進め方",content:"【着手】穏やかに。【進行】自然なペースで。【完了】「美しく穏やかか」。【1日】自然のリズム。"},{title:"🗣️ 会議での振る舞い",content:"静か。感性の話題で穏やかに。\n【ベスト】穏やかなデザイン議論"},{title:"💬 チャットでの傾向",content:"花や自然の写真。穏やかな言葉。\n【知っておくと楽】急かさない。"},{title:"👔 上司として／部下として",content:"【上司】穏やかな環境を。攻め苦手。\n【部下】穏やかな仕事で最大。"},{title:"🔥 モチベーション",content:"【🚀】自然/美/穏やか/五感\n【📉】競争/騒がしい/攻撃的/自然から離れる"},{title:"📝 フィードバック",content:"【受ける】穏やかに。【伝える】優しい。"},{title:"✅ 得意・苦手タスク",content:"【🎯】自然/美意識/繊細さ/創造力\n【😰】競争/主張/スピード/都市"},{title:"📖 頼み方マニュアル",content:"【✅】「自然と美を」→穏やかに。\n【❌】「攻めて」。\n【💡】1.穏やかな環境 2.自然 3.感性を認める"},{title:"🎯 適職マップ",content:"【🏆】ガーデン/動物保護/手工芸\n【⭐】フラワー/自然写真/アロマ\n【💡】養蜂家/森林セラピスト\n【⚠️】激しい営業/大規模管理"},{title:"🤝 相性マップ",content:"【💎】ENTP-O-Dp「常識クラッシャー」。ENTJ-O-Br「総司令」。\n【🔥】ISFP-O-Br「美の探偵」。ISFJ-G-Br「屋台骨」。\n【☀️】ISFP-G-Dp「癒し職人」。INFP-G-Br「やさしさ担当」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"庭仕事が至福。自然の中を散歩。手作りのものを大切に。友達と庭でお茶。穏やかな生活。"}]},
+"ISFP-G-Dp":{name:"癒し職人",character:"ジュビア（FAIRY TAIL）",great:"ヒルデガルト・フォン・ビンゲン",color:"#D2B4DE",summary:"「この一つの美と癒しを深く極める」静かな治療者。守り×深型で一つの癒しの技を究める。手の温もりで人を癒す力がある。",compatibility:{complement:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"知的広さが深い技に新視点。"},{code:"ENTJ-O-Dp",name:"将軍",desc:"組織力で癒しを広げる。"}],chemistry:[{code:"ESFP-G-Dp",name:"ゴッドハンド",desc:"癒しの同志。"},{code:"ISFJ-G-Dp",name:"守り神",desc:"深い守り共通。"}],comfort:[{code:"ISFP-G-Br",name:"クラフト職人",desc:"同じISFP-G。"},{code:"INFP-G-Dp",name:"詩人",desc:"静かな深さ。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"外の世界を見せる。"},{code:"ESTP-O-Dp",name:"エース",desc:"行動力が視野を。"}]},careers:{top:["鍼灸師","陶芸家（器）","和菓子の名匠"],good:["アロマセラピスト","リストラティブヨガ講師","漢方薬剤師"],surprise:["仏像修復師","苔庭の造園家"],avoid:["スピード営業","大規模イベント運営"]},strengths:["深い癒しの技","手の温もり","一つへの没入","静かな美意識"],weaknesses:["大人数","スピード","自己PR","変化"],tips:{do:"「この一つの技を極めてほしい」→静かな環境と時間。",dont:"「もっと多くの人を」→深いケアが命。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの癒しの技を究める静かな治療者。\n\n手の温もりで人を癒す。「この人に触れられると安心する」。\n\n弱点は大人数とスピード。"},{title:"💼 仕事の進め方",content:"【着手】一人に丁寧に向き合う。【進行】深く集中。【完了】「癒せたか」。【1日】穏やかで静か。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ静か。ケースの深い理解で重い発言。\n【ベスト】少人数のケース検討"},{title:"💬 チャットでの傾向",content:"穏やかで最小限。\n【知っておくと楽】燃え尽きケア。「休んでいい」。"},{title:"👔 上司として／部下として",content:"【上司】ケアに全力。管理弱い。\n【部下】一人に向き合わせると最高。"},{title:"🔥 モチベーション",content:"【🚀】癒せた/技が向上/静かな達成感/深い関わり\n【📉】大人数/スピード/深く関われない/燃え尽き"},{title:"📝 フィードバック",content:"【受ける】技術的助言歓迎。【伝える】繊細で丁寧。"},{title:"✅ 得意・苦手タスク",content:"【🎯】深い癒し/手の温もり/没入/美意識\n【😰】大人数/スピード/PR/変化"},{title:"📖 頼み方マニュアル",content:"【✅】「技を極めて」→静かな環境と時間。\n【❌】「多くの人を」→深いケアが命。\n【💡】1.一人に集中 2.燃え尽き防止 3.技の深化支援"},{title:"🎯 適職マップ",content:"【🏆】鍼灸師/陶芸家/和菓子名匠\n【⭐】アロマ/ヨガ講師/漢方\n【💡】仏像修復/苔庭造園\n【⚠️】スピード営業/大規模イベント"},{title:"🤝 相性マップ",content:"【💎】ENTP-O-Br「アイデアマン」。ENTJ-O-Dp「将軍」。\n【🔥】ESFP-G-Dp「ゴッドハンド」。ISFJ-G-Dp「守り神」。\n【☀️】ISFP-G-Br「クラフト職人」。INFP-G-Dp「詩人」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"静かな暮らし。陶芸や園芸。自然の中で一人の時間。お茶を丁寧に淹れる。友達は少数。穏やかで美しい日常。"}]},
+"ISTJ-O-Br":{name:"ルール番人",character:"テンヤ飯田（僕のヒーローアカデミア）",great:"リンカーン",color:"#ABB2B9",summary:"「ルールと正義を幅広く守る」公正の人。攻め×広型で複数の領域に公正な基準を適用する。規律正しく信頼性が極めて高い。",compatibility:{complement:[{code:"ENFP-G-Dp",name:"共感屋",desc:"公正さに優しさの彩り。"},{code:"ESFP-O-Dp",name:"パフォーマー",desc:"規律に狂気が方向を。"}],chemistry:[{code:"ESTJ-O-Br",name:"鬼軍曹",desc:"実行力の同盟。"},{code:"ISTJ-O-Dp",name:"任務遂行者",desc:"同じISTJ-O。"}],comfort:[{code:"ISTJ-G-Br",name:"組織の記憶庫",desc:"真面目さ。"},{code:"ISFJ-O-Br",name:"献身サポーター",desc:"献身。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"「ルール以外の方法も」。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが真面目を解放。"}]},careers:{top:["裁判官","監査法人パートナー","コンプライアンス責任者"],good:["税務署長","品質保証マネージャー","法務部長"],surprise:["棋士（規則の中の創造）","鉄道ダイヤ編成者"],avoid:["即興エンタメ","感覚重視のデザイン"]},strengths:["公正な判断","規律の維持","幅広い基準適用","極めて高い信頼性"],weaknesses:["柔軟性","感情面","創造性","変化への対応"],tips:{do:"「公正に管理してほしい」→規律の天才。権限を。",dont:"「ルールは気にしないで」→公正さが核。"},fullSections:[{title:"👤 この人はこんな人",content:"ルールと正義を幅広く守る公正の人。\n\n複数の領域に公正な基準を適用。規律正しく信頼性が極めて高い。「この人がチェックしたなら大丈夫」。\n\n弱点は柔軟性と創造性。"},{title:"💼 仕事の進め方",content:"【着手】基準を確認してから。【進行】規律正しく着実に。【完了】「基準を満たしているか」。【1日】極めて規則正しい。"},{title:"🗣️ 会議での振る舞い",content:"「ルール上はこう」と正確に。\n【ベスト】監査/基準策定/コンプライアンス"},{title:"💬 チャットでの傾向",content:"正確で簡潔。事実ベース。\n【知っておくと楽】感情的メッセージには反応薄。ルールで語ると早い。"},{title:"👔 上司として／部下として",content:"【上司】公正で明確。感情面弱い。\n【部下】規律正しく信頼性最高。"},{title:"🔥 モチベーション",content:"【🚀】公正に管理できた/基準達成/信頼/規律\n【📉】ルール無視/不公正/感情論/規律なし"},{title:"📝 フィードバック",content:"【受ける】事実ベース。【伝える】公正で正確。"},{title:"✅ 得意・苦手タスク",content:"【🎯】公正/規律/基準適用/信頼性\n【😰】柔軟性/感情/創造性/変化"},{title:"📖 頼み方マニュアル",content:"【✅】「公正に管理して」→規律の天才。\n【❌】「ルール気にしないで」。\n【💡】1.明確な基準 2.権限 3.公正で評価"},{title:"🎯 適職マップ",content:"【🏆】裁判官/監査法人/コンプライアンス責任者\n【⭐】税務署長/品質保証/法務部長\n【💡】棋士/鉄道ダイヤ\n【⚠️】即興エンタメ/感覚デザイン"},{title:"🤝 相性マップ",content:"【💎】ENFP-G-Dp「共感屋」。ESFP-O-Dp「パフォーマー」。\n【🔥】ESTJ-O-Br「鬼軍曹」。ISTJ-O-Dp「任務遂行者」。\n【☀️】ISTJ-G-Br「組織の記憶庫」。ISFJ-O-Br「献身サポーター」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"規則正しい生活。毎朝同じ時間に起き同じルーティン。趣味は囲碁、読書（歴史）。家計簿を丁寧につける。"}]},
+"ISTJ-O-Dp":{name:"任務遂行者",character:"煉獄杏寿郎（鬼滅の刃）",great:"ウェリントン公爵",color:"#808B96",summary:"「この一つの任務を必ず遂行する」鉄の意志。一つの任務に全てを捧げ最後まで絶対にやり遂げる。寡黙だが行動で全てを語る。",compatibility:{complement:[{code:"ENFP-G-Br",name:"ムードメーカー",desc:"鉄の意志に温かさ。"},{code:"ESFP-G-Br",name:"盛り上げ隊長",desc:"規律にユーモア。"}],chemistry:[{code:"ESTJ-O-Dp",name:"鬼教官",desc:"一点突破の同盟。"},{code:"ISTJ-O-Br",name:"ルール番人",desc:"同じISTJ-O。"}],comfort:[{code:"ISTJ-G-Dp",name:"金庫番",desc:"深さ共通。"},{code:"ISTP-O-Dp",name:"一刀流の職人",desc:"寡黙な実行力。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"「他の道も」。"},{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"常識を壊す発想。"}]},careers:{top:["特殊作戦部隊","原子力安全管理者","災害救助隊長"],good:["外科医（手術専門）","パイロット","プラントエンジニア"],surprise:["マラソンランナー","登山家"],avoid:["自由放任のクリエイティブ","合議制の多い組織"]},strengths:["鉄の意志","任務の完遂","寡黙な実行力","不屈の忍耐"],weaknesses:["柔軟性","感情表現","マルチタスク","撤退判断"],tips:{do:"「絶対に遂行してほしい」→全権委任。明確な任務を。",dont:"「状況に合わせて」→一つに集中してこそ。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの任務に全てを捧げ最後まで絶対にやり遂げる。\n\n寡黙だが行動で全てを語る。「この人が引き受けたなら絶対に大丈夫」。\n\n弱点は柔軟性と撤退判断。"},{title:"💼 仕事の進め方",content:"【着手】任務を確認し計画。【進行】一つに全力。【完了】「遂行したか」。【1日】早朝から規律正しく。"},{title:"🗣️ 会議での振る舞い",content:"寡黙。「やります」の一言に重みがある。\n【ベスト】任務ブリーフィング/実行計画"},{title:"💬 チャットでの傾向",content:"極めて短い。「了解」「完了」。\n【知っておくと楽】短いのは性格。結果で語る人。"},{title:"👔 上司として／部下として",content:"【上司】背中で見せる。部下にも鉄の意志を求める。\n【部下】任務を任せると120%の結果。"},{title:"🔥 モチベーション",content:"【🚀】任務完遂/限界突破/「任せれば間違いない」/不屈\n【📉】任務なし/不明確/柔軟性要求/撤退"},{title:"📝 フィードバック",content:"【受ける】結果ベース。【伝える】寡黙。行動で示す。"},{title:"✅ 得意・苦手タスク",content:"【🎯】鉄の意志/完遂/実行力/忍耐\n【😰】柔軟性/感情/マルチタスク/撤退"},{title:"📖 頼み方マニュアル",content:"【✅】「絶対に遂行して」→全権委任。\n【❌】「状況に合わせて」→一つに集中。\n【💡】1.明確な任務 2.権限 3.結果で評価"},{title:"🎯 適職マップ",content:"【🏆】特殊作戦/原子力安全/災害救助隊長\n【⭐】外科医/パイロット/プラントエンジニア\n【💡】マラソン/登山家\n【⚠️】自由クリエイティブ/合議制"},{title:"🤝 相性マップ",content:"【💎】ENFP-G-Br「ムードメーカー」。ESFP-G-Br「盛り上げ隊長」。\n【🔥】ESTJ-O-Dp「鬼教官」。ISTJ-O-Br「ルール番人」。\n【☀️】ISTJ-G-Dp「金庫番」。ISTP-O-Dp「一刀流の職人」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"鍛錬が趣味。毎朝のランニング。規律正しい食事。友達は少ないが戦友のような絆。"}]},
+"ISTJ-G-Br":{name:"組織の記憶庫",character:"我愛羅（NARUTO）",great:"司馬遷",color:"#BDC3C7",summary:"「全てを正確に記録し守る」記録の守護者。守り×広型で幅広い情報を正確に管理。組織の記憶そのもの。",compatibility:{complement:[{code:"ENFP-O-Dp",name:"伝道師",desc:"記録に情熱の炎を。"},{code:"ESFP-O-Dp",name:"パフォーマー",desc:"爆発力を記録で後世に。"}],chemistry:[{code:"ESTJ-G-Br",name:"なんでも屋",desc:"真面目さ共通。最強運営。"},{code:"ISTJ-O-Br",name:"ルール番人",desc:"同じISTJ-Br。"}],comfort:[{code:"ISTJ-G-Dp",name:"金庫番",desc:"同じISTJ-G。"},{code:"ISFJ-G-Br",name:"屋台骨",desc:"守りの堅実さ。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"「記録以外の可能性も」。"},{code:"ENFP-O-Br",name:"着火マン",desc:"新しい風。"}]},careers:{top:["アーキビスト","経理部長","データベース管理者"],good:["図書館情報専門員","品質記録管理","保険の査定士"],surprise:["歴史研究者","系図学者"],avoid:["即興のエンタメ","変化の激しいスタートアップ"]},strengths:["正確な記録","幅広い情報管理","組織の記憶","信頼性"],weaknesses:["創造性","変化","自己PR","感情面"],tips:{do:"「全てを正確に記録して」→記録の天才。情報を。",dont:"「記録は適当でいい」→正確さが命。"},fullSections:[{title:"👤 この人はこんな人",content:"全てを正確に記録し守る。組織の記憶そのもの。\n\n「あの件はどうだったっけ」で真っ先に聞かれる。\n\n弱点は創造性と変化。"},{title:"💼 仕事の進め方",content:"【着手】情報を整理。【進行】正確に丁寧に。【完了】「正確か」。【1日】規則正しい。"},{title:"🗣️ 会議での振る舞い",content:"「前回はこうでした」と正確な過去情報。\n【ベスト】記録レビュー/情報管理"},{title:"💬 チャットでの傾向",content:"正確で簡潔。過去ログを引用。\n【知っておくと楽】正確さを大切に。"},{title:"👔 上司として／部下として",content:"【上司】管理が正確。創造性弱い。\n【部下】記録と管理を任せると最高。"},{title:"🔥 モチベーション",content:"【🚀】正確に記録/情報が活きた/信頼/組織の記憶\n【📉】記録軽視/不正確/変化が激しい/創造性要求"},{title:"📝 フィードバック",content:"【受ける】事実ベース。【伝える】正確で公正。"},{title:"✅ 得意・苦手タスク",content:"【🎯】記録/情報管理/組織記憶/信頼性\n【😰】創造性/変化/PR/感情"},{title:"📖 頼み方マニュアル",content:"【✅】「正確に記録して」→情報を渡す。\n【❌】「適当でいい」→正確さが命。\n【💡】1.情報アクセス 2.正確さで評価 3.安定"},{title:"🎯 適職マップ",content:"【🏆】アーキビスト/経理部長/DB管理\n【⭐】図書館情報/品質記録/保険査定\n【💡】歴史研究者/系図学者\n【⚠️】即興エンタメ/激しいスタートアップ"},{title:"🤝 相性マップ",content:"【💎】ENFP-O-Dp「伝道師」。ESFP-O-Dp「パフォーマー」。\n【🔥】ESTJ-G-Br「なんでも屋」。ISTJ-O-Br「ルール番人」。\n【☀️】ISTJ-G-Dp「金庫番」。ISFJ-G-Br「屋台骨」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"記録が趣味。日記、家計簿、写真の整理。蔵書リスト。規則正しい生活。歴史好き。"}]},
+"ISTJ-G-Dp":{name:"金庫番",character:"平和島静雄（デュラララ!!）",great:"カント",color:"#5D6D7E",summary:"「この一つの仕組みを完璧に守り続ける」究極の番人。守り×深型で一つのシステムに深くコミットし完璧に維持する。寡黙で頑固だが絶対に壊れない信頼。",compatibility:{complement:[{code:"ENFP-O-Br",name:"着火マン",desc:"自由な発想が堅い守りに新しい可能性を。"},{code:"ESFP-O-Dp",name:"パフォーマー",desc:"芸術的爆発力が金剛石に光を。"}],chemistry:[{code:"ESTJ-G-Dp",name:"頑固職人",desc:"寡黙な信頼。職人同盟。"},{code:"ISTJ-O-Dp",name:"任務遂行者",desc:"深さ共通。"}],comfort:[{code:"ISTJ-G-Br",name:"組織の記憶庫",desc:"同じISTJ-G。"},{code:"ISTP-G-Dp",name:"専属オペレーター",desc:"寡黙な深さ。"}],catalyst:[{code:"ENTP-O-Br",name:"アイデアマン",desc:"「壊してみよう」が守りを進化。"},{code:"ENFP-O-Dp",name:"伝道師",desc:"情熱が守りに炎を。"}]},careers:{top:["金庫職人","原子力発電所のオペレーター","高セキュリティ施設管理"],good:["時計修理師","伝統建築の保存","ダム管理者"],surprise:["古文書の保存修復","灯台守"],avoid:["即興営業","毎日変わるクリエイティブ"]},strengths:["絶対に壊れない信頼","一つへの完璧な維持","寡黙な忍耐","長期的な安定"],weaknesses:["変化","コミュニケーション","柔軟性","新しい環境"],tips:{do:"「この仕組みを完璧に守り続けて」→究極の番人。敬意を。",dont:"「もっと柔軟に」→堅さが最大の価値。"},fullSections:[{title:"👤 この人はこんな人",content:"一つのシステムを完璧に守り続ける究極の番人。\n\n寡黙で頑固だが絶対に壊れない信頼。30年同じ仕組みを守り続けることに誇り。\n\n弱点は変化とコミュニケーション。"},{title:"💼 仕事の進め方",content:"【着手】仕組みを完全理解してから。【進行】毎日同じ手順で完璧に。【完了】「完璧に動いているか」。【1日】究極に規則正しい。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。仕組みに関してのみ重い一言。\n【ベスト】システム維持の議論"},{title:"💬 チャットでの傾向",content:"最小限。「異常なし」「対応済み」。\n【知っておくと楽】沈黙は正常の証。問題があれば自ら連絡する。"},{title:"👔 上司として／部下として",content:"【上司】仕組みの維持に厳格。変化は苦手。\n【部下】一つの仕組みを任せると完璧。"},{title:"🔥 モチベーション",content:"【🚀】仕組みが完璧に動いている/30年守り続けた/「壊れたことがない」/敬意\n【📉】仕組みを雑に/変化を強制/寡黙さを否定/新しいことばかり"},{title:"📝 フィードバック",content:"【受ける】仕組みへの理解に基づくFBのみ。【伝える】「これは仕様通り」「ここが異常」。"},{title:"✅ 得意・苦手タスク",content:"【🎯】壊れない信頼/完璧維持/忍耐/安定\n【😰】変化/コミュニケーション/柔軟性/新環境"},{title:"📖 頼み方マニュアル",content:"【✅】「完璧に守り続けて」→敬意を。\n【❌】「柔軟に」→堅さが価値。\n【💡】1.一つの仕組みを任せる 2.長期で敬意 3.変化は小さく"},{title:"🎯 適職マップ",content:"【🏆】金庫職人/原子力オペレーター/高セキュリティ管理\n【⭐】時計修理/伝統建築保存/ダム管理\n【💡】古文書保存/灯台守\n【⚠️】即興営業/変わるクリエイティブ"},{title:"🤝 相性マップ",content:"【💎】ENFP-O-Br「着火マン」。ESFP-O-Dp「パフォーマー」。\n【🔥】ESTJ-G-Dp「頑固職人」。ISTJ-O-Dp「任務遂行者」。\n【☀️】ISTJ-G-Br「組織の記憶庫」。ISTP-G-Dp「専属オペレーター」。\n【⚡】ENTP-O-Br「アイデアマン」。"},{title:"🌈 プライベートの顔",content:"同じ日常を守ることが幸せ。同じ時間に起き同じ朝食。道具の手入れ。友達は少ないが長い付き合い。"}]},
+"ISTP-O-Br":{name:"現場の万能技師",character:"キリト（SAO）",great:"チャック・イェーガー",color:"#DC7633",summary:"「どんな機械でも乗りこなし、どんな状況でも切り抜ける」万能の技師。攻め×広型で幅広い技術と冷静な判断力で困難に立ち向かう。手先が器用で即座に対応する力がある。",compatibility:{complement:[{code:"ENFJ-G-Dp",name:"寮長",desc:"イカロスの技術にヘスティアが温かさを。"},{code:"ESFJ-O-Dp",name:"肝っ玉番長",desc:"技術に愛を添える。"}],chemistry:[{code:"ESTP-O-Br",name:"トラブルシューター",desc:"現場力の最強タッグ。"},{code:"ISTP-O-Dp",name:"一刀流の職人",desc:"同じISTP-O。技術共通。"}],comfort:[{code:"ISTP-G-Br",name:"修理屋",desc:"器用さ共通。"},{code:"ISTJ-O-Br",name:"ルール番人",desc:"規律共通。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"「もっと楽しもう」が技術だけを超える。"},{code:"INFJ-O-Br",name:"革命家",desc:"ビジョンが技術に方向を。"}]},careers:{top:["テストパイロット","フィールドエンジニア","レスキュー隊員"],good:["メカニック","IT障害対応","消防士"],surprise:["スタントマン","eスポーツ選手"],avoid:["感情労働中心","長文の書類作成"]},strengths:["幅広い技術力","冷静な即時判断","手先の器用さ","困難への適応力"],weaknesses:["感情表現","長期計画","チームの空気","書類作業"],tips:{do:"「この現場をなんとかして」→技術で解決。裁量と自由を。",dont:"「計画書を書いて」→手を動かしてなんぼ。"},fullSections:[{title:"👤 この人はこんな人",content:"どんな機械でも乗りこなしどんな状況でも切り抜ける万能技師。\n\n手先が器用で冷静。緊急時に最も頼りになるタイプの一つ。\n\n弱点は感情表現と書類仕事。"},{title:"💼 仕事の進め方",content:"【着手】まず触ってみる。【進行】手を動かしながら考える。【完了】「動くか」。【1日】規則より状況次第。"},{title:"🗣️ 会議での振る舞い",content:"「やってみればわかる」。実演で語る。\n【ベスト】技術的問題解決/現場ブリーフィング"},{title:"💬 チャットでの傾向",content:"短い。写真付きで「これ直した」。\n【知っておくと楽】言葉より行動。結果で評価。"},{title:"👔 上司として／部下として",content:"【上司】技術で導く。管理弱い。\n【部下】技術を任せると最高。"},{title:"🔥 モチベーション",content:"【🚀】技術で問題解決/新しい機械/困難突破/手を動かす\n【📉】書類だけ/技術活かせない/閉じ込め/感情論"},{title:"📝 フィードバック",content:"【受ける】技術的FB。【伝える】実演で。"},{title:"✅ 得意・苦手タスク",content:"【🎯】技術力/即時判断/器用さ/適応力\n【😰】感情/長期計画/空気/書類"},{title:"📖 頼み方マニュアル",content:"【✅】「現場をなんとかして」→裁量と自由。\n【❌】「計画書を」→手を動かす人。\n【💡】1.現場の裁量 2.技術で評価 3.書類はサポート"},{title:"🎯 適職マップ",content:"【🏆】テストパイロット/フィールドエンジニア/レスキュー\n【⭐】メカニック/IT障害対応/消防士\n【💡】スタントマン/eスポーツ\n【⚠️】感情労働/長文書類"},{title:"🤝 相性マップ",content:"【💎】ENFJ-G-Dp「寮長」。ESFJ-O-Dp「肝っ玉番長」。\n【🔥】ESTP-O-Br「トラブルシューター」。ISTP-O-Dp「一刀流の職人」。\n【☀️】ISTP-G-Br「修理屋」。ISTJ-O-Br「ルール番人」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"バイク、車、ガジェット。分解して組み立てるのが好き。アウトドア。道具にこだわる。友達とは「一緒に何かを作る」関係。"}]},
+"ISTP-O-Dp":{name:"一刀流の職人",character:"ゾロ（ONE PIECE）",great:"宮本武蔵",color:"#A04000",summary:"「この一つの技を極限まで磨く」究極の技術者。一つの技に生涯を捧げ極限まで磨き上げる。寡黙で孤高。技で全てを語る。",compatibility:{complement:[{code:"ENFJ-O-Br",name:"カリスマ委員長",desc:"技術に人を動かす力を。"},{code:"ESFJ-O-Br",name:"総支配人",desc:"寡黙な実力に華やかさが深みを。"}],chemistry:[{code:"ISTP-O-Br",name:"現場の万能技師",desc:"技術共通。"},{code:"ESTP-O-Dp",name:"エース",desc:"一点突破の実行力。"}],comfort:[{code:"ISTP-G-Dp",name:"専属オペレーター",desc:"寡黙な深さ。"},{code:"ISTJ-O-Dp",name:"任務遂行者",desc:"寡黙な実行力。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"「他にも面白いことが」。"},{code:"ENTP-O-Dp",name:"常識クラッシャー",desc:"常識を壊す発想が技を進化。"}]},careers:{top:["刀鍛冶","スナイパー","精密機械技師"],good:["外科医","レーサー","サイバーセキュリティ専門家"],surprise:["弓道の師範","時計職人"],avoid:["チームの感情管理","大規模営業"]},strengths:["一つの技の極限","寡黙な集中力","冷静な実行力","手先の究極の器用さ"],weaknesses:["コミュニケーション","チームワーク","感情表現","柔軟性"],tips:{do:"「この技を極めてほしい」→一人の環境で最高。",dont:"「もっと話して」→技で語る人。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの技を極限まで磨く究極の技術者。\n\n寡黙で孤高。でも技を見れば全てがわかる。「この人の技は芸術」。\n\n弱点はコミュニケーション。"},{title:"💼 仕事の進め方",content:"【着手】技が求められたら。【進行】一人で極限まで。【完了】「完璧か」。【1日】鍛錬のリズム。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。技術の実演で語る。\n【ベスト】技術デモンストレーション"},{title:"💬 チャットでの傾向",content:"ほぼ無言。結果だけ報告。\n【知っておくと楽】沈黙は集中。技を見て評価。"},{title:"👔 上司として／部下として",content:"【上司】技で背中を見せる。管理不可。\n【部下】技を極める環境で最強。"},{title:"🔥 モチベーション",content:"【🚀】技が極まった/完璧な実行/静かな没入/認められた\n【📉】技活かせない/社交強制/浅い仕事/チーム管理"},{title:"📝 フィードバック",content:"【受ける】技術的指摘のみ。【伝える】実演で。"},{title:"✅ 得意・苦手タスク",content:"【🎯】極限の技/集中力/実行力/器用さ\n【😰】コミュニケーション/チーム/感情/柔軟性"},{title:"📖 頼み方マニュアル",content:"【✅】「技を極めて」→一人の環境。\n【❌】「もっと話して」→技で語る。\n【💡】1.一人の環境 2.技で評価 3.社交は免除"},{title:"🎯 適職マップ",content:"【🏆】刀鍛冶/スナイパー/精密機械技師\n【⭐】外科医/レーサー/サイバーセキュリティ\n【💡】弓道師範/時計職人\n【⚠️】感情管理/大規模営業"},{title:"🤝 相性マップ",content:"【💎】ENFJ-O-Br「カリスマ委員長」。ESFJ-O-Br「総支配人」。\n【🔥】ISTP-O-Br「現場の万能技師」。ESTP-O-Dp「エース」。\n【☀️】ISTP-G-Dp「専属オペレーター」。ISTJ-O-Dp「任務遂行者」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"鍛錬が全て。朝に素振り、夜に道具の手入れ。友達はほぼいない。道場や工房が居場所。"}]},
+"ISTP-G-Br":{name:"修理屋",character:"カカシ先生（NARUTO）",great:"ライト兄弟",color:"#EB984E",summary:"「何でも直せる、何でも作れる」万能の修理屋。守り×広型で幅広い技術を持ち現場の問題を確実に解決する。寡黙だが頼りになる技術の万能選手。",compatibility:{complement:[{code:"ENFJ-G-Br",name:"守護霊",desc:"技術に温かさが。"},{code:"ESFJ-G-Dp",name:"ベテラン寮長",desc:"仕組みに愛を。"}],chemistry:[{code:"ESTP-G-Br",name:"安全番長",desc:"寡黙な器用さ共通。最強修理チーム。"},{code:"ISTP-O-Br",name:"現場の万能技師",desc:"器用さ共通。"}],comfort:[{code:"ISTP-G-Dp",name:"専属オペレーター",desc:"同じISTP-G。"},{code:"ISTJ-G-Br",name:"組織の記憶庫",desc:"堅実さ。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"「もっと楽しもう」。"},{code:"ENTP-O-Br",name:"アイデアマン",desc:"「新しい技術も」。"}]},careers:{top:["ビルメンテナンスのプロ","自動車整備士（マイスター）","ITインフラエンジニア"],good:["大工","電気工事士","農業機械の修理"],surprise:["万能の執事","ピアノ調律師"],avoid:["感情中心のカウンセリング","抽象的な戦略のみ"]},strengths:["何でも直せる万能さ","寡黙な信頼性","幅広い技術","冷静な問題解決"],weaknesses:["感情表現","自己PR","抽象的議論","華やかさ"],tips:{do:"「これを直してほしい」→何でも直す。裁量を。",dont:"「プレゼンして」→手が語る人。"},fullSections:[{title:"👤 この人はこんな人",content:"何でも直せる何でも作れる万能の修理屋。\n\n寡黙だが頼りになる。「オリオンに頼めば直る」。\n\n弱点は感情表現と自己PR。"},{title:"💼 仕事の進め方",content:"【着手】壊れたものを見つけたら。【進行】手を動かしながら。【完了】「動くか」。【1日】現場主義。"},{title:"🗣️ 会議での振る舞い",content:"「これはこう直す」と実践的。\n【ベスト】技術的問題解決"},{title:"💬 チャットでの傾向",content:"短い。「修理完了」。写真付き。\n【知っておくと楽】言葉より行動。"},{title:"👔 上司として／部下として",content:"【上司】技術で導く。管理弱い。\n【部下】何でも頼める万能選手。"},{title:"🔥 モチベーション",content:"【🚀】直した/作った/頼りにされた/技術が活きた\n【📉】机上だけ/技術活かせない/PR強制/感情論"},{title:"📝 フィードバック",content:"【受ける】技術的。【伝える】「ここがこう」と実物で。"},{title:"✅ 得意・苦手タスク",content:"【🎯】万能修理/技術/冷静/問題解決\n【😰】感情/PR/抽象/華やかさ"},{title:"📖 頼み方マニュアル",content:"【✅】「直して」→裁量を。\n【❌】「プレゼンして」→手が語る。\n【💡】1.現場裁量 2.技術評価 3.PRはサポート"},{title:"🎯 適職マップ",content:"【🏆】ビルメンテ/自動車整備マイスター/ITインフラ\n【⭐】大工/電気工事/農業機械修理\n【💡】万能執事/ピアノ調律\n【⚠️】感情カウンセリング/抽象戦略のみ"},{title:"🤝 相性マップ",content:"【💎】ENFJ-G-Br「守護霊」。ESFJ-G-Dp「ベテラン寮長」。\n【🔥】ESTP-G-Br「安全番長」。ISTP-O-Br「現場の万能技師」。\n【☀️】ISTP-G-Dp「専属オペレーター」。ISTJ-G-Br「組織の記憶庫」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"DIYが趣味。壊れたものを直す、棚を作る、車を整備する。工具箱が宝物。休日はホームセンター。"}]},
+"ISTP-G-Dp":{name:"専属オペレーター",character:"ターミネーター（T-800）",great:"ニコラ・テスラ",color:"#873600",summary:"「この一つの機械を完璧に理解し永遠に動かす」究極のオペレーター。守り×深型で一つの機械・システムに深くコミットし完璧に維持する。人間よりも機械と語り合う。",compatibility:{complement:[{code:"ENFJ-O-Dp",name:"恩師",desc:"タロスの技術にテミスの使命が方向を。"},{code:"ESFJ-O-Br",name:"総支配人",desc:"機械だけの世界に人の温もりを。"}],chemistry:[{code:"INTJ-G-Dp",name:"設計狂",desc:"究極の設計×究極の運用。"},{code:"ISTJ-G-Dp",name:"金庫番",desc:"寡黙な深さ。"}],comfort:[{code:"ISTP-G-Br",name:"修理屋",desc:"同じISTP-G。"},{code:"ISTP-O-Dp",name:"一刀流の職人",desc:"深い技術。"}],catalyst:[{code:"ENFP-O-Br",name:"着火マン",desc:"「機械以外の世界も」。"},{code:"ESFP-O-Br",name:"お祭り総隊長",desc:"楽しさが機械だけの世界を開く。"}]},careers:{top:["発電所オペレーター","精密工作機械の専門家","潜水艦のエンジニア"],good:["エレベーター保守","天文台の望遠鏡管理","医療機器のスペシャリスト"],surprise:["オルゴール修復師","蒸気機関車の保存運転士"],avoid:["対人サービス","チームの感情管理"]},strengths:["一つの機械の完全理解","究極の維持管理","寡黙な信頼","長期的な安定運用"],weaknesses:["人間関係","コミュニケーション","変化","新しい環境"],tips:{do:"「この機械を完璧に動かし続けて」→一人で機械と。",dont:"「もっと人と関わって」→機械と語り合う人。"},fullSections:[{title:"👤 この人はこんな人",content:"一つの機械を完璧に理解し永遠に動かす究極のオペレーター。\n\n人間よりも機械と語り合う。機械の音を聞くだけで異常がわかる。\n\n弱点は人間関係。"},{title:"💼 仕事の進め方",content:"【着手】機械を完全理解してから。【進行】毎日同じ手順で完璧に。【完了】「完璧に動いているか」。【1日】機械のリズムに合わせる。"},{title:"🗣️ 会議での振る舞い",content:"ほぼ沈黙。機械の状態報告のみ。\n【ベスト】技術的な機械レビュー"},{title:"💬 チャットでの傾向",content:"「正常」「異常あり」のみ。\n【知っておくと楽】機械の話を振ると詳しい。"},{title:"👔 上司として／部下として",content:"【上司】技術指導は最高。人の管理は不可。\n【部下】一つの機械を任せると完璧。"},{title:"🔥 モチベーション",content:"【🚀】機械が完璧に動いている/異常を早期発見/30年守った/機械との対話\n【📉】機械を離れる/社交強制/新しい機械ばかり/雑に扱われる"},{title:"📝 フィードバック",content:"【受ける】機械に関する技術的FB。【伝える】「この部品がこう」。"},{title:"✅ 得意・苦手タスク",content:"【🎯】機械の完全理解/維持管理/寡黙な信頼/安定運用\n【😰】人間関係/コミュニケーション/変化/新環境"},{title:"📖 頼み方マニュアル",content:"【✅】「完璧に動かし続けて」→一人で機械と。\n【❌】「人と関わって」→機械と語る人。\n【💡】1.機械を任せる 2.一人の環境 3.長期で敬意"},{title:"🎯 適職マップ",content:"【🏆】発電所オペレーター/精密工作機械/潜水艦エンジニア\n【⭐】エレベーター保守/天文台管理/医療機器スペシャリスト\n【💡】オルゴール修復/蒸気機関車保存\n【⚠️】対人サービス/感情管理"},{title:"🤝 相性マップ",content:"【💎】ENFJ-O-Dp「恩師」。ESFJ-O-Br「総支配人」。\n【🔥】INTJ-G-Dp「設計狂」。ISTJ-G-Dp「金庫番」。\n【☀️】ISTP-G-Br「修理屋」。ISTP-O-Dp「一刀流の職人」。\n【⚡】ENFP-O-Br「着火マン」。"},{title:"🌈 プライベートの顔",content:"機械いじりが全て。自分の部屋は工房。古い機械を分解し理解する。音楽も機械式レコード。友達はほぼいないが機械を通じた仲間が少数。"}]},
+};
+
+// 90問の質問データ + スコアリングロジック
+
+const QUESTIONS = [
+  // E/I axis (Q1-15)
+  {id:1,text:"人と話しているとエネルギーが湧いてくる",axis:"EI",dir:1},
+  {id:2,text:"考えを整理するとき、誰かに話しながらまとめることが多い",axis:"EI",dir:1},
+  {id:3,text:"初対面の人とでも自然に会話を始められる",axis:"EI",dir:1},
+  {id:4,text:"一人で昼食を取る日が続くと物足りなく感じる",axis:"EI",dir:1},
+  {id:5,text:"仕事の悩みは、まず誰かに話したくなる",axis:"EI",dir:1},
+  {id:6,text:"大人数の集まりの後は、疲れるよりむしろ元気になっている",axis:"EI",dir:1},
+  {id:7,text:"新しい環境では、自分から積極的に話しかける方だ",axis:"EI",dir:1},
+  {id:8,text:"週末に予定がないと、誰かを誘いたくなる",axis:"EI",dir:1},
+  {id:9,text:"一人で過ごす時間は、自分にとって大事な充電時間だ",axis:"EI",dir:-1},
+  {id:10,text:"大勢の前で発言するより、少人数の方が考えをうまく伝えられる",axis:"EI",dir:-1},
+  {id:11,text:"にぎやかな場所に長時間いると、一人になりたくなる",axis:"EI",dir:-1},
+  {id:12,text:"何かを深く考えるときは、一人で静かな環境にいたい",axis:"EI",dir:-1},
+  {id:13,text:"あまり親しくない人との雑談はエネルギーを使うと感じる",axis:"EI",dir:-1},
+  {id:14,text:"重要な決断をするとき、まず一人でじっくり考えたい",axis:"EI",dir:-1},
+  {id:15,text:"考えがまとまる前に意見を求められると困ることがある",axis:"EI",dir:-1},
+  // S/N axis (Q16-30)
+  {id:16,text:"具体的な事実より、そこから読み取れる意味やパターンに興味がある",axis:"SN",dir:1},
+  {id:17,text:"「今どうなっているか」より「これからどうなるか」を考えるのが好きだ",axis:"SN",dir:1},
+  {id:18,text:"比喩やたとえ話を使って説明することが多い",axis:"SN",dir:1},
+  {id:19,text:"まだ存在しないものを想像するのが楽しい",axis:"SN",dir:1},
+  {id:20,text:"細かい手順を追うより、全体像を先に把握したい",axis:"SN",dir:1},
+  {id:21,text:"理論や概念について考えるのが好きだ",axis:"SN",dir:1},
+  {id:22,text:"「もしこうだったら」と仮定の話をよくする",axis:"SN",dir:1},
+  {id:23,text:"日常の出来事の裏にある法則や繋がりを見つけようとする",axis:"SN",dir:1},
+  {id:24,text:"抽象的な議論より、具体的な事例がある方が理解しやすい",axis:"SN",dir:-1},
+  {id:25,text:"経験や実績に基づいた判断の方が信頼できると思う",axis:"SN",dir:-1},
+  {id:26,text:"空想に浸るより、目の前の現実に集中する方だ",axis:"SN",dir:-1},
+  {id:27,text:"五感で確かめられる情報を重視する",axis:"SN",dir:-1},
+  {id:28,text:"理論的に正しくても、実際にやってみないと信じられないことがある",axis:"SN",dir:-1},
+  {id:29,text:"細部まできちんと確認してから次に進みたい",axis:"SN",dir:-1},
+  {id:30,text:"将来の可能性より、今確実にわかっていることを重視する",axis:"SN",dir:-1},
+  // T/F axis (Q31-45)
+  {id:31,text:"重要な決断をするとき、感情よりも論理を優先する",axis:"TF",dir:1},
+  {id:32,text:"人間関係のトラブルは、感情を脇に置いて客観的に分析したい",axis:"TF",dir:1},
+  {id:33,text:"正しいことを伝えるためなら、相手が一時的に傷ついても仕方ないと思う",axis:"TF",dir:1},
+  {id:34,text:"仕事の評価は、プロセスより結果で判断されるべきだ",axis:"TF",dir:1},
+  {id:35,text:"議論では、相手の気持ちより論理の整合性が気になる",axis:"TF",dir:1},
+  {id:36,text:"「なぜそう感じるのか」より「なぜそうなるのか」に興味がある",axis:"TF",dir:1},
+  {id:37,text:"褒めるときも、具体的な根拠を示した方が良いと思う",axis:"TF",dir:1},
+  {id:38,text:"人にアドバイスするとき、共感より解決策を先に考えてしまう",axis:"TF",dir:1},
+  {id:39,text:"論理的に正しくても、関係者の気持ちに配慮した判断をしたい",axis:"TF",dir:-1},
+  {id:40,text:"意見が対立したとき、まずお互いの気持ちを理解することが大切だ",axis:"TF",dir:-1},
+  {id:41,text:"チームの雰囲気が良いことは、成果と同じくらい大事だ",axis:"TF",dir:-1},
+  {id:42,text:"相手の表情や声のトーンの変化によく気づく",axis:"TF",dir:-1},
+  {id:43,text:"誰かが辛そうにしていると、自分も気持ちが重くなる",axis:"TF",dir:-1},
+  {id:44,text:"厳しいフィードバックを伝えるとき、相手への影響を先に考える",axis:"TF",dir:-1},
+  {id:45,text:"効率が良くても、誰かが無理をしている状況は放置できない",axis:"TF",dir:-1},
+  // J/P axis (Q46-60)
+  {id:46,text:"予定が決まっていると安心する",axis:"JP",dir:1},
+  {id:47,text:"やるべきことのリストを作り、順番に片付けるのが好きだ",axis:"JP",dir:1},
+  {id:48,text:"締切よりかなり前に仕事を終わらせたい",axis:"JP",dir:1},
+  {id:49,text:"計画を立ててから行動する方が成果が出る",axis:"JP",dir:1},
+  {id:50,text:"曖昧な状況が続くとストレスを感じる",axis:"JP",dir:1},
+  {id:51,text:"物事に決着がつくとスッキリする",axis:"JP",dir:1},
+  {id:52,text:"毎日のルーティンがある方が調子が良い",axis:"JP",dir:1},
+  {id:53,text:"旅行の前には、しっかり計画を立てたい",axis:"JP",dir:1},
+  {id:54,text:"計画を立てても、その通りにいかなくても気にならない",axis:"JP",dir:-1},
+  {id:55,text:"締切が迫ってからの方が集中力が上がる",axis:"JP",dir:-1},
+  {id:56,text:"予定外の出来事を楽しめる方だ",axis:"JP",dir:-1},
+  {id:57,text:"選択肢はなるべく多く残しておきたい",axis:"JP",dir:-1},
+  {id:58,text:"ルールや手順に縛られるのが苦手だ",axis:"JP",dir:-1},
+  {id:59,text:"「とりあえずやってみよう」が自分のスタイルに近い",axis:"JP",dir:-1},
+  {id:60,text:"完璧な計画より、柔軟に対応できる余白の方が大事だ",axis:"JP",dir:-1},
+  // O/G axis (Q61-75)
+  {id:61,text:"安定した成果を出し続けることより、大きな成果を一発狙う方に惹かれる",axis:"OG",dir:1},
+  {id:62,text:"失敗するかもしれなくても、大きなリターンが見込めるなら挑戦したい",axis:"OG",dir:1},
+  {id:63,text:"周囲から「やめた方がいい」と言われても、自分が勝算ありと思えば突き進む",axis:"OG",dir:1},
+  {id:64,text:"目標を立てるとき、「少し無理かも」と思うくらい高い方がやる気が出る",axis:"OG",dir:1},
+  {id:65,text:"意思決定のとき「最悪どうなるか」より「最高にうまくいったらどうなるか」を先に考える",axis:"OG",dir:1},
+  {id:66,text:"安定しているが成長が止まった環境より、不安定でも大きく飛躍できる環境を選ぶ",axis:"OG",dir:1},
+  {id:67,text:"小さく勝つより、大きく勝つ方法を考えたい",axis:"OG",dir:1},
+  {id:68,text:"自分のキャリアで「安全な道」を選んだことはあまりない",axis:"OG",dir:1},
+  {id:69,text:"大きな勝負に出るより、手堅く成果を重ねる方が最終的に勝つと思う",axis:"OG",dir:-1},
+  {id:70,text:"大きなリスクを取って失敗するくらいなら、確実にできることをやりたい",axis:"OG",dir:-1},
+  {id:71,text:"自分や家族の生活が安定していることが、仕事を頑張る一番の土台だ",axis:"OG",dir:-1},
+  {id:72,text:"大きなリスクを取るより、確実に成果を積み上げる方が性に合っている",axis:"OG",dir:-1},
+  {id:73,text:"挑戦する前に、失敗した場合のダメージを必ず見積もる",axis:"OG",dir:-1},
+  {id:74,text:"派手な成功より、着実な信頼を積み上げることに価値を感じる",axis:"OG",dir:-1},
+  {id:75,text:"100%の力で勝負するより、70%の力で確実に結果を出す方が賢いと思う",axis:"OG",dir:-1},
+  // Dp/Br axis (Q76-90)
+  {id:76,text:"一つの専門分野を極めるより、複数の分野に詳しくなりたい",axis:"DB",dir:1},
+  {id:77,text:"自分の市場価値は、複数のスキルの掛け算で生まれると思う",axis:"DB",dir:1},
+  {id:78,text:"自分の専門とは違う分野の知識が、仕事に役立った経験が何度もある",axis:"DB",dir:1},
+  {id:79,text:"キャリアは一つの専門を深掘りするより、異なる経験を積む方が理想だ",axis:"DB",dir:1},
+  {id:80,text:"転職や異動で新しい分野に入ることに抵抗がない",axis:"DB",dir:1},
+  {id:81,text:"「あなたは何の専門家？」と聞かれると、一つに絞るのが難しい",axis:"DB",dir:1},
+  {id:82,text:"「何でも屋」と呼ばれることに抵抗がない、むしろ嬉しい",axis:"DB",dir:1},
+  {id:83,text:"自分のキャリアを振り返ると、一つの分野に留まらず幅広い経験をしてきた",axis:"DB",dir:1},
+  {id:84,text:"一つのスキルを誰にも負けないレベルまで高めることに喜びを感じる",axis:"DB",dir:-1},
+  {id:85,text:"キャリアの強みは、一つの分野を長く続けた経験の蓄積だと思う",axis:"DB",dir:-1},
+  {id:86,text:"「広く浅く」より「狭く深く」の方が自分には合っていると思う",axis:"DB",dir:-1},
+  {id:87,text:"自分の専門領域では、社外の人にも教えられるレベルを目指している",axis:"DB",dir:-1},
+  {id:88,text:"自分の専門領域については、チーム内の誰よりも詳しくありたい",axis:"DB",dir:-1},
+  {id:89,text:"ジェネラリストより、スペシャリストと呼ばれたい",axis:"DB",dir:-1},
+  {id:90,text:"「第一人者」「エキスパート」と呼ばれることに強い憧れがある",axis:"DB",dir:-1},
+];
+
+const CUSTOM_QUESTIONS = QUESTIONS.filter(q => q.id >= 61);
+
+// スコアリング
+function calcScores(answers, mbtiOverride) {
+  const axes = { EI: 0, SN: 0, TF: 0, JP: 0, OG: 0, DB: 0 };
+  const counts = { EI: 0, SN: 0, TF: 0, JP: 0, OG: 0, DB: 0 };
+
+  for (const q of QUESTIONS) {
+    if (mbtiOverride && q.id < 61) continue;
+    const val = answers[q.id];
+    if (val === undefined) continue;
+    const score = q.dir === 1 ? val : (8 - val);
+    axes[q.axis] += score;
+    counts[q.axis]++;
+  }
+
+  const results = {};
+  for (const axis of Object.keys(axes)) {
+    if (mbtiOverride && (axis === "EI" || axis === "SN" || axis === "TF" || axis === "JP")) continue;
+    const max = counts[axis] * 7;
+    const min = counts[axis];
+    results[axis] = { raw: axes[axis], pct: Math.round(((axes[axis] - min) / (max - min)) * 100) };
+  }
+  return results;
+}
+
+// タイプ判定
+function getType(scores, mbtiOverride) {
+  let e, n, t, j;
+  if (mbtiOverride) {
+    e = mbtiOverride[0] === "E"; n = mbtiOverride[1] === "N";
+    t = mbtiOverride[2] === "T"; j = mbtiOverride[3] === "J";
+  } else {
+    e = scores.EI.pct >= 50; n = scores.SN.pct >= 50;
+    t = scores.TF.pct >= 50; j = scores.JP.pct >= 50;
+  }
+  const o = scores.OG.pct >= 50;
+  const br = scores.DB.pct >= 50;
+  const code = `${e?"E":"I"}${n?"N":"S"}${t?"T":"F"}${j?"J":"P"}-${o?"O":"G"}-${br?"Br":"Dp"}`;
+  return code;
+}
+
+const MBTI_TYPES = ["ENFP","ENFJ","ENTP","ENTJ","ESFP","ESFJ","ESTP","ESTJ","INFP","INFJ","INTP","INTJ","ISFP","ISFJ","ISTP","ISTJ"];
+
+
+// ── App State ──
+let mode = null; // 'full' | 'shortcut'
+let mbtiOverride = null;
+let currentQs = [];
+let currentIdx = 0;
+let answers = {};
+
+const AXIS_NAMES = {EI:'外向 ↔ 内向', SN:'直観 ↔ 感覚', TF:'思考 ↔ 感情', JP:'判断 ↔ 知覚', OG:'攻め ↔ 守り', DB:'多趣味 ↔ 専門'};
+const AXIS_LABELS = {EI:['E 外向','I 内向'],SN:['N 直観','S 感覚'],TF:['T 思考','F 感情'],JP:['J 判断','P 知覚'],OG:['O 攻め','G 守り'],DB:['Br 多趣味','Dp 専門']};
+
+// ── Init MBTI grid ──
+const grid = document.getElementById('mbtiGrid');
+MBTI_TYPES.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'mbti-chip';
+  chip.textContent = t;
+  chip.onclick = () => startShortcut(t);
+  grid.appendChild(chip);
+});
+
+function toggleMbtiSelect() {
+  grid.classList.toggle('show');
+  document.getElementById('mbtiNote').style.display = grid.classList.contains('show') ? 'block' : 'none';
+}
+
+function startFull() {
+  mode = 'full';
+  mbtiOverride = null;
+  currentQs = [...QUESTIONS];
+  answers = {};
+  currentIdx = 0;
+  showQuestionScreen();
+}
+
+function startShortcut(type) {
+  mode = 'shortcut';
+  mbtiOverride = type;
+  currentQs = [...CUSTOM_QUESTIONS];
+  answers = {};
+  currentIdx = 0;
+  showQuestionScreen();
+}
+
+function showQuestionScreen() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('questionScreen').style.display = 'block';
+  document.getElementById('resultScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = currentQs[currentIdx];
+  const total = currentQs.length;
+  document.getElementById('progressFill').style.width = ((currentIdx + 1) / total * 100) + '%';
+  document.getElementById('qCount').textContent = `${currentIdx + 1} / ${total}`;
+  document.getElementById('qAxisLabel').textContent = AXIS_NAMES[q.axis] || '';
+  document.getElementById('qText').textContent = q.text;
+
+  // Trigger fade animation on question card
+  const qCard = document.querySelector('.q-card');
+  if (qCard) {
+    qCard.classList.remove('fade-in');
+    void qCard.offsetWidth; // force reflow
+    qCard.classList.add('fade-in');
+  }
+  
+  const scaleDiv = document.getElementById('qScale');
+  scaleDiv.innerHTML = '';
+  for (let i = 1; i <= 7; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'q-scale-btn' + (answers[q.id] === i ? ' selected' : '');
+    btn.textContent = i;
+    btn.onclick = () => selectAnswer(q.id, i);
+    scaleDiv.appendChild(btn);
+  }
+  
+  document.getElementById('prevBtn').disabled = currentIdx === 0;
+  const isLast = currentIdx === total - 1;
+  document.getElementById('nextBtn').textContent = isLast ? '結果を見る →' : '次へ →';
+  document.getElementById('nextBtn').disabled = answers[q.id] === undefined;
+}
+
+function selectAnswer(qid, val) {
+  answers[qid] = val;
+  renderQuestion();
+  // Auto-advance after short delay
+  setTimeout(() => {
+    if (currentIdx < currentQs.length - 1) {
+      nextQ();
+    }
+  }, 300);
+}
+
+function nextQ() {
+  const q = currentQs[currentIdx];
+  if (answers[q.id] === undefined) return;
+  if (currentIdx < currentQs.length - 1) {
+    currentIdx++;
+    renderQuestion();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  } else {
+    showResult();
+  }
+}
+
+function prevQ() {
+  if (currentIdx > 0) {
+    currentIdx--;
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  const scores = calcScores(answers, mbtiOverride);
+  const typeCode = getType(scores, mbtiOverride);
+  const profile = PROFILES[typeCode];
+  
+  if (!profile) {
+    alert('プロフィールが見つかりませんでした: ' + typeCode);
+    return;
+  }
+  
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('questionScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+  
+  // Set theme color
+  const color = profile.color || '#667eea';
+  document.documentElement.style.setProperty('--accent', color);
+  
+  // Build all score data (including MBTI from override)
+  const allScores = {};
+  if (mbtiOverride) {
+    // For shortcut mode, show MBTI axes at 100/0 based on type
+    allScores.EI = {pct: mbtiOverride[0]==='E' ? 75 : 25};
+    allScores.SN = {pct: mbtiOverride[1]==='N' ? 75 : 25};
+    allScores.TF = {pct: mbtiOverride[2]==='T' ? 75 : 25};
+    allScores.JP = {pct: mbtiOverride[3]==='J' ? 75 : 25};
+  } else {
+    allScores.EI = scores.EI;
+    allScores.SN = scores.SN;
+    allScores.TF = scores.TF;
+    allScores.JP = scores.JP;
+  }
+  allScores.OG = scores.OG;
+  allScores.DB = scores.DB;
+  
+  // Build badge chips from type code and scores
+  const badgeAxes = ['EI','SN','TF','JP','OG','DB'];
+  const badgeHTML = badgeAxes.map(axis => {
+    const s = allScores[axis];
+    const pct = s ? s.pct : 50;
+    const labels = AXIS_LABELS[axis];
+    const winLabel = pct >= 50 ? labels[0] : labels[1];
+    return `<span class="type-badge">${winLabel}</span>`;
+  }).join('');
+
+  const rc = document.getElementById('resultContent');
+  rc.innerHTML = `
+    <div class="r-header">
+      <div class="r-label">Your Work Style Type</div>
+      <div class="r-name" style="color:${color}">${profile.name}</div>
+      <div class="r-code">${typeCode}</div>
+      <div class="type-badges">${badgeHTML}</div>
+      <div class="r-summary">${profile.summary}</div>
+    </div>
+
+    <!-- Score Bars -->
+    <div class="r-card">
+      <div class="r-card-title">📊 6軸スコア</div>
+      <div class="score-section" id="scoreBars"></div>
+    </div>
+    
+    <!-- Character & Great -->
+    <div class="r-card">
+      <div class="r-card-title">🎭 キャラクター・偉人</div>
+      <div class="r-persona">
+        <div class="r-persona-item">
+          <div class="r-persona-label">架空キャラ</div>
+          <div class="r-persona-name">${profile.character}</div>
+        </div>
+        <div class="r-persona-item">
+          <div class="r-persona-label">偉人</div>
+          <div class="r-persona-name">${profile.great}</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Full Sections Accordion -->
+    <div class="r-card">
+      <div class="r-card-title">📖 詳細プロフィール</div>
+      <div id="accordionWrap"></div>
+    </div>
+    
+    <!-- Compatibility -->
+    <div class="r-card">
+      <div class="r-card-title">🤝 相性マップ</div>
+      <div class="tab-bar" id="compatTabs"></div>
+      <div class="tab-content" id="compatContent"></div>
+    </div>
+    
+    <!-- Careers -->
+    <div class="r-card">
+      <div class="r-card-title">🎯 適職マップ</div>
+      <div id="careerContent" style="padding:0 24px 20px"></div>
+    </div>
+    
+    <!-- Strengths & Weaknesses -->
+    <div class="r-card">
+      <div class="r-card-title">✅ 得意・苦手タスク</div>
+      <div style="padding:0 24px 20px">
+        <div style="margin-bottom:16px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2ecc71">🎯 得意なタスク</div>
+          <div class="career-tags" id="strengthTags"></div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e74c3c">😰 苦手なタスク</div>
+          <div class="career-tags" id="weaknessTags"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tips -->
+    <div class="r-card">
+      <div class="r-card-title">📘 頼み方マニュアル</div>
+      <div class="tip-section" id="tipContent"></div>
+    </div>
+    
+    <!-- Share -->
+    <div class="r-card">
+      <div class="r-card-title">🔗 結果をシェア</div>
+      <div class="share-wrap">
+        <div class="share-buttons">
+          <button class="share-btn copy" onclick="copyShareLink()">📋 リンクをコピー</button>
+          <a class="share-btn x" id="shareX" href="#" target="_blank" rel="noopener">𝕏 でシェア</a>
+          <a class="share-btn line" id="shareLine" href="#" target="_blank" rel="noopener">LINE で送る</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Restart -->
+    <div class="restart-wrap">
+      <button class="restart-btn" onclick="restart()">🔄 もう一度診断する</button>
+    </div>
+  `;
+
+  // Set share links
+  setupShareLinks(typeCode, profile, allScores);
+  
+  // Render score bars
+  renderScoreBars(allScores, color);
+  
+  // Render accordion
+  renderAccordion(profile.fullSections);
+  
+  // Render compatibility tabs
+  renderCompatibility(profile.compatibility, color);
+  
+  // Render careers
+  renderCareers(profile.careers);
+  
+  // Render tags
+  renderTags('strengthTags', profile.strengths, 'green');
+  renderTags('weaknessTags', profile.weaknesses, 'red');
+  
+  // Render tips
+  renderTips(profile.tips);
+  
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function renderScoreBars(allScores, color) {
+  const wrap = document.getElementById('scoreBars');
+  const axes = ['EI','SN','TF','JP','OG','DB'];
+  let html = '';
+  axes.forEach(axis => {
+    const s = allScores[axis];
+    const pct = s ? s.pct : 50;
+    const labels = AXIS_LABELS[axis];
+    html += `
+      <div class="score-row">
+        <div class="score-label">${labels[0].split(' ')[0]}</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-fill" data-pct="${pct}" style="width:0%;background:${color}"></div>
+        </div>
+        <div class="score-pct">${pct}%</div>
+      </div>
+      <div class="score-label-row"><span>${labels[0]}</span><span>${labels[1]}</span></div>
+    `;
+  });
+  wrap.innerHTML = html;
+  // Animate bars from 0 to target width
+  requestAnimationFrame(() => {
+    wrap.querySelectorAll('.score-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.pct + '%';
+    });
+  });
+}
+
+function renderAccordion(sections) {
+  const wrap = document.getElementById('accordionWrap');
+  if (!sections || !sections.length) { wrap.innerHTML = '<p style="padding:20px 24px;color:var(--text-muted)">詳細データなし</p>'; return; }
+  let html = '';
+  sections.forEach((sec, i) => {
+    html += `
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span>${sec.title}</span>
+          <span class="accordion-arrow">▼</span>
+        </div>
+        <div class="accordion-body">${sec.content}</div>
+      </div>
+    `;
+  });
+  wrap.innerHTML = html;
+  // Open first by default
+  const first = wrap.querySelector('.accordion-header');
+  if (first) toggleAccordion(first);
+}
+
+function toggleAccordion(header) {
+  header.classList.toggle('open');
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function renderCompatibility(compat, color) {
+  if (!compat) return;
+  const tabs = [
+    {key:'complement',label:'💎 補完',data:compat.complement},
+    {key:'chemistry',label:'🔥 化学反応',data:compat.chemistry},
+    {key:'comfort',label:'☀️ 居心地',data:compat.comfort},
+    {key:'catalyst',label:'⚡ 触発',data:compat.catalyst}
+  ];
+  
+  const tabBar = document.getElementById('compatTabs');
+  const content = document.getElementById('compatContent');
+  
+  let tabHtml = '';
+  let panelHtml = '';
+  tabs.forEach((t, i) => {
+    tabHtml += `<button class="tab-btn${i===0?' active':''}" onclick="switchTab(this,'compat',${i})">${t.label}</button>`;
+    let items = '';
+    if (t.data && t.data.length) {
+      t.data.forEach(item => {
+        items += `<div class="compat-item"><div class="compat-name">${item.name || ''}</div><div class="compat-code">${item.code || ''}</div><div class="compat-desc">${item.desc || ''}</div></div>`;
+      });
+    } else {
+      items = '<p style="color:var(--text-muted);font-size:14px">データなし</p>';
+    }
+    panelHtml += `<div class="tab-panel${i===0?' active':''}" data-tab-group="compat" data-tab-idx="${i}">${items}</div>`;
+  });
+  tabBar.innerHTML = tabHtml;
+  content.innerHTML = panelHtml;
+}
+
+function switchTab(btn, group, idx) {
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll(`[data-tab-group="${group}"]`).forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab-group="${group}"][data-tab-idx="${idx}"]`).classList.add('active');
+}
+
+function renderCareers(careers) {
+  if (!careers) return;
+  const wrap = document.getElementById('careerContent');
+  const groups = [
+    {key:'top',label:'🏆 天職レベル',cls:'gold'},
+    {key:'good',label:'⭐ かなり合う',cls:'blue'},
+    {key:'surprise',label:'💡 意外とハマる',cls:'purple'},
+    {key:'avoid',label:'⚠️ 避けた方がいい',cls:'warn'}
+  ];
+  let html = '';
+  groups.forEach(g => {
+    const items = careers[g.key];
+    if (items && items.length) {
+      html += `<div class="career-group"><div class="career-group-title">${g.label}</div><div class="career-tags">`;
+      items.forEach(item => { html += `<span class="tag ${g.cls}">${item}</span>`; });
+      html += '</div></div>';
+    }
+  });
+  wrap.innerHTML = html;
+}
+
+function renderTags(containerId, items, cls) {
+  const wrap = document.getElementById(containerId);
+  if (!items || !items.length) { wrap.innerHTML = '<span style="color:var(--text-muted);font-size:13px">データなし</span>'; return; }
+  wrap.innerHTML = items.map(item => `<span class="tag ${cls}">${item}</span>`).join('');
+}
+
+function renderTips(tips) {
+  if (!tips) return;
+  const wrap = document.getElementById('tipContent');
+  let html = '';
+  if (tips.do) {
+    html += '<div style="margin-bottom:16px"><div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2ecc71">✅ こうすると動く</div>';
+    tips.do.split(/[。\n]/).filter(Boolean).forEach(t => {
+      html += `<div class="tip-item"><span class="tip-icon">✅</span><span>${t.trim()}</span></div>`;
+    });
+    html += '</div>';
+  }
+  if (tips.dont) {
+    html += '<div><div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e74c3c">❌ これはNG</div>';
+    tips.dont.split(/[。\n]/).filter(Boolean).forEach(t => {
+      html += `<div class="tip-item"><span class="tip-icon">❌</span><span>${t.trim()}</span></div>`;
+    });
+    html += '</div>';
+  }
+  wrap.innerHTML = html;
+}
+
+// ── Share functions ──
+function buildShareURL(typeCode, allScores) {
+  const base = window.location.href.split('?')[0].split('#')[0];
+  const s = ['EI','SN','TF','JP','OG','DB'].map(a => (allScores[a]||{pct:50}).pct).join(',');
+  return `${base}?type=${encodeURIComponent(typeCode)}&s=${s}`;
+}
+
+function setupShareLinks(typeCode, profile, allScores) {
+  const url = buildShareURL(typeCode, allScores);
+  const text = `私のワークスタイルタイプは「${profile.name}」（${typeCode}）でした！\n64タイプワークスタイル診断`;
+
+  const xLink = document.getElementById('shareX');
+  if (xLink) xLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+
+  const lineLink = document.getElementById('shareLine');
+  if (lineLink) lineLink.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+
+  // Store URL for copy
+  window._shareURL = url;
+}
+
+function copyShareLink() {
+  if (!window._shareURL) return;
+  navigator.clipboard.writeText(window._shareURL).then(() => {
+    showToast('リンクをコピーしました！');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = window._shareURL;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('リンクをコピーしました！');
+  });
+}
+
+function showToast(msg) {
+  let toast = document.querySelector('.share-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'share-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ── Load from URL params (shared link) ──
+function loadFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const typeCode = params.get('type');
+  const scoreStr = params.get('s');
+  if (!typeCode || !PROFILES[typeCode]) return false;
+
+  const profile = PROFILES[typeCode];
+  const color = profile.color || '#667eea';
+  document.documentElement.style.setProperty('--accent', color);
+
+  // Parse scores
+  const allScores = {};
+  const axes = ['EI','SN','TF','JP','OG','DB'];
+  if (scoreStr) {
+    const vals = scoreStr.split(',').map(Number);
+    axes.forEach((a, i) => { allScores[a] = {pct: vals[i] || 50}; });
+  } else {
+    axes.forEach(a => { allScores[a] = {pct: 50}; });
+  }
+
+  // Show result directly
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('questionScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+
+  // Build badge chips for shared view
+  const badgeAxes2 = ['EI','SN','TF','JP','OG','DB'];
+  const badgeHTML2 = badgeAxes2.map(axis => {
+    const s = allScores[axis];
+    const pct = s ? s.pct : 50;
+    const labels = AXIS_LABELS[axis];
+    const winLabel = pct >= 50 ? labels[0] : labels[1];
+    return `<span class="type-badge">${winLabel}</span>`;
+  }).join('');
+
+  // Reuse showResult rendering by setting globals and calling render
+  const rc = document.getElementById('resultContent');
+  rc.innerHTML = `
+    <div class="r-header">
+      <div class="r-label">Your Work Style Type</div>
+      <div class="r-name" style="color:${color}">${profile.name}</div>
+      <div class="r-code">${typeCode}</div>
+      <div class="type-badges">${badgeHTML2}</div>
+      <div class="r-summary">${profile.summary}</div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">📊 6軸スコア</div>
+      <div class="score-section" id="scoreBars"></div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">🎭 キャラクター・偉人</div>
+      <div class="r-persona">
+        <div class="r-persona-item">
+          <div class="r-persona-label">架空キャラ</div>
+          <div class="r-persona-name">${profile.character}</div>
+        </div>
+        <div class="r-persona-item">
+          <div class="r-persona-label">偉人</div>
+          <div class="r-persona-name">${profile.great}</div>
+        </div>
+      </div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">📖 詳細プロフィール</div>
+      <div id="accordionWrap"></div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">🤝 相性マップ</div>
+      <div class="tab-bar" id="compatTabs"></div>
+      <div class="tab-content" id="compatContent"></div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">🎯 適職マップ</div>
+      <div id="careerContent" style="padding:0 24px 20px"></div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">✅ 得意・苦手タスク</div>
+      <div style="padding:0 24px 20px">
+        <div style="margin-bottom:16px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2ecc71">🎯 得意なタスク</div>
+          <div class="career-tags" id="strengthTags"></div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e74c3c">😰 苦手なタスク</div>
+          <div class="career-tags" id="weaknessTags"></div>
+        </div>
+      </div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">📘 頼み方マニュアル</div>
+      <div class="tip-section" id="tipContent"></div>
+    </div>
+    <div class="r-card">
+      <div class="r-card-title">🔗 結果をシェア</div>
+      <div class="share-wrap">
+        <div class="share-buttons">
+          <button class="share-btn copy" onclick="copyShareLink()">📋 リンクをコピー</button>
+          <a class="share-btn x" id="shareX" href="#" target="_blank" rel="noopener">𝕏 でシェア</a>
+          <a class="share-btn line" id="shareLine" href="#" target="_blank" rel="noopener">LINE で送る</a>
+        </div>
+      </div>
+    </div>
+    <div class="restart-wrap">
+      <button class="restart-btn prominent" onclick="restart()">🔄 自分も診断する</button>
+    </div>
+  `;
+
+  renderScoreBars(allScores, color);
+  renderAccordion(profile.fullSections);
+  renderCompatibility(profile.compatibility, color);
+  renderCareers(profile.careers);
+  renderTags('strengthTags', profile.strengths, 'green');
+  renderTags('weaknessTags', profile.weaknesses, 'red');
+  renderTips(profile.tips);
+  setupShareLinks(typeCode, profile, allScores);
+  return true;
+}
+
+function restart() {
+  // Clear URL params
+  history.replaceState(null, '', window.location.pathname);
+  document.getElementById('startScreen').style.display = 'flex';
+  document.getElementById('questionScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('resultContent').innerHTML = '';
+  document.documentElement.style.setProperty('--accent', '#667eea');
+  // Reset MBTI grid
+  document.getElementById('mbtiGrid').classList.remove('show');
+  document.getElementById('mbtiNote').style.display = 'none';
+  window.scrollTo({top: 0});
+}
+
+// ── On page load, check for shared URL ──
+window.addEventListener('DOMContentLoaded', () => { loadFromURL(); });
+</script>
+</body>
+</html>
