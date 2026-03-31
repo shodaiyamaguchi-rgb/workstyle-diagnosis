@@ -58,9 +58,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 /* Result Screen */
 #resultScreen{display:none;padding:40px 0 80px}
-.r-header{text-align:center;padding:40px 20px 32px;position:relative}
+.r-header{text-align:center;padding:40px 20px 32px;position:relative;background:radial-gradient(ellipse at center top, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%)}
 .r-label{font-size:11px;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:16px}
-.r-name{font-family:'Noto Serif JP',serif;font-size:36px;font-weight:700;margin-bottom:8px}
+.r-avatar{width:160px;height:160px;border-radius:50%;border:3px solid var(--accent);background:rgba(255,255,255,0.03);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px color-mix(in srgb, var(--accent) 20%, transparent)}
+.r-avatar-letter{font-size:64px;font-family:'Noto Serif JP',serif;font-weight:700}
+.r-name{font-family:'Noto Serif JP',serif;font-size:42px;font-weight:700;margin-bottom:8px;text-shadow:0 0 30px color-mix(in srgb, var(--accent) 25%, transparent)}
 .r-code{font-size:14px;letter-spacing:2px;margin-bottom:20px;opacity:0.6}
 .r-summary{font-size:15px;line-height:1.9;color:var(--text-muted);max-width:540px;margin:0 auto;padding:0 20px}
 
@@ -68,14 +70,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .score-section{padding:24px 20px}
 .score-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .score-label{font-size:12px;width:28px;text-align:right;font-weight:700}
-.score-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;position:relative;overflow:visible}
-.score-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.score-bar-wrap{flex:1;height:10px;background:rgba(255,255,255,0.06);border-radius:5px;position:relative;overflow:visible}
+.score-bar-fill{height:100%;border-radius:5px;transition:width 1s ease;box-shadow:0 0 8px color-mix(in srgb, var(--accent) 50%, transparent)}
+.score-bar-center{position:absolute;top:-2px;left:50%;width:2px;height:14px;background:rgba(255,255,255,0.2);border-radius:1px;transform:translateX(-50%);z-index:1}
 .score-pct{font-size:11px;color:var(--text-muted);width:36px}
 .score-label-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:-4px;margin-bottom:8px;padding-left:40px;padding-right:36px}
 
 /* Cards */
-.r-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;margin:16px 20px;overflow:hidden}
-.r-card-title{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;padding:20px 24px;display:flex;align-items:center;gap:10px}
+.r-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--card-border);border-left:4px solid color-mix(in srgb, var(--accent) 60%, transparent);border-radius:16px;margin:16px 20px;overflow:hidden}
+.r-card:nth-child(odd){border-left-color:color-mix(in srgb, var(--accent) 40%, transparent)}
+.r-card-title{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;padding:20px 24px;display:flex;align-items:center;gap:10px;color:var(--accent)}
+.r-card-title .card-emoji{font-size:22px}
 
 /* Character & Great */
 .r-persona{display:flex;gap:16px;padding:0 24px 20px}
@@ -113,27 +118,40 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 /* Tags */
 .tag{display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;border:1px solid var(--card-border);background:rgba(255,255,255,0.02)}
-.tag.green{border-color:rgba(46,204,113,0.3);color:#2ecc71;background:rgba(46,204,113,0.06)}
-.tag.red{border-color:rgba(231,76,60,0.3);color:#e74c3c;background:rgba(231,76,60,0.06)}
-.tag.blue{border-color:rgba(52,152,219,0.3);color:#3498db;background:rgba(52,152,219,0.06)}
-.tag.purple{border-color:rgba(155,89,182,0.3);color:#9b59b6;background:rgba(155,89,182,0.06)}
-.tag.gold{border-color:rgba(241,196,15,0.3);color:#f1c40f;background:rgba(241,196,15,0.06)}
-.tag.warn{border-color:rgba(231,76,60,0.2);color:rgba(231,76,60,0.8);background:rgba(231,76,60,0.04)}
+.tag.green{border-color:rgba(16,185,129,0.4);color:#10b981;background:rgba(16,185,129,0.08);box-shadow:0 0 12px rgba(16,185,129,0.1)}
+.tag.red{border-color:rgba(248,113,113,0.35);color:#f87171;background:rgba(248,113,113,0.08)}
+.tag.blue{border-color:rgba(59,130,246,0.35);color:#3b82f6;background:rgba(59,130,246,0.08)}
+.tag.purple{border-color:rgba(168,85,247,0.35);color:#a855f7;background:rgba(168,85,247,0.08)}
+.tag.gold{border-color:rgba(245,158,11,0.4);color:#f59e0b;background:rgba(245,158,11,0.1);box-shadow:0 0 10px rgba(245,158,11,0.08)}
+.tag.warn{border-color:rgba(190,60,50,0.25);color:rgba(220,90,80,0.85);background:rgba(190,60,50,0.06)}
 
 /* Tips */
 .tip-section{padding:0 24px 20px}
-.tip-item{display:flex;gap:10px;padding:10px 0;font-size:14px;line-height:1.7;color:var(--text-muted)}
+.tip-item{display:flex;gap:10px;padding:10px 14px;font-size:14px;line-height:1.7;color:var(--text-muted);border-radius:10px;margin-bottom:6px}
+.tip-item.tip-do{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.12)}
+.tip-item.tip-dont{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.12)}
 .tip-icon{flex-shrink:0;font-size:16px}
 
 /* Share */
-.share-wrap{padding:20px 24px;display:flex;flex-direction:column;gap:12px}
-.share-label{font-size:13px;font-weight:700;margin-bottom:4px}
-.share-buttons{display:flex;gap:8px;flex-wrap:wrap}
-.share-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;border:1px solid var(--card-border);background:var(--card);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;text-decoration:none}
-.share-btn:hover{background:rgba(255,255,255,0.06);transform:translateY(-1px)}
-.share-btn.x{border-color:rgba(255,255,255,0.15);background:rgba(0,0,0,0.3)}
-.share-btn.line{border-color:rgba(6,199,85,0.3);color:#06c755}
-.share-btn.copy{border-color:rgba(102,126,234,0.3);color:#667eea}
+.share-section{position:relative;overflow:hidden;border-radius:16px;background:linear-gradient(135deg,rgba(102,126,234,0.10),rgba(118,75,162,0.10));border:1px solid rgba(102,126,234,0.18);padding:28px 24px}
+.share-section::before{content:'';position:absolute;top:-40%;right:-20%;width:200px;height:200px;background:radial-gradient(circle,rgba(102,126,234,0.12),transparent 70%);pointer-events:none}
+.share-heading{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:700;text-align:center;margin-bottom:4px}
+.share-sub{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:20px}
+.share-preview{background:rgba(0,0,0,0.25);border-radius:12px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,0.06)}
+.share-preview-avatar{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0}
+.share-preview-info{flex:1;min-width:0}
+.share-preview-type{font-size:15px;font-weight:700;margin-bottom:2px}
+.share-preview-code{font-size:11px;color:var(--text-muted);letter-spacing:1px}
+.share-buttons{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.share-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .25s;text-decoration:none}
+.share-btn:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.share-btn-icon{font-size:24px;line-height:1}
+.share-btn.x{background:rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.12)}
+.share-btn.x:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.25)}
+.share-btn.line{background:rgba(6,199,85,0.08);border-color:rgba(6,199,85,0.25);color:#06c755}
+.share-btn.line:hover{background:rgba(6,199,85,0.15);border-color:rgba(6,199,85,0.4)}
+.share-btn.copy{background:rgba(102,126,234,0.08);border-color:rgba(102,126,234,0.25);color:#667eea}
+.share-btn.copy:hover{background:rgba(102,126,234,0.15);border-color:rgba(102,126,234,0.4)}
 .share-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(102,126,234,0.95);color:#fff;padding:12px 28px;border-radius:12px;font-size:14px;opacity:0;transition:all .3s;pointer-events:none;z-index:100;backdrop-filter:blur(8px)}
 .share-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -162,6 +180,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* Type badge chips */
 .type-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:16px auto 20px;max-width:480px}
 .type-badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.5px;border:1.5px solid var(--accent);color:var(--accent);background:rgba(255,255,255,0.03)}
+.type-badge.axis-ei{border-color:rgba(99,102,241,0.6);color:#6366f1;background:rgba(99,102,241,0.08)}
+.type-badge.axis-sn{border-color:rgba(139,92,246,0.6);color:#8b5cf6;background:rgba(139,92,246,0.08)}
+.type-badge.axis-tf{border-color:rgba(236,72,153,0.6);color:#ec4899;background:rgba(236,72,153,0.08)}
+.type-badge.axis-jp{border-color:rgba(245,158,11,0.6);color:#f59e0b;background:rgba(245,158,11,0.08)}
+.type-badge.axis-og{border-color:rgba(16,185,129,0.6);color:#10b981;background:rgba(16,185,129,0.08)}
+.type-badge.axis-db{border-color:rgba(6,182,212,0.6);color:#06b6d4;background:rgba(6,182,212,0.08)}
+/* Compat dot */
+.compat-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle;background:var(--accent);box-shadow:0 0 6px color-mix(in srgb, var(--accent) 40%, transparent)}
 
 /* Prominent restart button for shared links */
 .restart-btn.prominent{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;font-size:16px;padding:16px 48px}
@@ -169,7 +195,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 @media(max-width:400px){
   .q-scale-btn{width:38px;height:38px;font-size:13px}
-  .r-name{font-size:28px}
+  .r-name{font-size:32px}
+  .r-avatar{width:120px;height:120px}
+  .r-avatar-letter{font-size:48px}
   .r-persona{flex-direction:column}
 }
 </style>
@@ -483,7 +511,7 @@ function renderQuestion() {
   const total = currentQs.length;
   document.getElementById('progressFill').style.width = ((currentIdx + 1) / total * 100) + '%';
   document.getElementById('qCount').textContent = `${currentIdx + 1} / ${total}`;
-  document.getElementById('qAxisLabel').textContent = AXIS_NAMES[q.axis] || '';
+  // Axis label hidden to avoid response bias
   document.getElementById('qText').textContent = q.text;
 
   // Trigger fade animation on question card
@@ -577,18 +605,22 @@ function showResult() {
   
   // Build badge chips from type code and scores
   const badgeAxes = ['EI','SN','TF','JP','OG','DB'];
+  const badgeAxisCls = {EI:'axis-ei',SN:'axis-sn',TF:'axis-tf',JP:'axis-jp',OG:'axis-og',DB:'axis-db'};
   const badgeHTML = badgeAxes.map(axis => {
     const s = allScores[axis];
     const pct = s ? s.pct : 50;
     const labels = AXIS_LABELS[axis];
     const winLabel = pct >= 50 ? labels[0] : labels[1];
-    return `<span class="type-badge">${winLabel}</span>`;
+    return `<span class="type-badge ${badgeAxisCls[axis]}">${winLabel}</span>`;
   }).join('');
 
   const rc = document.getElementById('resultContent');
   rc.innerHTML = `
     <div class="r-header">
       <div class="r-label">Your Work Style Type</div>
+      <div class="r-avatar" style="border-color:${color}">
+        <span class="r-avatar-letter" style="color:${color}">${profile.name[0]}</span>
+      </div>
       <div class="r-name" style="color:${color}">${profile.name}</div>
       <div class="r-code">${typeCode}</div>
       <div class="type-badges">${badgeHTML}</div>
@@ -597,13 +629,13 @@ function showResult() {
 
     <!-- Score Bars -->
     <div class="r-card">
-      <div class="r-card-title">📊 6軸スコア</div>
+      <div class="r-card-title"><span class="card-emoji">📊</span> 6軸スコア</div>
       <div class="score-section" id="scoreBars"></div>
     </div>
-    
+
     <!-- Character & Great -->
     <div class="r-card">
-      <div class="r-card-title">🎭 キャラクター・偉人</div>
+      <div class="r-card-title"><span class="card-emoji">🎭</span> キャラクター・偉人</div>
       <div class="r-persona">
         <div class="r-persona-item">
           <div class="r-persona-label">架空キャラ</div>
@@ -615,56 +647,68 @@ function showResult() {
         </div>
       </div>
     </div>
-    
+
     <!-- Full Sections Accordion -->
     <div class="r-card">
-      <div class="r-card-title">📖 詳細プロフィール</div>
+      <div class="r-card-title"><span class="card-emoji">📖</span> 詳細プロフィール</div>
       <div id="accordionWrap"></div>
     </div>
-    
+
     <!-- Compatibility -->
     <div class="r-card">
-      <div class="r-card-title">🤝 相性マップ</div>
+      <div class="r-card-title"><span class="card-emoji">🤝</span> 相性マップ</div>
       <div class="tab-bar" id="compatTabs"></div>
       <div class="tab-content" id="compatContent"></div>
     </div>
-    
+
     <!-- Careers -->
     <div class="r-card">
-      <div class="r-card-title">🎯 適職マップ</div>
+      <div class="r-card-title"><span class="card-emoji">🎯</span> 適職マップ</div>
       <div id="careerContent" style="padding:0 24px 20px"></div>
     </div>
-    
+
     <!-- Strengths & Weaknesses -->
     <div class="r-card">
-      <div class="r-card-title">✅ 得意・苦手タスク</div>
+      <div class="r-card-title"><span class="card-emoji">✅</span> 得意・苦手タスク</div>
       <div style="padding:0 24px 20px">
         <div style="margin-bottom:16px">
-          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2ecc71">🎯 得意なタスク</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#10b981">🎯 得意なタスク</div>
           <div class="career-tags" id="strengthTags"></div>
         </div>
         <div>
-          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e74c3c">😰 苦手なタスク</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#f87171">😰 苦手なタスク</div>
           <div class="career-tags" id="weaknessTags"></div>
         </div>
       </div>
     </div>
-    
+
     <!-- Tips -->
     <div class="r-card">
-      <div class="r-card-title">📘 頼み方マニュアル</div>
+      <div class="r-card-title"><span class="card-emoji">📘</span> 頼み方マニュアル</div>
       <div class="tip-section" id="tipContent"></div>
     </div>
-    
+
     <!-- Share -->
-    <div class="r-card">
-      <div class="r-card-title">🔗 結果をシェア</div>
-      <div class="share-wrap">
-        <div class="share-buttons">
-          <button class="share-btn copy" onclick="copyShareLink()">📋 リンクをコピー</button>
-          <a class="share-btn x" id="shareX" href="#" target="_blank" rel="noopener">𝕏 でシェア</a>
-          <a class="share-btn line" id="shareLine" href="#" target="_blank" rel="noopener">LINE で送る</a>
+    <div class="share-section">
+      <div class="share-heading">結果をシェアしよう</div>
+      <div class="share-sub">友達や同僚にも診断を勧めてみよう</div>
+      <div class="share-preview">
+        <div class="share-preview-avatar" style="background:${color}">${profile.name.charAt(0)}</div>
+        <div class="share-preview-info">
+          <div class="share-preview-type">${profile.name}</div>
+          <div class="share-preview-code">${typeCode}</div>
         </div>
+      </div>
+      <div class="share-buttons">
+        <a class="share-btn x" id="shareX" href="#" target="_blank" rel="noopener">
+          <span class="share-btn-icon">𝕏</span>ポスト
+        </a>
+        <a class="share-btn line" id="shareLine" href="#" target="_blank" rel="noopener">
+          <span class="share-btn-icon">💬</span>LINE
+        </a>
+        <button class="share-btn copy" onclick="copyShareLink()">
+          <span class="share-btn-icon">📋</span>コピー
+        </button>
       </div>
     </div>
 
@@ -711,6 +755,7 @@ function renderScoreBars(allScores, color) {
       <div class="score-row">
         <div class="score-label">${labels[0].split(' ')[0]}</div>
         <div class="score-bar-wrap">
+          <div class="score-bar-center"></div>
           <div class="score-bar-fill" data-pct="${pct}" style="width:0%;background:${color}"></div>
         </div>
         <div class="score-pct">${pct}%</div>
@@ -773,7 +818,7 @@ function renderCompatibility(compat, color) {
     let items = '';
     if (t.data && t.data.length) {
       t.data.forEach(item => {
-        items += `<div class="compat-item"><div class="compat-name">${item.name || ''}</div><div class="compat-code">${item.code || ''}</div><div class="compat-desc">${item.desc || ''}</div></div>`;
+        items += `<div class="compat-item"><div class="compat-name"><span class="compat-dot"></span>${item.name || ''}</div><div class="compat-code">${item.code || ''}</div><div class="compat-desc">${item.desc || ''}</div></div>`;
       });
     } else {
       items = '<p style="color:var(--text-muted);font-size:14px">データなし</p>';
@@ -823,16 +868,16 @@ function renderTips(tips) {
   const wrap = document.getElementById('tipContent');
   let html = '';
   if (tips.do) {
-    html += '<div style="margin-bottom:16px"><div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2ecc71">✅ こうすると動く</div>';
+    html += '<div style="margin-bottom:16px"><div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#10b981">✅ こうすると動く</div>';
     tips.do.split(/[。\n]/).filter(Boolean).forEach(t => {
-      html += `<div class="tip-item"><span class="tip-icon">✅</span><span>${t.trim()}</span></div>`;
+      html += `<div class="tip-item tip-do"><span class="tip-icon">✅</span><span>${t.trim()}</span></div>`;
     });
     html += '</div>';
   }
   if (tips.dont) {
-    html += '<div><div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e74c3c">❌ これはNG</div>';
+    html += '<div><div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#f87171">❌ これはNG</div>';
     tips.dont.split(/[。\n]/).filter(Boolean).forEach(t => {
-      html += `<div class="tip-item"><span class="tip-icon">❌</span><span>${t.trim()}</span></div>`;
+      html += `<div class="tip-item tip-dont"><span class="tip-icon">❌</span><span>${t.trim()}</span></div>`;
     });
     html += '</div>';
   }
@@ -916,12 +961,13 @@ function loadFromURL() {
 
   // Build badge chips for shared view
   const badgeAxes2 = ['EI','SN','TF','JP','OG','DB'];
+  const badgeAxisCls2 = {EI:'axis-ei',SN:'axis-sn',TF:'axis-tf',JP:'axis-jp',OG:'axis-og',DB:'axis-db'};
   const badgeHTML2 = badgeAxes2.map(axis => {
     const s = allScores[axis];
     const pct = s ? s.pct : 50;
     const labels = AXIS_LABELS[axis];
     const winLabel = pct >= 50 ? labels[0] : labels[1];
-    return `<span class="type-badge">${winLabel}</span>`;
+    return `<span class="type-badge ${badgeAxisCls2[axis]}">${winLabel}</span>`;
   }).join('');
 
   // Reuse showResult rendering by setting globals and calling render
@@ -929,17 +975,20 @@ function loadFromURL() {
   rc.innerHTML = `
     <div class="r-header">
       <div class="r-label">Your Work Style Type</div>
+      <div class="r-avatar" style="border-color:${color}">
+        <span class="r-avatar-letter" style="color:${color}">${profile.name[0]}</span>
+      </div>
       <div class="r-name" style="color:${color}">${profile.name}</div>
       <div class="r-code">${typeCode}</div>
       <div class="type-badges">${badgeHTML2}</div>
       <div class="r-summary">${profile.summary}</div>
     </div>
     <div class="r-card">
-      <div class="r-card-title">📊 6軸スコア</div>
+      <div class="r-card-title"><span class="card-emoji">📊</span> 6軸スコア</div>
       <div class="score-section" id="scoreBars"></div>
     </div>
     <div class="r-card">
-      <div class="r-card-title">🎭 キャラクター・偉人</div>
+      <div class="r-card-title"><span class="card-emoji">🎭</span> キャラクター・偉人</div>
       <div class="r-persona">
         <div class="r-persona-item">
           <div class="r-persona-label">架空キャラ</div>
@@ -952,43 +1001,55 @@ function loadFromURL() {
       </div>
     </div>
     <div class="r-card">
-      <div class="r-card-title">📖 詳細プロフィール</div>
+      <div class="r-card-title"><span class="card-emoji">📖</span> 詳細プロフィール</div>
       <div id="accordionWrap"></div>
     </div>
     <div class="r-card">
-      <div class="r-card-title">🤝 相性マップ</div>
+      <div class="r-card-title"><span class="card-emoji">🤝</span> 相性マップ</div>
       <div class="tab-bar" id="compatTabs"></div>
       <div class="tab-content" id="compatContent"></div>
     </div>
     <div class="r-card">
-      <div class="r-card-title">🎯 適職マップ</div>
+      <div class="r-card-title"><span class="card-emoji">🎯</span> 適職マップ</div>
       <div id="careerContent" style="padding:0 24px 20px"></div>
     </div>
     <div class="r-card">
-      <div class="r-card-title">✅ 得意・苦手タスク</div>
+      <div class="r-card-title"><span class="card-emoji">✅</span> 得意・苦手タスク</div>
       <div style="padding:0 24px 20px">
         <div style="margin-bottom:16px">
-          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#2ecc71">🎯 得意なタスク</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#10b981">🎯 得意なタスク</div>
           <div class="career-tags" id="strengthTags"></div>
         </div>
         <div>
-          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#e74c3c">😰 苦手なタスク</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#f87171">😰 苦手なタスク</div>
           <div class="career-tags" id="weaknessTags"></div>
         </div>
       </div>
     </div>
     <div class="r-card">
-      <div class="r-card-title">📘 頼み方マニュアル</div>
+      <div class="r-card-title"><span class="card-emoji">📘</span> 頼み方マニュアル</div>
       <div class="tip-section" id="tipContent"></div>
     </div>
-    <div class="r-card">
-      <div class="r-card-title">🔗 結果をシェア</div>
-      <div class="share-wrap">
-        <div class="share-buttons">
-          <button class="share-btn copy" onclick="copyShareLink()">📋 リンクをコピー</button>
-          <a class="share-btn x" id="shareX" href="#" target="_blank" rel="noopener">𝕏 でシェア</a>
-          <a class="share-btn line" id="shareLine" href="#" target="_blank" rel="noopener">LINE で送る</a>
+    <div class="share-section">
+      <div class="share-heading">結果をシェアしよう</div>
+      <div class="share-sub">友達や同僚にも診断を勧めてみよう</div>
+      <div class="share-preview">
+        <div class="share-preview-avatar" style="background:${color}">${profile.name.charAt(0)}</div>
+        <div class="share-preview-info">
+          <div class="share-preview-type">${profile.name}</div>
+          <div class="share-preview-code">${typeCode}</div>
         </div>
+      </div>
+      <div class="share-buttons">
+        <a class="share-btn x" id="shareX" href="#" target="_blank" rel="noopener">
+          <span class="share-btn-icon">𝕏</span>ポスト
+        </a>
+        <a class="share-btn line" id="shareLine" href="#" target="_blank" rel="noopener">
+          <span class="share-btn-icon">💬</span>LINE
+        </a>
+        <button class="share-btn copy" onclick="copyShareLink()">
+          <span class="share-btn-icon">📋</span>コピー
+        </button>
       </div>
     </div>
     <div class="restart-wrap">
