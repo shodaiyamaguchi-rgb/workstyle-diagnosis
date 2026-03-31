@@ -746,17 +746,19 @@ function showResult() {
 function renderScoreBars(allScores, color) {
   const wrap = document.getElementById('scoreBars');
   const axes = ['EI','SN','TF','JP','OG','DB'];
+  const axisColors = {EI:'#6366f1',SN:'#8b5cf6',TF:'#ec4899',JP:'#f59e0b',OG:'#10b981',DB:'#06b6d4'};
   let html = '';
   axes.forEach(axis => {
     const s = allScores[axis];
     const pct = s ? s.pct : 50;
     const labels = AXIS_LABELS[axis];
+    const ac = axisColors[axis];
     html += `
       <div class="score-row">
-        <div class="score-label">${labels[0].split(' ')[0]}</div>
+        <div class="score-label" style="color:${ac}">${labels[0].split(' ')[0]}</div>
         <div class="score-bar-wrap">
           <div class="score-bar-center"></div>
-          <div class="score-bar-fill" data-pct="${pct}" style="width:0%;background:${color}"></div>
+          <div class="score-bar-fill" data-pct="${pct}" style="width:0%;background:${ac};box-shadow:0 0 10px ${ac}44"></div>
         </div>
         <div class="score-pct">${pct}%</div>
       </div>
