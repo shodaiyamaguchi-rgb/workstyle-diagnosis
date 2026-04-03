@@ -1498,10 +1498,10 @@ function renderChaosMap() {
   // Legend
   const legend = document.getElementById('chaosLegend');
   legend.innerHTML = `
-    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#10b981"></div>O = 楽観</div>
-    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#6366f1"></div>G = 慎重</div>
-    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#f59e0b"></div>D = 主導</div>
-    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#ec4899"></div>B = 協調</div>
+    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#10b981"></div>O = 攻め</div>
+    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#6366f1"></div>G = 守り</div>
+    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#f59e0b"></div>Br = 多趣味</div>
+    <div class="chaos-legend-item"><div class="chaos-legend-dot" style="background:#ec4899"></div>Dp = 専門</div>
     <div class="chaos-legend-item" style="font-size:10px;color:var(--text-muted)">タップで詳細診断へ</div>
   `;
 
@@ -1513,10 +1513,10 @@ function renderChaosMap() {
     {key:'diplomat', label:'💚 ディプロマット'},
     {key:'sentinel', label:'🛡️ センチネル'},
     {key:'explorer', label:'⚡ エクスプローラー'},
-    {key:'O', label:'楽観 O'},
-    {key:'G', label:'慎重 G'},
-    {key:'D', label:'主導 D'},
-    {key:'B', label:'協調 B'}
+    {key:'O', label:'攻め O'},
+    {key:'G', label:'守り G'},
+    {key:'Br', label:'多趣味 Br'},
+    {key:'Dp', label:'専門 Dp'}
   ];
   filterWrap.innerHTML = filters.map(f =>
     `<button class="chaos-filter-btn${chaosActiveFilter===f.key?' active':''}" onclick="filterChaosMap('${f.key}')">${f.label}</button>`
@@ -1556,10 +1556,10 @@ function renderChaosContent() {
         filtered = types.filter(c => c.split('-')[1] === 'O');
       } else if (chaosActiveFilter === 'G') {
         filtered = types.filter(c => c.split('-')[1] === 'G');
-      } else if (chaosActiveFilter === 'D') {
-        filtered = types.filter(c => c.split('-')[2].startsWith('D'));
-      } else if (chaosActiveFilter === 'B') {
-        filtered = types.filter(c => c.split('-')[2].startsWith('B'));
+      } else if (chaosActiveFilter === 'Br') {
+        filtered = types.filter(c => c.split('-')[2] === 'Br');
+      } else if (chaosActiveFilter === 'Dp') {
+        filtered = types.filter(c => c.split('-')[2] === 'Dp');
       }
     }
 
@@ -1580,8 +1580,8 @@ function renderChaosContent() {
         const db = parts[2];
         const ogColor = og === 'O' ? '#10b981' : '#6366f1';
         const dbColor = db.startsWith('D') ? '#f59e0b' : '#ec4899';
-        const ogLabel = og === 'O' ? '楽観' : '慎重';
-        const dbLabel = db.startsWith('D') ? '主導' : '協調';
+        const ogLabel = og === 'O' ? '攻め' : '守り';
+        const dbLabel = db === 'Br' ? '多趣味' : '専門';
 
         html += `<a class="chaos-tile" href="?type=${encodeURIComponent(code)}" style="animation:fadeInUp .4s ease ${i*0.03}s both" onclick="event.preventDefault();navigateToType('${code}')">
           <div class="chaos-tile-avatar" style="border-color:${p.color}">
@@ -1682,8 +1682,8 @@ function analyzeTeam() {
     {key: 'SN', left: 'S（現実）', right: 'N（直感）', colorL: '#8b5cf6', colorR: '#a78bfa'},
     {key: 'TF', left: 'T（思考）', right: 'F（感情）', colorL: '#ec4899', colorR: '#f472b6'},
     {key: 'JP', left: 'J（計画）', right: 'P（柔軟）', colorL: '#f59e0b', colorR: '#fbbf24'},
-    {key: 'OG', left: 'O（楽観）', right: 'G（慎重）', colorL: '#10b981', colorR: '#34d399'},
-    {key: 'DB', left: 'D（主導）', right: 'B（協調）', colorL: '#06b6d4', colorR: '#22d3ee'}
+    {key: 'OG', left: 'O（攻め）', right: 'G（守り）', colorL: '#10b981', colorR: '#34d399'},
+    {key: 'DB', left: 'Br（多趣味）', right: 'Dp（専門）', colorL: '#06b6d4', colorR: '#22d3ee'}
   ];
 
   // Count left vs right for each axis
@@ -1695,7 +1695,7 @@ function analyzeTeam() {
       const parts = code.split('-');
       const mbti = parts[0]; // ENFP
       const og = parts[1];   // O or G
-      const db = parts[2];   // Br, Dr, Bl, Dl
+      const db = parts[2];   // Br or Dp
 
       let isLeft;
       if (axis.key === 'EI') isLeft = mbti[0] === 'E';
@@ -1703,7 +1703,7 @@ function analyzeTeam() {
       else if (axis.key === 'TF') isLeft = mbti[2] === 'T';
       else if (axis.key === 'JP') isLeft = mbti[3] === 'J';
       else if (axis.key === 'OG') isLeft = og === 'O';
-      else if (axis.key === 'DB') isLeft = db.startsWith('D') || db.startsWith('d');
+      else if (axis.key === 'DB') isLeft = db === 'Br';
 
       if (isLeft) left++; else right++;
     });
@@ -1782,22 +1782,22 @@ function analyzeTeam() {
     insights.push({icon: '🔄', title: '計画性と柔軟性のバランス◎', text: `計画型${jCount}人と柔軟型${pCount}人の組み合わせです。J型がスケジュールとマイルストーンを管理し、P型が「もっと良い方法があるかも」と改善案を持ち込む好循環が期待できます。プロジェクト序盤はP型の柔軟な探索フェーズを設け、中盤以降はJ型主導で計画に落とし込むという段階的アプローチが効きます。スプリントプランニングではJ型が全体の見通しを立て、スプリント中の細かな調整はP型に任せると、計画の骨格を保ちながら現場の最適化もできる体制になります。`});
   }
 
-  // ── 6. O/G axis ──
+  // ── 6. O/G axis（攻め／守り）──
   if (r[4] >= 0.8) {
-    insights.push({icon: '☀️', title: `楽観型${pct(4)}%：リスク見落としに注意`, text: `O（楽観）型が大半です。チームの雰囲気は明るく、新しいチャレンジにも「やってみよう！」と前向きに取り組めます。ピンチの時も「なんとかなるでしょ」と動じないため、メンバーの心理的な安定感は高いです。しかし、リスク評価が甘くなりがちです。たとえば「セキュリティ対策は後でやろう」「テストは最低限でいい」「このバグは多分大丈夫」と楽観的に判断した結果、本番環境で大きな障害が発生…というシナリオが起きやすくなります。対策として、企画やリリース前に必ず「プレモーテム（事前検死）」を実施しましょう。「もしこのプロジェクトが半年後に大失敗していたら、原因は何だったか？」を全員で書き出すワークです。楽観型でも「仮定の失敗」を考えるのは抵抗が少なく、効果的にリスクを洗い出せます。`});
+    insights.push({icon: '☀️', title: `攻め型${pct(4)}%：リスク見落としに注意`, text: `O（攻め）型が大半です。チームの雰囲気は明るく、新しいチャレンジにも「やってみよう！」と前向きに取り組めます。ピンチの時も「なんとかなるでしょ」と動じないため、メンバーの心理的な安定感は高いです。しかし、リスク評価が甘くなりがちです。たとえば「セキュリティ対策は後でやろう」「テストは最低限でいい」「このバグは多分大丈夫」と判断した結果、本番環境で大きな障害が発生…というシナリオが起きやすくなります。対策として、企画やリリース前に必ず「プレモーテム（事前検死）」を実施しましょう。「もしこのプロジェクトが半年後に大失敗していたら、原因は何だったか？」を全員で書き出すワークです。攻め型でも「仮定の失敗」を考えるのは抵抗が少なく、効果的にリスクを洗い出せます。`});
   } else if (r[4] <= 0.2) {
-    insights.push({icon: '🛡️', title: `慎重型${100-pct(4)}%：スピード不足に注意`, text: `G（慎重）型が大半です。リスク管理が徹底されており、品質面での信頼性は高いチームですが、「石橋を叩きすぎて渡れない」状態に陥りがちです。新規企画の承認に何度もレビューを重ね、結局タイミングを逃してしまうケースが起きやすくなります。競合が先にリリースして「あの時やっておけば…」と後悔することも。対策として、意思決定に「タイムボックス」を設けましょう。「この判断は3日以内に結論を出す」と期限を切り、期限内に全員が賛成しなくても60%の確信で進む「ファストフェイル」の文化を意識的に導入してください。小さく始めて早く失敗し、学んで修正するサイクルが、慎重型チームの成長スピードを大きく引き上げます。`});
+    insights.push({icon: '🛡️', title: `守り型${100-pct(4)}%：スピード不足に注意`, text: `G（守り）型が大半です。リスク管理が徹底されており、品質面での信頼性は高いチームですが、「石橋を叩きすぎて渡れない」状態に陥りがちです。新規企画の承認に何度もレビューを重ね、結局タイミングを逃してしまうケースが起きやすくなります。競合が先にリリースして「あの時やっておけば…」と後悔することも。対策として、意思決定に「タイムボックス」を設けましょう。「この判断は3日以内に結論を出す」と期限を切り、期限内に全員が賛成しなくても60%の確信で進む「ファストフェイル」の文化を意識的に導入してください。小さく始めて早く失敗し、学んで修正するサイクルが、守り型チームの成長スピードを大きく引き上げます。`});
   } else if (hasO && hasG) {
-    insights.push({icon: '🎯', title: '楽観と慎重のバランス◎', text: `楽観型${oCount}人と慎重型${gCount}人の組み合わせです。O型が「このアイデア面白い、やってみよう」とアクセルを踏み、G型が「待って、ここにリスクがある」とブレーキをかけるバランスが取れています。新規事業の検討では、O型に企画のドラフトを任せ、G型にリスク評価とフィージビリティ分析を依頼するとスピードと安全性を両立できます。プロジェクトの進行中も、O型が「まだいける」と言う時にG型のリスクシグナルを丁寧に拾うことで、致命的な失敗を防ぎつつ挑戦的な目標にも手が届く好循環が生まれます。`});
+    insights.push({icon: '🎯', title: '攻めと守りのバランス◎', text: `攻め型${oCount}人と守り型${gCount}人の組み合わせです。O型が「このアイデア面白い、やってみよう」とアクセルを踏み、G型が「待って、ここにリスクがある」とブレーキをかけるバランスが取れています。新規事業の検討では、O型に企画のドラフトを任せ、G型にリスク評価とフィージビリティ分析を依頼するとスピードと安全性を両立できます。プロジェクトの進行中も、O型が「まだいける」と言う時にG型のリスクシグナルを丁寧に拾うことで、致命的な失敗を防ぎつつ挑戦的な目標にも手が届く好循環が生まれます。`});
   }
 
-  // ── 7. D/B axis ──
+  // ── 7. D/B axis（多趣味Br／専門Dp）──
   if (r[5] >= 0.8) {
-    insights.push({icon: '⚔️', title: `主導型${pct(5)}%：権限争いのリスク`, text: `D（主導）型が大半です。全員がリーダーシップを取りたがるため、「船頭多くして船山に登る」状態になりがちです。会議では自分の主張を通そうとする人が多く、議論が平行線になったり、表面的に合意しても裏で不満が溜まったりします。特に2人のD型メンバーの意見が対立すると、チーム全体が二分されるリスクがあります。対策として、プロジェクトごとに明確な「意思決定者（DRI: Directly Responsible Individual）」を1人指名し、最終判断の権限を集中させましょう。他のD型メンバーには別の領域でリーダーシップを発揮する場を用意し、「全員がどこかでリードしている」状態を作ることでモチベーションを維持できます。`});
+    insights.push({icon: '🎨', title: `多趣味型${pct(5)}%：広く浅くなるリスク`, text: `Br（多趣味）型が大半です。メンバー全員が幅広い興味・スキルを持つゼネラリスト志向で、新しいツールや技術にも柔軟に対応できます。チーム内で「ちょっとこれやってくれない？」と振られた仕事も快く引き受けるフットワークの軽さが魅力です。一方で、特定領域の深い専門性が不足しがちです。技術的に難易度の高い課題に直面した時、「誰もその分野に詳しくない」という事態が起きやすくなります。対策として、各メンバーに1つ「スペシャリティ領域」を決めてもらい、その分野だけは深掘りする時間を確保しましょう。週に2〜3時間の「専門学習タイム」を設けるのも効果的です。`});
   } else if (r[5] <= 0.2) {
-    insights.push({icon: '🕊️', title: `協調型${100-pct(5)}%：意思決定者の不在リスク`, text: `B（協調）型が大半です。メンバー全員が相手を尊重し、衝突を避ける穏やかなチームですが、「で、誰が決めるの？」という場面で全員が譲り合い、意思決定が宙に浮くことが頻発します。「みんなはどう思う？」「私はどちらでも」が連続し、結局リーダーや上司に判断を仰ぐ…という依存構造ができやすいです。対策として、各テーマに「オーナー」を明確にアサインし、「あなたが最終判断していい」と権限を与えましょう。また、意見対立を「対人的な衝突」ではなく「アイデアの切磋琢磨」と捉えるマインドセットを共有し、「反対意見を歓迎する」カルチャーを意識的に育てることが重要です。`});
+    insights.push({icon: '🔬', title: `専門型${100-pct(5)}%：サイロ化に注意`, text: `Dp（専門）型が大半です。各メンバーがそれぞれの専門分野で深い知見を持っており、その領域の課題に対しては質の高いアウトプットが期待できます。しかし「自分の専門外は関知しない」という縦割り意識が生まれやすく、チーム内のナレッジ共有が滞りがちです。メンバーAの専門領域の課題にメンバーBの知見が活かせるケースを見逃してしまうことも。対策として、月1回の「ナレッジシェア会」で各自の専門領域のトピックを10分ずつ共有したり、異なる専門のメンバー同士をペアにする「クロスファンクショナル・ペアリング」を試すと、サイロの壁が薄くなります。`});
   } else if (hasD && hasB) {
-    insights.push({icon: '🤝', title: 'リーダーシップバランス◎', text: `主導型${dCount}人と協調型${bCount}人が共存しています。D型が方向性を示して意思決定をリードし、B型がチームの声を拾って合意形成を支える理想的な組み合わせです。D型リーダーが「こっちに行こう」と旗を振り、B型が「みんなついてきてる？」とフォローする形が自然に生まれます。1on1ではD型メンバーには「チームの意見を聞いてから判断する場面を増やそう」、B型メンバーには「自分の意見をもっと積極的に出していい」とそれぞれ逆方向のフィードバックを意識すると、全体の成長につながります。`});
+    insights.push({icon: '🤝', title: '多趣味と専門のバランス◎', text: `多趣味型${dCount}人と専門型${bCount}人が共存しています。Br型がチーム横断的に動いて各所をつなぎ、Dp型が専門領域を深く掘り下げる補完関係が機能します。新しいプロジェクトの立ち上げフェーズではBr型のフットワークが活き、専門性が求められる技術検証やクオリティ担保ではDp型が力を発揮します。Br型メンバーには「広い視野を活かして全体の接続点を見つける役割」を、Dp型メンバーには「その領域のエキスパートとして品質のゲートキーパーになる役割」を明確にアサインすると、互いの強みが最大化されます。`});
   }
 
   // ── 8. Cross-axis combination insights ──
@@ -1817,13 +1817,13 @@ function analyzeTeam() {
   if (r[1] >= 0.6 && r[2] >= 0.6) {
     insights.push({icon: '📊', title: '分析力特化チーム', text: `現実型×思考型が多い構成です。データ分析、品質管理、業務改善においては非常に強い力を発揮します。ファクトベースの議論ができ、属人的な判断に頼らない意思決定が可能です。一方で、ユーザーの感情や市場の空気感といった定性的な情報を軽視しがちです。定量データに加えて「ユーザーインタビュー」や「現場観察」など定性リサーチを定期的に取り入れると、盲点を補完できます。`});
   }
-  // O多数 × D多数 = 推進力MAX
+  // O多数 × Br多数 = 推進力MAX
   if (r[4] >= 0.6 && r[5] >= 0.6) {
-    insights.push({icon: '🚀', title: '推進力MAXチーム', text: `楽観型×主導型が多い構成です。「いける！やろう！」のエネルギーが非常に高く、新規事業やスタートアップ的なフェーズでは圧倒的な突破力を発揮します。しかし、リスク管理と合意形成の両方が弱点になるため、品質問題やチーム内の不満が水面下で蓄積されやすいです。スプリントごとに「振り返り（レトロスペクティブ）」を実施し、「うまくいったこと・改善したいこと・モヤモヤしていること」を匿名で集めると、早期に問題を発見できます。`});
+    insights.push({icon: '🚀', title: '推進力MAXチーム', text: `攻め型×多趣味型が多い構成です。「いける！やろう！」のエネルギーが非常に高く、新規事業やスタートアップ的なフェーズでは圧倒的な突破力を発揮します。幅広い関心と攻めの姿勢が組み合わさり、新しい領域にもどんどん踏み込めます。しかし、リスク管理と専門性の深掘りが弱点になるため、品質問題が水面下で蓄積されやすいです。スプリントごとに「振り返り（レトロスペクティブ）」を実施し、早期に問題を発見しましょう。`});
   }
-  // G多数 × B多数 = 安定だが停滞リスク
+  // G多数 × Dp多数 = 安定だが停滞リスク
   if (r[4] <= 0.4 && r[5] <= 0.4) {
-    insights.push({icon: '🐢', title: '安定感はあるが推進力に課題', text: `慎重型×協調型が多い構成です。丁寧な仕事ぶりでミスが少なく、チーム内の人間関係も良好ですが、「現状維持バイアス」が強く働き、改善や新しい取り組みが進みにくい傾向があります。「今のやり方で問題ないから変えなくていい」という空気が生まれやすいです。四半期に一度「もし自分たちのチームを今日ゼロから作り直すなら？」というゼロベース思考ワークを実施し、慣習に縛られない視点を持つ機会を作りましょう。`});
+    insights.push({icon: '🐢', title: '安定感はあるが推進力に課題', text: `守り型×専門型が多い構成です。各自の専門領域で丁寧な仕事ぶりを発揮し、品質は非常に高い一方、「現状維持バイアス」が強く働き、新しい取り組みが進みにくい傾向があります。「今のやり方で問題ないから変えなくていい」という空気が生まれやすいです。四半期に一度「もし自分たちのチームを今日ゼロから作り直すなら？」というゼロベース思考ワークを実施し、慣習に縛られない視点を持つ機会を作りましょう。`});
   }
 
   // ── 9. Team size insight ──
