@@ -22,20 +22,51 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .container{max-width:640px;margin:0 auto;padding:0 20px}
 
 /* Start Screen */
-#startScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:40px 20px}
-.start-label{font-size:11px;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:24px}
-.start-title{font-family:'Noto Serif JP',serif;font-size:32px;font-weight:700;margin-bottom:12px;line-height:1.4}
-.start-sub{font-size:14px;color:var(--text-muted);margin-bottom:48px;line-height:1.8}
-.start-btn{display:block;width:100%;max-width:360px;padding:16px 24px;border:none;border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:500;cursor:pointer;transition:all .3s;margin-bottom:16px}
-.start-btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.start-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(102,126,234,0.3)}
-.start-btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--card-border)}
-.start-btn.secondary:hover{background:rgba(255,255,255,0.06)}
+#startScreen{display:flex;flex-direction:column;align-items:center;min-height:100vh;text-align:center;padding:0 20px;overflow:hidden}
+.start-hero{position:relative;width:100%;padding:60px 0 40px;margin-bottom:8px}
+.start-hero-avatars{display:flex;justify-content:center;gap:0;margin-bottom:28px;position:relative;height:90px}
+.start-hero-avatar{border-radius:50%;overflow:hidden;border:2.5px solid rgba(255,255,255,0.1);position:absolute;top:50%;transform:translateY(-50%);animation:floatAvatar 3.5s ease-in-out infinite;box-shadow:0 6px 20px rgba(0,0,0,0.5);transition:transform .3s,box-shadow .3s}
+.start-hero-avatar:hover{z-index:10 !important;box-shadow:0 8px 28px rgba(102,126,234,0.4)}
+.start-hero-avatar img{width:100%;height:100%;object-fit:cover}
+@keyframes floatAvatar{0%,100%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(calc(-50% - 8px)) translateX(0)}}
+.start-hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;background:radial-gradient(circle,rgba(102,126,234,0.12) 0%,rgba(118,75,162,0.06) 40%,transparent 70%);pointer-events:none;z-index:0}
+.start-label{font-size:10px;letter-spacing:5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:16px;position:relative;z-index:1}
+.start-title{font-family:'Noto Serif JP',serif;font-size:36px;font-weight:700;margin-bottom:10px;line-height:1.3;position:relative;z-index:1;background:linear-gradient(135deg,#e8e6e3 0%,#c4b5fd 50%,#e8e6e3 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% auto;animation:shimmerTitle 4s ease-in-out infinite}
+@keyframes shimmerTitle{0%,100%{background-position:0% center}50%{background-position:200% center}}
+.start-title-accent{display:inline-block;font-size:42px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.start-sub{font-size:13px;color:var(--text-muted);margin-bottom:0;line-height:1.8;position:relative;z-index:1}
+.start-actions{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:32px}
+.start-btn-primary{display:block;width:100%;padding:20px 24px;border:none;border-radius:16px;font-family:'Noto Sans JP',sans-serif;font-size:17px;font-weight:700;cursor:pointer;transition:all .3s;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(102,126,234,0.3)}
+.start-btn-primary::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);transition:left .5s}
+.start-btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(102,126,234,0.4)}
+.start-btn-primary:hover::after{left:100%}
+.start-btn-primary .btn-sub{font-size:11px;font-weight:400;opacity:0.75;margin-top:4px;display:block}
+.start-btn-secondary{display:block;width:100%;padding:16px 24px;border:1.5px solid rgba(102,126,234,0.3);border-radius:14px;font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .3s;background:rgba(102,126,234,0.04);color:var(--text);backdrop-filter:blur(4px)}
+.start-btn-secondary:hover{background:rgba(102,126,234,0.1);border-color:rgba(102,126,234,0.5);transform:translateY(-2px)}
+.start-btn-secondary .btn-sub{font-size:11px;font-weight:400;opacity:0.5;margin-top:3px;display:block}
+.start-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--card-border),transparent);margin:8px auto}
+.start-extras{width:100%;max-width:420px;display:flex;gap:10px;margin-top:0}
+.start-btn-team{flex:1;padding:14px 12px;border:1px solid rgba(102,126,234,0.2);border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .3s;background:rgba(102,126,234,0.03);color:var(--text);text-align:center}
+.start-btn-team:hover{background:rgba(102,126,234,0.08);border-color:rgba(102,126,234,0.4);transform:translateY(-2px)}
+.start-btn-team .btn-icon{font-size:20px;display:block;margin-bottom:4px}
+.start-btn-team .btn-sub{font-size:10px;color:var(--text-muted);display:block;margin-top:2px}
+.start-btn-map{flex:1;padding:14px 12px;border:1px solid rgba(255,255,255,0.06);border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;background:transparent;color:var(--text-muted);text-align:center}
+.start-btn-map:hover{background:rgba(255,255,255,0.03);color:var(--text);border-color:rgba(255,255,255,0.12)}
+.start-btn-map .btn-icon{font-size:20px;display:block;margin-bottom:4px}
+.start-btn-map .btn-sub{font-size:10px;color:var(--text-muted);display:block;margin-top:2px;opacity:0.6}
 .start-note{font-size:12px;color:var(--text-muted);margin-top:8px}
-.mbti-grid{display:none;flex-wrap:wrap;gap:8px;justify-content:center;max-width:360px;margin:16px auto}
+.mbti-grid{display:none;flex-wrap:wrap;gap:8px;justify-content:center;max-width:400px;margin:16px auto}
 .mbti-grid.show{display:flex}
 .mbti-chip{padding:8px 14px;border-radius:8px;background:var(--card);border:1px solid var(--card-border);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
 .mbti-chip:hover,.mbti-chip.selected{background:rgba(102,126,234,0.2);border-color:rgba(102,126,234,0.5)}
+@media(max-width:400px){
+  .start-title{font-size:28px}
+  .start-title-accent{font-size:34px}
+  .start-hero-avatar{width:44px;height:44px}
+  .start-btn-primary{font-size:15px;padding:18px 20px}
+  .start-btn-secondary{font-size:14px;padding:14px 20px}
+  .start-extras{flex-direction:column}
+}
 
 /* Question Screen */
 #questionScreen{display:none;min-height:100vh;padding:20px}
@@ -308,21 +339,42 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 <!-- START SCREEN -->
 <div id="startScreen">
-  <div class="start-label">Work Style Personality Map</div>
-  <div class="start-title">64タイプ<br>ワークスタイル診断</div>
-  <div class="start-sub">MBTIの4軸に独自の2軸を加えた<br>6軸・64タイプの職場パーソナリティ診断</div>
-  <button class="start-btn primary" onclick="startFull()">90問で診断する<br><span style="font-size:12px;opacity:0.7">所要時間：約10分</span></button>
-  <button class="start-btn secondary" onclick="toggleMbtiSelect()">MBTIを知っている人はこちら<br><span style="font-size:12px;opacity:0.7">30問ショートカット（約4分）</span></button>
-  <div class="mbti-grid" id="mbtiGrid"></div>
-  <div class="start-note" id="mbtiNote" style="display:none">MBTIタイプを選んでください</div>
-  <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px;width:100%;max-width:400px">
-    <button class="start-btn secondary" onclick="showChaosMap()" style="border-color:rgba(139,92,246,0.4);background:rgba(139,92,246,0.06)">
-      🗺️ 全64タイプ一覧マップ<br><span style="font-size:12px;opacity:0.7">カオスマップで全タイプを俯瞰</span>
-    </button>
-    <button class="start-btn secondary" onclick="showTeamScreen()" style="border-color:rgba(102,126,234,0.4);background:rgba(102,126,234,0.06)">
-      👥 チーム診断<br><span style="font-size:12px;opacity:0.7">複数人の結果からチームバランスを可視化</span>
-    </button>
+  <div class="start-hero">
+    <div class="start-hero-glow"></div>
+    <div class="start-hero-avatars" id="heroAvatars"></div>
+    <div class="start-label">Work Style Personality Map</div>
+    <div class="start-title"><span class="start-title-accent">64</span>タイプ<br>ワークスタイル診断</div>
+    <div class="start-sub">MBTIの4軸に独自の2軸を加えた<br>6軸・64タイプの職場パーソナリティ診断</div>
   </div>
+
+  <div class="start-actions">
+    <button class="start-btn-primary" onclick="startFull()">
+      90問で診断する
+      <span class="btn-sub">所要時間：約10分 ・ 全6軸を精密診断</span>
+    </button>
+    <button class="start-btn-secondary" onclick="toggleMbtiSelect()">
+      MBTIを知っている人はこちら
+      <span class="btn-sub">30問ショートカット（約4分）</span>
+    </button>
+    <div class="mbti-grid" id="mbtiGrid"></div>
+    <div class="start-note" id="mbtiNote" style="display:none">MBTIタイプを選んでください</div>
+
+    <div class="start-divider"></div>
+
+    <div class="start-extras">
+      <button class="start-btn-team" onclick="showTeamScreen()">
+        <span class="btn-icon">👥</span>
+        チーム診断
+        <span class="btn-sub">チームバランスを可視化</span>
+      </button>
+      <button class="start-btn-map" onclick="showChaosMap()">
+        <span class="btn-icon">🗺️</span>
+        全64タイプ一覧
+        <span class="btn-sub">カオスマップで俯瞰</span>
+      </button>
+    </div>
+  </div>
+
   <div id="historyPanel"></div>
 </div>
 
@@ -1845,10 +1897,43 @@ function analyzeTeam() {
   document.getElementById('teamResult').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
+// ── Hero Avatars ──
+function renderHeroAvatars() {
+  const wrap = document.getElementById('heroAvatars');
+  if (!wrap) return;
+  // Pick 8 diverse representative types
+  const heroTypes = ['ENFP-O-Br','INTJ-O-Dp','ESFJ-G-Br','ISTP-G-Dp','ENTJ-O-Br','INFP-G-Dp','ESTP-O-Br','ISFJ-G-Br','ENFJ-O-Dp','INTP-G-Br'];
+  // center items larger, edges smaller, slight overlap
+  const configs = [
+    {x:-200, size:42, z:1, delay:0},
+    {x:-155, size:50, z:2, delay:0.2},
+    {x:-105, size:58, z:3, delay:0.4},
+    {x:-50,  size:66, z:5, delay:0.1},
+    {x:0,    size:72, z:6, delay:0.5},
+    {x:50,   size:66, z:5, delay:0.3},
+    {x:105,  size:58, z:3, delay:0.6},
+    {x:155,  size:50, z:2, delay:0.15},
+    {x:200,  size:42, z:1, delay:0.45},
+    {x:-2,   size:0,  z:0, delay:0}  // skip 10th if odd
+  ];
+  wrap.innerHTML = heroTypes.slice(0, 9).map((code, i) => {
+    const p = PROFILES[code];
+    const c = configs[i];
+    if (!p) return '';
+    return `<div class="start-hero-avatar" style="left:calc(50% + ${c.x}px - ${c.size/2}px);width:${c.size}px;height:${c.size}px;z-index:${c.z};animation-delay:${c.delay}s;border-color:${p.color}50">
+      <picture>
+        <source srcset="avatar_images/${code}.webp" type="image/webp">
+        <img src="avatar_images/${code}.png" alt="${p.name}" loading="eager">
+      </picture>
+    </div>`;
+  }).join('');
+}
+
 // ── On page load, check for shared URL + render history ──
 window.addEventListener('DOMContentLoaded', () => {
   loadFromURL();
   renderHistory();
+  renderHeroAvatars();
 });
 </script>
 </body>
