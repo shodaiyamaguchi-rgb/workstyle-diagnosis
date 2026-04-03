@@ -189,7 +189,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .q-card.fade-in{animation:fadeIn .3s ease both}
 
 /* History panel */
-.history-section{margin:16px 20px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);overflow:hidden}
+.history-section{width:100%;max-width:400px;margin:24px auto 0;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);overflow:hidden}
 .history-title{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;padding:16px 20px;color:var(--text-muted);display:flex;align-items:center;gap:8px;cursor:pointer}
 .history-list{padding:0 20px 16px}
 .history-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);margin-bottom:8px;cursor:pointer;transition:all .2s}
@@ -207,6 +207,44 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 /* Section divider shimmer */
 .r-card + .r-card{margin-top:20px}
+
+/* Team Diagnosis */
+#teamScreen{display:none;min-height:100vh;padding:40px 20px}
+.team-container{max-width:640px;margin:0 auto}
+.team-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:700;text-align:center;margin-bottom:8px}
+.team-sub{font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:32px}
+.team-members{margin-bottom:24px}
+.team-member{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;margin-bottom:8px;animation:fadeInUp .3s ease both}
+.team-member-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.team-member-info{flex:1;min-width:0}
+.team-member-name{font-size:14px;font-weight:600}
+.team-member-code{font-size:11px;color:var(--text-muted)}
+.team-member-remove{background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+.team-member-remove:hover{background:rgba(239,68,68,0.1);color:#f87171}
+.team-add-area{border:2px dashed var(--card-border);border-radius:12px;padding:20px;text-align:center;margin-bottom:24px}
+.team-add-area select{background:var(--card);color:var(--text);border:1px solid var(--card-border);border-radius:8px;padding:10px 16px;font-size:14px;font-family:'Noto Sans JP',sans-serif;width:100%;max-width:320px;margin-bottom:12px;cursor:pointer}
+.team-add-area select option{background:#1a1e2e}
+.team-add-btn{padding:10px 24px;border-radius:10px;border:none;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:14px;cursor:pointer;transition:all .2s}
+.team-add-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(102,126,234,0.3)}
+.team-add-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+.team-analyze-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:500;cursor:pointer;transition:all .2s;margin-bottom:24px}
+.team-analyze-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(102,126,234,0.3)}
+.team-analyze-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.team-result{margin-top:24px}
+.team-chart-wrap{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:24px;margin-bottom:16px}
+.team-chart-title{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent)}
+.team-axis-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.team-axis-label{font-size:11px;width:24px;font-weight:700;text-align:right}
+.team-axis-bar{flex:1;height:24px;background:rgba(255,255,255,0.04);border-radius:12px;position:relative;overflow:hidden}
+.team-axis-bar-inner{position:absolute;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.8);transition:width .8s ease}
+.team-axis-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);padding:0 32px;margin-top:-6px;margin-bottom:8px}
+.team-type-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.team-type-chip{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:500;border:1px solid var(--card-border);background:var(--card)}
+.team-insight{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:20px 24px;margin-bottom:16px}
+.team-insight-title{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.team-insight-text{font-size:13px;color:var(--text-muted);line-height:1.8}
+.team-back-btn{display:block;margin:24px auto;padding:12px 32px;border-radius:10px;border:1px solid var(--card-border);background:var(--card);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;cursor:pointer;transition:all .2s}
+.team-back-btn:hover{background:rgba(255,255,255,0.06)}
 
 /* Type badge chips */
 .type-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:16px auto 20px;max-width:480px}
@@ -245,7 +283,31 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <button class="start-btn secondary" onclick="toggleMbtiSelect()">MBTIを知っている人はこちら<br><span style="font-size:12px;opacity:0.7">30問ショートカット（約4分）</span></button>
   <div class="mbti-grid" id="mbtiGrid"></div>
   <div class="start-note" id="mbtiNote" style="display:none">MBTIタイプを選んでください</div>
+  <div style="margin-top:18px">
+    <button class="start-btn secondary" onclick="showTeamScreen()" style="border-color:rgba(102,126,234,0.4);background:rgba(102,126,234,0.06)">
+      👥 チーム診断<br><span style="font-size:12px;opacity:0.7">複数人の結果からチームバランスを可視化</span>
+    </button>
+  </div>
   <div id="historyPanel"></div>
+</div>
+
+<!-- TEAM SCREEN -->
+<div id="teamScreen">
+  <div class="team-container">
+    <div class="team-title">チーム診断</div>
+    <div class="team-sub">メンバーのタイプを追加して、チームのバランスを分析しましょう</div>
+    <div class="team-members" id="teamMembers"></div>
+    <div class="team-add-area">
+      <select id="teamTypeSelect">
+        <option value="">タイプを選択...</option>
+      </select>
+      <br>
+      <button class="team-add-btn" onclick="addTeamMember()" id="teamAddBtn" disabled>+ メンバーを追加</button>
+    </div>
+    <button class="team-analyze-btn" onclick="analyzeTeam()" id="teamAnalyzeBtn" disabled>チームを分析する</button>
+    <div class="team-result" id="teamResult"></div>
+    <button class="team-back-btn" onclick="backFromTeam()">← スタートに戻る</button>
+  </div>
 </div>
 
 <!-- QUESTION SCREEN -->
@@ -777,7 +839,9 @@ function showResult() {
   
   // Render tips
   renderTips(profile.tips);
-  
+
+  // Save to history & scroll
+  saveToHistory(typeCode, profile, allScores);
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
@@ -1130,11 +1194,13 @@ function restart() {
   document.getElementById('startScreen').style.display = 'flex';
   document.getElementById('questionScreen').style.display = 'none';
   document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('teamScreen').style.display = 'none';
   document.getElementById('resultContent').innerHTML = '';
   document.documentElement.style.setProperty('--accent', '#667eea');
   // Reset MBTI grid
   document.getElementById('mbtiGrid').classList.remove('show');
   document.getElementById('mbtiNote').style.display = 'none';
+  renderHistory();
   window.scrollTo({top: 0});
 }
 
@@ -1266,6 +1332,205 @@ function renderHistory() {
 function loadHistoryItem(code, scoresStr) {
   const url = window.location.pathname + `?type=${encodeURIComponent(code)}&s=${scoresStr}`;
   window.location.href = url;
+}
+
+// ── Team Diagnosis ──
+let teamMembers = [];
+
+function showTeamScreen() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('teamScreen').style.display = 'block';
+  populateTypeSelect();
+  renderTeamMembers();
+}
+
+function backFromTeam() {
+  document.getElementById('teamScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'flex';
+  window.scrollTo({top: 0});
+}
+
+function populateTypeSelect() {
+  const sel = document.getElementById('teamTypeSelect');
+  if (sel.options.length > 1) return;
+  const sorted = Object.keys(PROFILES).sort((a, b) => PROFILES[a].name.localeCompare(PROFILES[b].name, 'ja'));
+  sorted.forEach(code => {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = `${PROFILES[code].name}（${code}）`;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => {
+    document.getElementById('teamAddBtn').disabled = !sel.value;
+  });
+}
+
+function addTeamMember() {
+  const sel = document.getElementById('teamTypeSelect');
+  const code = sel.value;
+  if (!code || !PROFILES[code]) return;
+  teamMembers.push(code);
+  sel.value = '';
+  document.getElementById('teamAddBtn').disabled = true;
+  renderTeamMembers();
+}
+
+function removeTeamMember(idx) {
+  teamMembers.splice(idx, 1);
+  renderTeamMembers();
+}
+
+function renderTeamMembers() {
+  const wrap = document.getElementById('teamMembers');
+  document.getElementById('teamAnalyzeBtn').disabled = teamMembers.length < 2;
+  if (teamMembers.length === 0) {
+    wrap.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px 0">まだメンバーがいません</div>';
+    return;
+  }
+  wrap.innerHTML = teamMembers.map((code, i) => {
+    const p = PROFILES[code];
+    return `<div class="team-member" style="animation-delay:${i * 0.05}s">
+      <div class="team-member-dot" style="background:${p.color}"></div>
+      <div class="team-member-info">
+        <div class="team-member-name">${p.name}</div>
+        <div class="team-member-code">${code}</div>
+      </div>
+      <button class="team-member-remove" onclick="removeTeamMember(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function analyzeTeam() {
+  if (teamMembers.length < 2) return;
+
+  const AXES = [
+    {key: 'EI', left: 'E（外向）', right: 'I（内向）', colorL: '#6366f1', colorR: '#818cf8'},
+    {key: 'SN', left: 'S（現実）', right: 'N（直感）', colorL: '#8b5cf6', colorR: '#a78bfa'},
+    {key: 'TF', left: 'T（思考）', right: 'F（感情）', colorL: '#ec4899', colorR: '#f472b6'},
+    {key: 'JP', left: 'J（計画）', right: 'P（柔軟）', colorL: '#f59e0b', colorR: '#fbbf24'},
+    {key: 'OG', left: 'O（楽観）', right: 'G（慎重）', colorL: '#10b981', colorR: '#34d399'},
+    {key: 'DB', left: 'D（主導）', right: 'B（協調）', colorL: '#06b6d4', colorR: '#22d3ee'}
+  ];
+
+  // Count left vs right for each axis
+  const axisCounts = AXES.map(axis => {
+    let left = 0, right = 0;
+    teamMembers.forEach(code => {
+      const letter = code.charAt({EI:0,SN:1,TF:2,JP:3}[axis.key] ?? (axis.key === 'OG' ? 5 : 7));
+      // Parse from code format: ENFP-O-Br -> E,N,F,P,-,O,-,B,r
+      const parts = code.split('-');
+      const mbti = parts[0]; // ENFP
+      const og = parts[1];   // O or G
+      const db = parts[2];   // Br, Dr, Bl, Dl
+
+      let isLeft;
+      if (axis.key === 'EI') isLeft = mbti[0] === 'E';
+      else if (axis.key === 'SN') isLeft = mbti[1] === 'S';
+      else if (axis.key === 'TF') isLeft = mbti[2] === 'T';
+      else if (axis.key === 'JP') isLeft = mbti[3] === 'J';
+      else if (axis.key === 'OG') isLeft = og === 'O';
+      else if (axis.key === 'DB') isLeft = db.startsWith('D') || db.startsWith('d');
+
+      if (isLeft) left++; else right++;
+    });
+    return {left, right, total: teamMembers.length};
+  });
+
+  // Unique types
+  const uniqueTypes = [...new Set(teamMembers)];
+  const typeFreq = {};
+  teamMembers.forEach(c => typeFreq[c] = (typeFreq[c] || 0) + 1);
+
+  // Generate insights
+  const insights = [];
+
+  // Diversity score
+  const diversity = uniqueTypes.length / teamMembers.length;
+  if (diversity >= 0.8) {
+    insights.push({icon: '🌈', title: 'タイプ多様性が高い', text: `${teamMembers.length}人中${uniqueTypes.length}種類のタイプが揃っています。多角的な視点でのディスカッションが期待できます。`});
+  } else if (diversity < 0.5) {
+    insights.push({icon: '⚠️', title: 'タイプの偏りあり', text: `同じタイプのメンバーが多く、盲点が生まれやすい構成です。意識的に異なる視点を取り入れる工夫が必要です。`});
+  }
+
+  // Axis balance insights
+  axisCounts.forEach((ac, i) => {
+    const axis = AXES[i];
+    const ratio = ac.left / ac.total;
+    if (ratio >= 0.8) {
+      insights.push({icon: '📊', title: `${axis.left.split('（')[1].replace('）','')}型に偏り`, text: `チームの${Math.round(ratio*100)}%が${axis.left}側です。${axis.right}側の視点が不足する可能性があります。`});
+    } else if (ratio <= 0.2) {
+      insights.push({icon: '📊', title: `${axis.right.split('（')[1].replace('）','')}型に偏り`, text: `チームの${Math.round((1-ratio)*100)}%が${axis.right}側です。${axis.left}側の視点が不足する可能性があります。`});
+    }
+  });
+
+  // Strength areas
+  const hasE = axisCounts[0].left > 0, hasI = axisCounts[0].right > 0;
+  const hasT = axisCounts[2].left > 0, hasF = axisCounts[2].right > 0;
+  const hasD = axisCounts[5].left > 0, hasB = axisCounts[5].right > 0;
+  if (hasE && hasI) insights.push({icon: '💬', title: 'コミュニケーションバランス◎', text: '外向型と内向型が共存しており、発信力と傾聴力の両方を持つチームです。'});
+  if (hasT && hasF) insights.push({icon: '⚖️', title: '意思決定バランス◎', text: '論理重視と感情重視が混在し、データに基づきながらも人への配慮ができるチームです。'});
+  if (hasD && hasB) insights.push({icon: '🤝', title: 'リーダーシップバランス◎', text: '主導型と協調型が共存し、推進力と合意形成力の両面を持つチームです。'});
+
+  if (insights.length === 0) {
+    insights.push({icon: '✅', title: 'バランスの取れたチーム', text: '各軸のバランスが比較的均等です。多様な強みを活かしたチームワークが期待できます。'});
+  }
+
+  // Render
+  let html = '';
+
+  // Axis distribution chart
+  html += '<div class="team-chart-wrap"><div class="team-chart-title">6軸バランス分布</div>';
+  axisCounts.forEach((ac, i) => {
+    const axis = AXES[i];
+    const leftPct = Math.round(ac.left / ac.total * 100);
+    const rightPct = 100 - leftPct;
+    html += `<div class="team-axis-row">
+      <div class="team-axis-label">${axis.key[0]}</div>
+      <div class="team-axis-bar">
+        <div class="team-axis-bar-inner" style="width:${leftPct}%;background:${axis.colorL};left:0;justify-content:flex-end">${leftPct}%</div>
+      </div>
+      <div class="team-axis-bar">
+        <div class="team-axis-bar-inner" style="width:${rightPct}%;background:${axis.colorR};left:0;justify-content:flex-end">${rightPct}%</div>
+      </div>
+      <div class="team-axis-label">${axis.key[1]}</div>
+    </div>
+    <div class="team-axis-labels"><span>${axis.left}</span><span>${axis.right}</span></div>`;
+  });
+  html += '</div>';
+
+  // Type chips
+  html += '<div class="team-chart-wrap"><div class="team-chart-title">メンバー構成</div><div class="team-type-grid">';
+  uniqueTypes.sort((a,b) => (typeFreq[b] - typeFreq[a])).forEach(code => {
+    const p = PROFILES[code];
+    const count = typeFreq[code];
+    html += `<div class="team-type-chip" style="border-color:${p.color};color:${p.color}">
+      ${p.name}${count > 1 ? ` ×${count}` : ''}
+    </div>`;
+  });
+  html += '</div></div>';
+
+  // Insights
+  html += '<div class="team-chart-wrap"><div class="team-chart-title">チームインサイト</div>';
+  insights.forEach(ins => {
+    html += `<div class="team-insight">
+      <div class="team-insight-title">${ins.icon} ${ins.title}</div>
+      <div class="team-insight-text">${ins.text}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  document.getElementById('teamResult').innerHTML = html;
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.team-axis-bar-inner').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0';
+      requestAnimationFrame(() => { el.style.width = w; });
+    });
+  });
+
+  document.getElementById('teamResult').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 // ── On page load, check for shared URL + render history ──
